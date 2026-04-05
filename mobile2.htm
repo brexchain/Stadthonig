@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Stadthonig – Premium Webvisitenkarte</title>
+  <meta name="description" content="Stadthonig vom Hobbyimker – moderne Premium-Webvisitenkarte mit WhatsApp-Bestellung.">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;700&display=swap');
+
+    :root{
+      --bg:#f7f2ea;
+      --bg2:rgba(255,255,255,.95);
+      --text:#171717;
+      --muted:#666;
+      --gold:#d4a574;
+      --gold2:#e7bf76;
+      --green:#25D366;
+      --shadow:0 24px 60px rgba(0,0,0,.14);
+      --border:rgba(212,165,116,.22);
+      --nav-bg:rgba(15,23,42,.96);
+    }
+    [data-theme="dark"]{
+      --bg:#050505;
+      --bg2:rgba(22,22,22,.96);
+      --text:#f5f0e8;
+      --muted:#aaa;
+      --border:rgba(231,191,118,.18);
+      --nav-bg:rgba(15,23,42,.96);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.6;
+      transition:.3s ease background,.3s ease color;
+      padding-bottom:72px; /* Platz für Bottom-Nav */
+    }
+    img{max-width:100%;display:block}
+    a{text-decoration:none;color:inherit}
+    .container{max-width:1280px;margin:0 auto;padding:0 20px}
+
+    /* iOS-style Statusbar + Top-Nav */
+    .status-bar{
+      height:18px;
+      background:rgba(0,0,0,.7);
+      color:#fff;
+      font-size:.7rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 10px;
+      position:fixed;
+      top:0;left:0;right:0;
+      z-index:2100;
+    }
+    .status-dots{display:flex;gap:4px}
+    .status-dot{width:6px;height:6px;border-radius:50%;background:#4ade80}
+
+    header{
+      position:fixed;
+      top:18px;left:0;right:0;
+      z-index:2000;
+      backdrop-filter:blur(20px);
+      background:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,.45),transparent);
+      border-bottom:1px solid rgba(255,255,255,.12);
+    }
+    .nav{
+      height:56px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 16px;
+    }
+    .brand{
+      font-family:'Playfair Display',serif;
+      font-size:1.1rem;
+      color:#fff;
+      letter-spacing:.3px;
+    }
+    .nav-links{display:flex;align-items:center;gap:18px;font-size:.9rem}
+    .nav-links a{color:#f9fafb;opacity:.95}
+    .nav-links a:hover{color:var(--gold2)}
+    .toggle{
+      border-radius:999px;
+      padding:6px 12px;
+      border:1px solid rgba(231,191,118,.6);
+      background:rgba(15,23,42,.6);
+      color:#fefce8;
+      font-size:.8rem;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      cursor:pointer;
+    }
+
+    /* Top frame – sorten.jpg mit zwei Kacheln */
+    .top-frame{
+      margin-top:74px;
+      background:
+        linear-gradient(to bottom,rgba(15,23,42,0.8),rgba(15,23,42,0.4)),
+        url('sorten.jpg') center center / cover no-repeat;
+      color:#fff;
+      text-shadow:0 12px 25px rgba(0,0,0,.6);
+      padding:18px 16px 20px;
+    }
+    .top-frame-inner{
+      max-width:1280px;
+      margin:0 auto;
+    }
+    .top-frame-title{
+      font-family:'Playfair Display',serif;
+      font-size:1.4rem;
+      margin-bottom:8px;
+    }
+    .top-frame-sub{
+      font-size:.9rem;
+      opacity:.9;
+      margin-bottom:12px;
+    }
+    .top-promo-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:10px;
+    }
+    .top-promo-card{
+      background:rgba(15,23,42,0.55);
+      border-radius:14px;
+      padding:10px 12px;
+      border:1px solid rgba(248,250,252,0.18);
+      cursor:pointer;
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      font-size:.9rem;
+      backdrop-filter:blur(8px);
+    }
+    .top-promo-icon{
+      font-size:1.2rem;
+      flex-shrink:0;
+    }
+    .top-promo-text strong{
+      display:block;
+      margin-bottom:2px;
+      font-size:.95rem;
+    }
+
+    /* Hero ikea sticky */
+    .hero{
+      min-height:80vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:#fff;
+      position:relative;
+      background:url('ikeaview.jpg') center center / cover no-repeat;
+      background-attachment:fixed; /* Desktop Parallax */ /*[web:65][web:73]*/
+      overflow:hidden;
+    }
+    .hero::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at center,rgba(0,0,0,.45) 0%,rgba(0,0,0,.8) 75%);
+    }
+    .hero-inner{
+      position:relative;
+      z-index:1;
+      padding:70px 20px 80px;
+      max-width:880px;
+      margin:0 auto;
+    }
+    .hero h1{
+      font-family:'Playfair Display',serif;
+      font-size:clamp(2.4rem,4.3vw,3.9rem);
+      margin-bottom:10px;
+    }
+    .hero p{
+      font-size:1.02rem;
+      opacity:.96;
+      max-width:640px;
+      margin:0 auto 26px;
+    }
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+    }
+    .btn{
+      border:none;
+      border-radius:999px;
+      padding:11px 18px;
+      font-size:.95rem;
+      font-weight:600;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      transition:.25s ease transform,.25s ease box-shadow;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#fff;
+      box-shadow:0 14px 30px rgba(212,165,116,.4);
+    }
+    .btn-primary:hover{transform:translateY(-1px) scale(1.01)}
+    .btn-ghost{
+      background:rgba(15,23,42,.35);
+      color:#e5e7eb;
+      border:1px solid rgba(248,250,252,.2);
+    }
+
+    .hero-cta-float{
+      position:absolute;
+      right:20px;
+      bottom:24px;
+      z-index:2;
+    }
+    .hero-cta-float button{
+      border:none;
+      border-radius:999px;
+      padding:9px 16px;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#fff;
+      font-size:.85rem;
+      font-weight:700;
+      box-shadow:0 16px 38px rgba(0,0,0,.45);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .section{padding:64px 0}
+    .section-title{
+      font-family:'Playfair Display',serif;
+      font-size:1.9rem;
+      text-align:center;
+      margin-bottom:8px;
+    }
+    .section-sub{
+      text-align:center;
+      font-size:.98rem;
+      color:var(--muted);
+      max-width:620px;
+      margin:0 auto 32px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:22px;
+    }
+    .card{
+      background:var(--bg2);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--border);
+      overflow:hidden;
+      position:relative;
+      cursor:pointer;
+      transition:.3s ease transform,.3s ease box-shadow;
+    }
+    .card:hover{
+      transform:translateY(-8px) scale(1.01);
+      box-shadow:0 26px 52px rgba(0,0,0,.18);
+    }
+    .card img{height:210px;object-fit:cover;width:100%;transition:.5s ease transform}
+    .card:hover img{transform:scale(1.06)}
+    .card-body{padding:18px}
+    .card h3{
+      font-family:'Playfair Display',serif;
+      font-size:1.35rem;
+      margin-bottom:4px;
+    }
+    .card p{color:var(--muted);font-size:.95rem;margin-bottom:10px}
+    .price{
+      font-size:1.4rem;
+      font-weight:800;
+      color:var(--gold);
+      margin-bottom:12px;
+    }
+    .add-btn{
+      width:100%;
+      border:none;
+      border-radius:14px;
+      padding:10px 12px;
+      background:linear-gradient(135deg,var(--green),#3be26d);
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      font-size:.95rem;
+    }
+
+    .bubble{
+      position:absolute;
+      top:16px;right:16px;
+      width:52px;height:52px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#fff;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      font-size:1.4rem;
+      box-shadow:0 16px 34px rgba(212,165,116,.5);
+    }
+    .bubble.show{
+      display:flex;
+      animation:bubble .4s cubic-bezier(.68,-.55,.27,1.55);
+    }
+    @keyframes bubble{
+      0%{transform:scale(0) rotate(150deg);opacity:0}
+      65%{transform:scale(1.15)}
+      100%{transform:scale(1) rotate(0);opacity:1}
+    }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.45);
+      backdrop-filter:blur(3px);
+      opacity:0;
+      visibility:hidden;
+      transition:.25s ease;
+      z-index:2500;
+    }
+    .overlay.show{opacity:1;visibility:visible}
+
+    .cart{
+      position:fixed;
+      top:50%;left:50%;
+      transform:translate(-50%,-50%) scale(.9);
+      width:min(500px,92vw);
+      max-height:80vh;
+      background:var(--bg2);
+      border-radius:24px;
+      box-shadow:0 40px 110px rgba(0,0,0,.25);
+      border:1px solid var(--border);
+      z-index:3000;
+      opacity:0;
+      pointer-events:none;
+      transition:.28s ease;
+    }
+    .cart.show{
+      opacity:1;
+      pointer-events:auto;
+      transform:translate(-50%,-50%) scale(1);
+    }
+    .cart.minimized{
+      bottom:16px;top:auto;
+      transform:translateX(-50%) scale(.97);
+      max-height:70px;
+    }
+    .cart-head{
+      padding:14px 16px;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#fff;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .cart-actions{display:flex;gap:6px}
+    .icon-btn{
+      width:30px;height:30px;
+      border-radius:50%;
+      border:none;
+      background:rgba(255,255,255,.22);
+      color:#fff;
+      cursor:pointer;
+    }
+    .swipe-hint{
+      text-align:center;
+      font-size:.85rem;
+      color:var(--green);
+      padding:8px 10px;
+      background:rgba(37,211,102,.08);
+      cursor:pointer;
+    }
+    .cart-body{
+      padding:14px 16px 18px;
+      max-height:calc(80vh - 86px);
+      overflow:auto;
+    }
+    .cart.minimized .cart-body,
+    .cart.minimized .swipe-hint{display:none}
+
+    .cart-item{
+      display:flex;
+      justify-content:space-between;
+      padding:9px 0;
+      border-bottom:1px solid rgba(148,163,184,.3);
+      font-size:.92rem;
+    }
+    .cart-item:last-child{border-bottom:none}
+    .cart-item small{color:var(--muted)}
+    .total{
+      text-align:center;
+      font-size:1.4rem;
+      font-weight:800;
+      color:var(--gold);
+      margin:14px 0 10px;
+    }
+    .upsell{
+      border-radius:16px;
+      border:1px solid var(--border);
+      padding:12px 12px 10px;
+      margin:12px 0;
+      font-size:.9rem;
+    }
+    .upsell h4{color:var(--gold);margin-bottom:6px}
+    .upsell-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
+    }
+    .upsell-chip{
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px dashed var(--border);
+      cursor:pointer;
+      font-size:.85rem;
+      text-align:center;
+    }
+    .order-btn{
+      width:100%;
+      margin-top:8px;
+      border:none;
+      border-radius:16px;
+      padding:11px 12px;
+      background:linear-gradient(135deg,var(--green),#3be26d);
+      color:#fff;
+      font-weight:800;
+      font-size:.95rem;
+      cursor:pointer;
+    }
+
+    .cart-fab{
+      position:fixed;
+      right:16px;top:118px;
+      width:46px;height:46px;
+      border-radius:16px 0 0 16px;
+      border:none;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#fff;
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      z-index:2600;
+    }
+    .wa-fab{
+      position:fixed;
+      right:16px;bottom:88px;
+      width:60px;height:60px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.8rem;
+      border:none;
+      background:linear-gradient(135deg,var(--green),#3be26d);
+      color:#fff;
+      box-shadow:0 20px 40px rgba(22,163,74,.4);
+      z-index:1200;
+    }
+
+    /* Bottom Nav */
+    .bottom-nav{
+      position:fixed;
+      left:0;right:0;bottom:0;
+      height:64px;
+      background:var(--nav-bg);
+      color:#e5e7eb;
+      display:flex;
+      justify-content:space-around;
+      align-items:flex-start;
+      padding:8px 6px 10px;
+      border-top:1px solid rgba(148,163,184,.4);
+      z-index:1500;
+    }
+    .nav-item{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      font-size:.7rem;
+      gap:3px;
+      opacity:.75;
+      cursor:pointer;
+    }
+    .nav-item span.icon{
+      font-size:1.25rem;
+    }
+    .nav-item.active{
+      opacity:1;
+      color:var(--gold2);
+    }
+
+    footer{
+      padding:28px 0 40px;
+      text-align:center;
+      font-size:.85rem;
+      color:var(--muted);
+    }
+
+    @media (max-width:768px){
+      .nav-links{display:none}
+      .section{padding:52px 0}
+      .hero{background-attachment:scroll;} /* iOS Fix */ /*[web:66][web:70]*/
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+<div class="status-bar">
+  <div class="status-dots">
+    <span class="status-dot"></span><span class="status-dot"></span><span class="status-dot"></span>
+  </div>
+  <div>Stadthonig</div>
+  <div style="font-size:.65rem;">4G ▴▴▴▴</div>
+</div>
+
+<header>
+  <div class="nav">
+    <div class="brand">Stadthonig Wien</div>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#specials">Specials</a>
+      <a href="#sorten">Sorten</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+    <button class="toggle" id="themeBtn" onclick="toggleTheme()">🌙 Dark</button>
+  </div>
+</header>
+
+<!-- Top Frame mit zwei Engagement-Kacheln -->
+<div class="top-frame">
+  <div class="top-frame-inner">
+    <div class="top-frame-title">Feine Stadthonige & Bienen‑Erlebnisse</div>
+    <div class="top-frame-sub">
+      Scan den QR‑Code und entdecke besondere Angebote & spannende Bienen‑Stories.
+    </div>
+
+    <div class="top-promo-grid">
+      <div class="top-promo-card" onclick="scrollToSection('bee-tour', this)">
+        <div class="top-promo-icon">🚸</div>
+        <div class="top-promo-text">
+          <strong>Bee‑Learning‑Tour buchen</strong>
+          Geführte Bienenführung für Gruppen, Schulen & Teams – sichere dir deinen Termin.
+        </div>
+      </div>
+
+      <div class="top-promo-card" onclick="scrollToSection('bee-stories', this)">
+        <div class="top-promo-icon">👑</div>
+        <div class="top-promo-text">
+          <strong>Geheimnisse von Königin & Gelee Royale</strong>
+          Erfahre, warum die Königin nur einmal fliegt und was Gelee Royale so besonders macht.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="home" class="hero">
+  <div class="hero-inner">
+    <h1>Stadthonig vom Dach<br>direkt in dein Glas</h1>
+    <p>Moderner 2026‑Auftritt für deinen Hobbyimker-Betrieb: alle Sorten, Preise und Bestellung per WhatsApp – optimiert für Smartphone und lokale Kunden.</p>
+    <div class="hero-actions">
+      <a href="#sorten" class="btn btn-primary">Honigsorten ansehen</a>
+      <button class="btn btn-ghost" onclick="openCart()">Bestellübersicht</button>
+    </div>
+  </div>
+
+  <div class="hero-cta-float">
+    <button onclick="openCart()">🛒 Jetzt bestellen</button>
+  </div>
+</section>
+
+<!-- Neue Story-Sektion: Bee-Learning-Tour -->
+<section id="bee-tour" class="section" style="padding-top:40px;">
+  <div class="container">
+    <h2 class="section-title">Bee‑Learning‑Tour für Gruppen</h2>
+    <p class="section-sub">
+      Perfekt für Schulklassen, Teams oder Freundesgruppen: 60–90 Minuten Bienen‑Erlebnis mitten in der Stadt.
+    </p>
+    <p style="max-width:720px;margin:0 auto 12px;font-size:.95rem;">
+      • Besuch beim Bienenstock auf dem Dach oder im Garten<br>
+      • Live‑Blick in die Beute (mit Schutz, nur bei gutem Wetter)<br>
+      • Erklärung von Arbeiterinnen, Drohnen und Königin<br>
+      • Honigverkostung & Zeit für Fragen
+    </p>
+    <p style="max-width:720px;margin:0 auto 18px;font-size:.95rem;">
+      Auf Wunsch passen wir die Tour für Kinder, Erwachsene oder Firmen an.
+    </p>
+    <div style="text-align:center;">
+      <button class="btn btn-primary" onclick="orderWhatsApp()">
+        📅 Bee‑Tour anfragen über WhatsApp
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Neue Story-Sektion: Bee Stories & Gelee Royale -->
+<section id="bee-stories" class="section" style="padding-top:0;">
+  <div class="container">
+    <h2 class="section-title">Coole Fakten über Bienen & Gelee Royale</h2>
+    <p class="section-sub">
+      Kleine Stories, die man gern weitererzählt – perfekt für Besucher, die nach dem Scan kurz stöbern.
+    </p>
+    <div style="max-width:780px;margin:0 auto;font-size:.95rem;line-height:1.7;">
+      <p><strong>Die Königin fliegt nur einmal:</strong> Auf ihrem Hochzeitsflug paart sie sich in der Luft mit mehreren Drohnen, speichert den Samen und kehrt dann zurück – meistens verlässt sie den Stock nie wieder.</p>
+      <p><strong>Gelee Royale:</strong> Ein spezieller Futtersaft, den Arbeiterinnen produzieren. Damit wird die Königin ihr ganzes Leben lang gefüttert, Arbeiterinnen aber nur in den ersten Tagen – das macht den Unterschied.</p>
+      <p><strong>Stadtbienen kennen ihr Viertel:</strong> Sammelbienen fliegen bis zu mehrere Kilometer weit, finden aber dank Sonnenstand, Magnetfeld und Duftspur immer wieder in ihren Stock zurück.</p>
+      <p><strong>Tanzsprache:</strong> Mit dem Schwänzeltanz teilen Bienen ihren Schwestern mit, wo gute Trachtquellen sind – inklusive Entfernung und Richtung.</p>
+    </div>
+  </div>
+</section>
+
+<section id="specials" class="section" style="padding-top:32px;">
+  <div class="container">
+    <h2 class="section-title">Exklusive Specials</h2>
+    <p class="section-sub">Limitierte Produkte, die deine Stammkunden lieben – ein Tap legt sie direkt in den Warenkorb.</p>
+
+    <div class="grid">
+      <div class="card" onclick="addItem('Stadthonig Geschenkset',19,this)">
+        <div class="bubble">✅</div>
+        <img src="sorten.jpg" alt="Stadthonig Geschenkset">
+        <div class="card-body">
+          <h3>Stadthonig Geschenkset</h3>
+          <p>Drei ausgewählte Sorten in einer edlen Geschenkbox.</p>
+          <div class="price">19 €</div>
+          <button class="add-btn" onclick="event.stopPropagation();addItem('Stadthonig Geschenkset',19,this.parentElement.parentElement)">In Warenkorb</button>
+        </div>
+      </div>
+
+      <div class="card" onclick="addItem('Bienenwachs-Kerze',8,this)">
+        <div class="bubble">✅</div>
+        <img src="ikeaview.jpg" alt="Bienenwachs-Kerze">
+        <div class="card-body">
+          <h3>Bienenwachs-Kerze</h3>
+          <p>Handgegossene Kerze aus eigenem Bienenwachs.</p>
+          <div class="price">8 €</div>
+          <button class="add-btn" onclick="event.stopPropagation();addItem('Bienenwachs-Kerze',8,this.parentElement.parentElement)">In Warenkorb</button>
+        </div>
+      </div>
+
+      <div class="card" onclick="addItem('Propolis-Tropfen',12,this)">
+        <div class="bubble">✅</div>
+        <img src="sorten.jpg" alt="Propolis-Tropfen">
+        <div class="card-body">
+          <h3>Propolis-Tropfen</h3>
+          <p>Intensiver Propolis-Auszug vom Stadtdach.</p>
+          <div class="price">12 €</div>
+          <button class="add-btn" onclick="event.stopPropagation();addItem('Propolis-Tropfen',12,this.parentElement.parentElement)">In Warenkorb</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sorten" class="section">
+  <div class="container">
+    <h2 class="section-title">Unsere Honigsorten</h2>
+    <p class="section-sub">Tippen auf eine Karte legt den Artikel in den Warenkorb. Danach erscheint eine Bestellübersicht mit Upselling – wie eine kleine Shop‑App.</p>
+
+    <div class="grid">
+      <div class="card" onclick="addItem('Akazienhonig',10,this)">
+        <div class="bubble">✅</div>
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/361cc82ddaccd5983637fcbfcb74178c97de963d.jpg" alt="Akazienhonig">
+        <div class="card-body">
+          <h3>Akazienhonig</h3>
+          <p>Mild, klar und perfekt für Tee & Frühstück.</p>
+          <div class="price">10 € / 500g</div>
+          <button class="add-btn" onclick="event.stopPropagation();addItem('Akazienhonig',10,this.parentElement.parentElement)">In Warenkorb</button>
+        </div>
+      </div>
+
+      <div class="card" onclick="addItem('Waldhonig',9,this)">
+        <div class="bubble">✅</div>
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/3ba95b043da0cd912cdb1779be0feb9601fcdbf6.jpg" alt="Waldhonig">
+        <div class="card-body">
+          <h3>Waldhonig</h3>
+          <p>Kräftig-würzig, aus Mischwald und Tannen.</p>
+          <div class="price">9 € / 500g</div>
+          <button class="add-btn" onclick="event.stopPropagation();addItem('Waldhonig',9,this.parentElement.parentElement)">In Warenkorb</button>
+        </div>
+      </div>
+
+      <div class="card" onclick="addItem('Blütenhonig',6,this)">
+        <div class="bubble">✅</div>
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/7f490a06cbc3359206894804e0263f8de602780b.jpg" alt="Blütenhonig">
+        <div class="card-body">
+          <h3>Blütenhonig</h3>
+          <p>Der klassische Allrounder aus Stadtgärten.</p>
+          <div class="price">6 € / 500g</div>
+          <button class="add-btn" onclick="event.stopPropagation();addItem('Blütenhonig',6,this.parentElement.parentElement)">In Warenkorb</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<div class="cart" id="cart">
+  <div class="cart-head">
+    <div>🛒 Bestellübersicht <span id="count">(0)</span></div>
+    <div class="cart-actions">
+      <button class="icon-btn" onclick="minimizeCart()" title="Minimieren">▁</button>
+      <button class="icon-btn" onclick="closeCart()" title="Schließen">×</button>
+    </div>
+  </div>
+  <div class="swipe-hint" onclick="minimizeCart()">Tippen/Swipe zum Minimieren</div>
+  <div class="cart-body">
+    <div id="cartItems"></div>
+
+    <div class="upsell">
+      <h4>Gäste kaufen oft dazu</h4>
+      <div class="upsell-grid">
+        <div class="upsell-chip" onclick="addItem('Honig-Geschenkset',18)">🎁 Geschenkset</div>
+        <div class="upsell-chip" onclick="addItem('Bienenwachs-Kerze',8)">🕯 Kerze</div>
+        <div class="upsell-chip" onclick="addItem('Propolis-Tropfen',12)">💧 Propolis</div>
+        <div class="upsell-chip" onclick="addItem('Probierpaket 3×125g',15)">🍯 Probierpaket</div>
+      </div>
+    </div>
+
+    <div class="total" id="total">0 €</div>
+    <button class="order-btn" onclick="orderWhatsApp()">🟢 Bestellung über WhatsApp senden</button>
+  </div>
+</div>
+
+<button class="cart-fab" onclick="openCart()">🛒</button>
+<button class="wa-fab" onclick="orderWhatsApp()" title="Direkt mit Bestellung in WhatsApp öffnen">💬</button>
+
+<section id="kontakt" class="section">
+  <div class="container">
+    <h2 class="section-title">Kontakt</h2>
+    <p class="section-sub">Ersetze im Code <strong>DEINE-NUMMER</strong> durch deine WhatsApp-Nummer im internationalen Format (z.B. 43664...).</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    © 2026 Stadthonig vom Hobbyimker – Premium Webvisitenkarte
+  </div>
+</footer>
+
+<nav class="bottom-nav">
+  <div class="nav-item active" onclick="scrollToSection('home',this)">
+    <span class="icon">🏠</span>
+    <span>Home</span>
+  </div>
+  <div class="nav-item" onclick="scrollToSection('specials',this)">
+    <span class="icon">⭐</span>
+    <span>Specials</span>
+  </div>
+  <div class="nav-item" onclick="scrollToSection('sorten',this)">
+    <span class="icon">🍯</span>
+    <span>Sorten</span>
+  </div>
+  <div class="nav-item" onclick="scrollToSection('kontakt',this)">
+    <span class="icon">📞</span>
+    <span>Kontakt</span>
+  </div>
+</nav>
+
+<script>
+  let cart = [];
+  const cartEl = document.getElementById('cart');
+  const overlay = document.getElementById('overlay');
+  const cartItems = document.getElementById('cartItems');
+  const countEl = document.getElementById('count');
+  const totalEl = document.getElementById('total');
+  const themeBtn = document.getElementById('themeBtn');
+
+  function toggleTheme(){
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    themeBtn.textContent = isDark ? '🌙 Dark' : '☀️ Light';
+  }
+
+  function openCart(){
+    cartEl.classList.add('show');
+    overlay.classList.add('show');
+    cartEl.classList.remove('minimized');
+  }
+  function closeCart(){
+    cartEl.classList.remove('show','minimized');
+    overlay.classList.remove('show');
+  }
+  function minimizeCart(){
+    cartEl.classList.toggle('minimized');
+  }
+
+  function flashBubble(card){
+    const bubble = card.querySelector('.bubble');
+    if(!bubble) return;
+    bubble.classList.add('show');
+    setTimeout(()=>bubble.classList.remove('show'),400);
+  }
+
+  function addItem(name, price, sourceCard){
+    const existing = cart.find(i => i.name === name);
+    if(existing) existing.qty += 1;
+    else cart.push({name, price, qty:1});
+
+    updateCart();
+    const card = sourceCard && sourceCard.classList && sourceCard.classList.contains('card')
+      ? sourceCard
+      : (sourceCard ? sourceCard.closest('.card') : null);
+    if(card) flashBubble(card);
+    openCart();
+  }
+
+  function updateCart(){
+    const count = cart.reduce((s,i)=>s+i.qty,0);
+    const total = cart.reduce((s,i)=>s+i.qty*i.price,0);
+    countEl.textContent = `(${count})`;
+    totalEl.textContent = total.toFixed(2).replace('.00','') + ' €';
+
+    if(cart.length === 0){
+      cartItems.innerHTML = '<div style="text-align:center;color:var(--muted);padding:10px 0;">Noch keine Artikel im Warenkorb.</div>';
+      return;
+    }
+
+    cartItems.innerHTML = cart.map((item,idx)=>`
+      <div class="cart-item">
+        <div>
+          <strong>${item.name}</strong><br>
+          <small>${item.qty} × ${item.price} €</small>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <strong>${(item.qty*item.price).toFixed(2).replace('.00','')} €</strong>
+          <button class="icon-btn" style="background:rgba(148,163,184,.25);color:var(--text);" onclick="removeItem(${idx})">×</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function removeItem(index){
+    cart.splice(index,1);
+    updateCart();
+    if(cart.length===0) closeCart();
+  }
+
+  function orderWhatsApp(){
+    if(cart.length===0){
+      window.open('https://wa.me/DEINE-NUMMER','_blank');
+      return;
+    }
+    const items = cart.map(i=>`${i.name} x${i.qty}`).join('\n');
+    const total = cart.reduce((s,i)=>s+i.qty*i.price,0).toFixed(2).replace('.00','');
+    const msg = `Hallo! Ich möchte folgenden Stadthonig bestellen:\n\n${items}\n\nGesamt: ${total} €`;
+    window.open(`https://wa.me/DEINE-NUMMER?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+
+  function scrollToSection(id, el){
+    const target = document.getElementById(id);
+    if(target){
+      target.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    const items = document.querySelectorAll('.bottom-nav .nav-item');
+    items.forEach(i=>i.classList.remove('active'));
+    if(el && el.classList.contains('nav-item')) el.classList.add('active');
+  }
+
+  updateCart();
+</script>
+</body>
+</html>

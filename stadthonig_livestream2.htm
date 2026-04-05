@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stadthonig | Senior Bee Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0b0c;
+            --card: rgba(21, 21, 23, 0.85);
+            --accent: #facc15;
+            --accent-glow: rgba(250, 204, 21, 0.3);
+            --text: #f5f5f7;
+            --muted: #9ca3af;
+            --stroke: rgba(255, 255, 255, 0.12);
+            --blur: blur(25px);
+        }
+
+        body.light {
+            --bg: #f2f2f7;
+            --card: rgba(255, 255, 255, 0.7);
+            --text: #1c1c1e;
+            --muted: #8e8e93;
+            --stroke: rgba(0, 0, 0, 0.08);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            overflow-x: hidden;
+            transition: background 0.4s ease;
+        }
+
+        /* Animated Background */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 10% 10%, var(--accent-glow), transparent 40%);
+            z-index: -1;
+        }
+
+        /* Nav & Tabs */
+        nav {
+            position: sticky; top: 0; z-index: 1000;
+            padding: 15px 20px;
+            background: var(--card);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border-bottom: 1px solid var(--stroke);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .brand { font-weight: 800; color: var(--accent); letter-spacing: -1px; }
+
+        .tab-bar {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px;
+            background: var(--card); backdrop-filter: var(--blur);
+            border: 1px solid var(--stroke); border-radius: 30px;
+            display: flex; justify-content: space-around; padding: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); z-index: 1000;
+        }
+
+        .tab-item { cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: var(--muted); font-weight: 600; transition: 0.3s; }
+        .tab-item.active { color: var(--accent); }
+
+        /* Sections */
+        main { padding: 20px 20px 120px; max-width: 600px; margin: 0 auto; }
+        section { display: none; animation: fadeIn 0.4s ease; }
+        section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Discovery & Swipe Game UI */
+        .hero-img { width: 100%; height: 200px; object-fit: cover; border-radius: 24px; margin-bottom: 20px; border: 1px solid var(--stroke); }
+
+        .swipe-stage {
+            position: relative; height: 320px; margin: 20px 0;
+            perspective: 1000px;
+        }
+
+        .swipe-card {
+            position: absolute; inset: 0;
+            background: var(--card); border: 1px solid var(--stroke);
+            border-radius: 28px; padding: 25px;
+            display: flex; flex-direction: column; justify-content: center;
+            text-align: center; font-size: 1.2rem; font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            touch-action: none; user-select: none;
+        }
+
+        .swipe-btns { display: flex; gap: 10px; margin-top: 15px; }
+        .swipe-btn {
+            flex: 1; padding: 15px; border-radius: 18px; border: 1px solid var(--stroke);
+            background: rgba(255,255,255,0.05); color: var(--text); font-weight: 800; cursor: pointer;
+        }
+        #btnMind { background: rgba(250, 204, 21, 0.15); border-color: var(--accent); }
+
+        /* Grid */
+        .discover-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .tile { 
+            background: var(--card); border: 1px solid var(--stroke); border-radius: 24px; 
+            padding: 15px; text-decoration: none; color: inherit;
+        }
+        .tile img { width: 100%; height: 100px; object-fit: cover; border-radius: 16px; margin-bottom: 10px; }
+        .tile h3 { font-size: 0.9rem; margin: 0; color: var(--accent); }
+
+        /* Bee Particles */
+        .bee-burst { position: absolute; pointer-events: none; z-index: 2000; }
+        .bee { position: absolute; font-size: 20px; animation: beeFly 0.8s ease-out forwards; }
+        @keyframes beeFly {
+            0% { opacity: 0; transform: translate(0,0) scale(0.5); }
+            20% { opacity: 1; }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(1.2); }
+        }
+
+        .badge {
+            position: absolute; top: 20px; padding: 8px 12px; border-radius: 12px;
+            font-weight: 900; font-size: 0.8rem; opacity: 0; transition: 0.1s;
+        }
+        .badge-left { left: 20px; background: #ef4444; transform: rotate(-15deg); }
+        .badge-right { right: 20px; background: #22c55e; transform: rotate(15deg); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <nav>
+        <div class="brand">STADTHONIG</div>
+        <div style="display:flex; gap:8px;">
+            <select id="langPicker" style="background:var(--stroke); color:var(--text); border:none; border-radius:10px; padding:5px;">
+                <option value="de">DE</option>
+                <option value="en">EN</option>
+                <option value="es">ES</option>
+                <option value="fr">FR</option>
+                <option value="ja">JP</option>
+                <option value="zh">ZN</option>
+            </select>
+            <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.2rem;">🌓</button>
+        </div>
+    </nav>
+
+    <main>
+        <section id="order" class="active">
+            <img src="miel.jpg" class="hero-img" alt="Honey Hero">
+            <h1 data-i18n="hero_t">Stadthonig</h1>
+            <div class="tile" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                <div>
+                    <h2 style="margin:0; font-size:1.1rem;">Blütenhonig 250g</h2>
+                    <p style="margin:5px 0 0; color:var(--muted); font-size:0.8rem;">Vom Stadtbalkon</p>
+                </div>
+                <div style="color:var(--accent); font-weight:800; font-size:1.2rem;">€9.50</div>
+            </div>
+        </section>
+
+        <section id="discover">
+            <h2 data-i18n="disc_t">Queenbee Secrets 👑🐝</h2>
+            
+            <div class="swipe-stage" id="swipeStage">
+                <div class="badge badge-left">GEWUSST</div>
+                <div class="badge badge-right">WOW!</div>
+                </div>
+
+            <div class="swipe-btns">
+                <button class="swipe-btn" id="btnKnew">GEWUSST</button>
+                <button class="swipe-btn" id="btnMind">MIND BLOWN</button>
+            </div>
+
+            <div class="discover-grid">
+                <div class="tile"><img src="queenbee.jpg" alt=""><h3>Die Königin</h3></div>
+                <div class="tile"><img src="vrc.jpg" alt=""><h3>VRC System</h3></div>
+                <div class="tile"><img src="bees.jpg" alt=""><h3>Das Volk</h3></div>
+                <div class="tile"><img src="sace.jpg" alt=""><h3>Wabenbau</h3></div>
+            </div>
+        </section>
+    </main>
+
+    <div class="tab-bar">
+        <div class="tab-item active" onclick="setMode('order')"><span>🍯</span><span>Shop</span></div>
+        <div class="tab-item" onclick="setMode('discover')"><span>📖</span><span>Story</span></div>
+    </div>
+
+    <script>
+        // DATA FROM mob6ipol.htm
+        const FACTS = {
+            de: ["Die Königin sieht die Sonne meist nur einmal im Leben – am Tag ihres Hochzeitsflugs.", "Eine Königin wird nicht als solche geboren. Gelee Royale macht sie dazu.", "Sie kann Sperma jahrelang in einer Samentasche speichern – ein lebender Bio-Tresor.", "Sie entscheidet selbst, ob sie ein Ei befruchtet: Befruchtet = Arbeiterin, Unbefruchtet = Drohn."],
+            en: ["The Queen usually sees the sun only once – on her nuptial flight.", "A queen isn't born a queen. Royal Jelly makes her one.", "She can store sperm for years in a specialized pouch – a living bio-vault.", "She decides whether to fertilize an egg: Fertilized = Worker, Unfertilized = Drone."],
+            es: ["La Reina suele ver el sol solo una vez: en su vuelo nupcial.", "Una reina no nace reina. La Jalea Real la convierte en una.", "Puede almacenar esperma durante años en una bolsa especial: una caja fuerte biológica.", "Ella decide si fertiliza un huevo: Fecundado = Obrera, No fecundado = Zángano."],
+            fr: ["La Reine ne voit le soleil qu'une seule fois : lors de son vol nuptial.", "Une reine ne naît pas reine. C'est la Gelée Royale qui la façonne.", "Elle peut stocker du sperme pendant des années : un véritable coffre-fort biologique.", "Elle décide de fertiliser ou non un œuf : Fertilisé = Ouvrière, Non fertilisé = Faux-bourdon."],
+            ja: ["女王蜂が太陽を見るのは一生に一度、婚飛の日だけです。", "女王蜂は女王として生まれるのではありません。ローヤルゼリーが彼女を作ります。", "彼女は精子を数年間保存できる「生物学的な金庫」を持っています。", "彼女は卵を受精させるかどうかを自分で決めます。"],
+            zh: ["蜂后一生通常只见过一次太阳——在她的婚飞之日。", "蜂后并非生而为后。是蜂王浆造就了她。", "她可以将精子在体内储存多年——一个活生生的生物保险库。", "她可以决定是否受精：受精=工蜂，未受精=雄蜂。"]
+        };
+
+        let state = {
+            lang: localStorage.getItem('BZZZ_LANG') || 'de',
+            theme: localStorage.getItem('BZZZ_THEME') || 'dark',
+            mode: 'order',
+            factIdx: 0
+        };
+
+        function setMode(m) {
+            state.mode = m;
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(m).classList.add('active');
+            document.querySelectorAll('.tab-item').forEach((t, i) => t.classList.toggle('active', (i===0 && m==='order') || (i===1 && m==='discover')));
+            if(m === 'discover') renderFact();
+        }
+
+        function renderFact() {
+            const list = FACTS[state.lang] || FACTS.de;
+            const text = list[state.factIdx % list.length];
+            const stage = document.getElementById('swipeStage');
+            stage.innerHTML = `<div class="swipe-card" id="activeCard">${text}</div>`;
+            bindSwipe();
+        }
+
+        // SWIPE LOGIC & PARTICLES
+        function bindSwipe() {
+            const card = document.getElementById('activeCard');
+            let startX = 0, dx = 0;
+
+            card.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            card.addEventListener('touchmove', e => {
+                dx = e.touches[0].clientX - startX;
+                const rot = dx / 20;
+                card.style.transform = `translateX(${dx}px) rotate(${rot}deg)`;
+            });
+            card.addEventListener('touchend', () => {
+                if (Math.abs(dx) > 100) {
+                    spawnBees(dx > 0 ? 'right' : 'left');
+                    state.factIdx++;
+                    renderFact();
+                } else {
+                    card.style.transform = '';
+                }
+                dx = 0;
+            });
+        }
+
+        function spawnBees(dir) {
+            const btn = document.getElementById(dir === 'right' ? 'btnMind' : 'btnKnew');
+            const rect = btn.getBoundingClientRect();
+            for(let i=0; i<8; i++) {
+                const b = document.createElement('div');
+                b.className = 'bee';
+                b.innerHTML = '🐝';
+                b.style.left = (rect.left + rect.width/2) + 'px';
+                b.style.top = (rect.top) + 'px';
+                b.style.setProperty('--tx', (Math.random()*200 - 100) + 'px');
+                b.style.setProperty('--ty', (-Math.random()*200 - 50) + 'px');
+                b.style.setProperty('--tr', (Math.random()*360) + 'deg');
+                document.body.appendChild(b);
+                setTimeout(() => b.remove(), 800);
+            }
+        }
+
+        function toggleTheme() {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            document.body.className = state.theme;
+            localStorage.setItem('BZZZ_THEME', state.theme);
+        }
+
+        document.getElementById('langPicker').addEventListener('change', (e) => {
+            state.lang = e.target.value;
+            localStorage.setItem('BZZZ_LANG', state.lang);
+            renderFact();
+        });
+
+        // Init
+        document.body.className = state.theme;
+        document.getElementById('langPicker').value = state.lang;
+        document.getElementById('btnKnew').onclick = () => { spawnBees('left'); state.factIdx++; renderFact(); };
+        document.getElementById('btnMind').onclick = () => { spawnBees('right'); state.factIdx++; renderFact(); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Stadthonig – Premium Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#0b0b0c;
+--card:#151517;
+--accent:#facc15;
+--text:#f5f5f7;
+--muted:#9ca3af;
+}
+
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Inter, sans-serif;
+background:var(--bg);
+color:var(--text);
+}
+
+header{
+position:fixed;
+top:0;
+width:100%;
+backdrop-filter:blur(20px);
+background:rgba(20,20,20,0.6);
+padding:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:1000;
+}
+
+header div{font-weight:600}
+
+button{
+border:none;
+padding:8px 12px;
+border-radius:12px;
+background:rgba(255,255,255,0.05);
+color:#fff;
+}
+
+.section{
+padding:80px 16px 120px;
+}
+
+.hidden{display:none}
+
+.hero{
+height:200px;
+border-radius:20px;
+overflow:hidden;
+margin-bottom:16px;
+position:relative;
+}
+.hero img{
+width:100%;
+height:100%;
+object-fit:cover;
+filter:brightness(0.7);
+}
+.hero h1{
+position:absolute;
+bottom:16px;
+left:16px;
+margin:0;
+font-size:1.4rem;
+}
+
+.card{
+background:var(--card);
+border-radius:18px;
+padding:14px;
+margin-bottom:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+transition:all .2s ease;
+}
+
+.card:active{
+transform:scale(0.96);
+background:#1c1c1f;
+}
+
+.card img{
+width:50px;
+height:50px;
+border-radius:12px;
+object-fit:cover;
+margin-right:10px;
+}
+
+.card-content{
+display:flex;
+align-items:center;
+}
+
+.price{color:var(--accent);font-weight:600}
+
+#orderBar{
+position:fixed;
+bottom:70px;
+left:12px;
+right:12px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(20px);
+padding:16px;
+border-radius:18px;
+text-align:center;
+font-weight:600;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+#assistant{
+position:fixed;
+bottom:140px;
+right:12px;
+width:280px;
+background:rgba(20,20,20,0.9);
+backdrop-filter:blur(20px);
+border-radius:20px;
+padding:12px;
+box-shadow:0 20px 40px rgba(0,0,0,0.5);
+}
+
+#assistantLog{
+max-height:180px;
+overflow:auto;
+font-size:.85rem;
+margin-bottom:8px;
+}
+
+.msg{margin-bottom:6px}
+.biene{color:var(--accent)}
+.user{text-align:right;color:#60a5fa}
+
+input{
+width:100%;
+padding:8px;
+border-radius:10px;
+border:none;
+background:#1f1f23;
+color:#fff;
+}
+
+</style>
+</head>
+<body data-mode="order">
+
+<header>
+<div>🐝 Stadthonig</div>
+<div>
+<button onclick="setMode('order')">Bestellen</button>
+<button onclick="setMode('discover')">Entdecken</button>
+</div>
+</header>
+
+<div id="menu" class="section">
+
+<div class="hero">
+<img src="bees.jpg">
+<h1>Frischer Stadthonig 🍯</h1>
+</div>
+
+<div class="card" onclick="addItem('Blütenhonig',6)">
+<div class="card-content">
+<img src="bees.jpg">
+<div>
+<div>Blütenhonig</div>
+<div class="muted">mild & floral</div>
+</div>
+</div>
+<div class="price">6€</div>
+</div>
+
+<div class="card" onclick="addItem('Waldhonig',9)">
+<div class="card-content">
+<img src="bees.jpg">
+<div>
+<div>Waldhonig</div>
+<div class="muted">kräftig & dunkel</div>
+</div>
+</div>
+<div class="price">9€</div>
+</div>
+
+<div class="card" onclick="addItem('Propolis',12)">
+<div class="card-content">
+<img src="queenbee.png">
+<div>
+<div>Propolis</div>
+<div class="muted">natürliches Antibiotikum</div>
+</div>
+</div>
+<div class="price">12€</div>
+</div>
+
+</div>
+
+<div id="discover" class="section hidden">
+<div class="hero">
+<img src="queenbee.png">
+<h1>Die Welt der Bienen 🐝</h1>
+</div>
+<p>Bienen können Gesichter erkennen und kommunizieren durch Tanzbewegungen.</p>
+<p>Die Königin legt bis zu 2000 Eier pro Tag!</p>
+</div>
+
+<div id="orderBar" onclick="sendOrder()">🧾 0 Artikel • 0€</div>
+
+<div id="assistant">
+<div id="assistantLog"></div>
+<input id="assistantInput" placeholder="Frag Biene Maja...">
+</div>
+
+<script>
+let cart=[];
+
+function setMode(mode){
+ document.body.dataset.mode=mode;
+ document.getElementById('menu').classList.toggle('hidden',mode!=='order');
+ document.getElementById('discover').classList.toggle('hidden',mode!=='discover');
+}
+
+function addItem(name,price){
+ const item=cart.find(i=>i.name===name);
+ if(item)item.qty++; else cart.push({name,price,qty:1});
+ updateBar();
+ speak("Gute Wahl 😄 passt perfekt!");
+}
+
+function updateBar(){
+ const count=cart.reduce((s,i)=>s+i.qty,0);
+ const total=cart.reduce((s,i)=>s+i.qty*i.price,0);
+ document.getElementById('orderBar').innerText=`🧾 ${count} Artikel • ${total}€`;
+}
+
+function sendOrder(){
+ let text="🧾 Stadthonig Bestellung\n\n";
+ cart.forEach(i=>text+=`• ${i.qty}x ${i.name}\n`);
+ const total=cart.reduce((s,i)=>s+i.qty*i.price,0);
+ text+=`\n💰 Gesamt: ${total}€`;
+ window.open("https://wa.me/?text="+encodeURIComponent(text));
+}
+
+const log=document.getElementById('assistantLog');
+const input=document.getElementById('assistantInput');
+
+function speak(text){
+ const d=document.createElement('div');
+ d.className='msg biene';
+ d.innerText="🐝 Maja: "+text;
+ log.appendChild(d);
+ log.scrollTop=log.scrollHeight;
+}
+
+input.addEventListener('keydown',e=>{
+ if(e.key==='Enter'){
+  const val=input.value;
+  const u=document.createElement('div');
+  u.className='msg user';
+  u.innerText=val;
+  log.appendChild(u);
+  respond(val);
+  input.value='';
+ }
+});
+
+function respond(t){
+ t=t.toLowerCase();
+ if(t.includes('königin')) speak("Ich liebe unsere Königin 😄 sie ist das Herz des Stocks!");
+ else if(t.includes('propolis')) speak("Propolis schützt den Bienenstock – und dich auch!");
+ else if(t.includes('tour')) speak("Komm zur Bee Tour 🐝 ich zeig dir alles!");
+ else speak("Wusstest du? Bienen sehen UV-Licht 👀");
+}
+
+speak("Hi ich bin Maja 🐝 Lust auf Honig oder spannende Fakten?");
+</script>
+
+</body>
+</html>

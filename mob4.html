@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Stadthonig – Premium Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+	--bg:#0b0b0c;
+	--card:#151517;
+	--accent:#facc15;
+	--text:#f5f5f7;
+	--muted:#9ca3af;
+	--stroke:rgba(255,255,255,.10);
+	--shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* Light theme overrides */
+body.light{
+	--bg:#f6f7fb;
+	--card:#ffffff;
+	--text:#101114;
+	--muted:#5b6472;
+	--stroke:rgba(0,0,0,.10);
+	--shadow:0 10px 30px rgba(0,0,0,0.12);
+}
+body.light header{background:linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.58));border-bottom:1px solid rgba(0,0,0,.10);box-shadow:0 12px 30px rgba(0,0,0,.10)}
+body.light button{background:rgba(0,0,0,0.04);color:#101114}
+body.light #orderBar{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.10)}
+body.light #assistant{background:rgba(255,255,255,0.85);border-color:rgba(0,0,0,0.10)}
+body.light input{background:rgba(0,0,0,0.06);color:#101114}
+body.light .biene{color:#b45309}
+body.light .user{color:#2563eb}
+
+:root{
+}
+
+*{box-sizing:border-box}
+body{
+	margin:0;
+	font-family:Inter, sans-serif;
+	background:var(--bg);
+	color:var(--text);
+	min-height:100vh;
+}
+
+/* Sticky background image + glamour shading */
+body::before{
+	content:"";
+	position:fixed;
+	inset:0;
+	z-index:-2;
+	background:
+		linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.86)),
+		url('queen.jpg') center/cover no-repeat;
+	background-attachment:fixed;
+	filter:saturate(1.08) contrast(1.06) brightness(.78);
+	transform:scale(1.03);
+}
+body::after{
+	content:"";
+	position:fixed;
+	inset:0;
+	z-index:-1;
+	background:
+		radial-gradient(900px 520px at 18% 0%, rgba(250,204,21,.12), rgba(0,0,0,0) 55%),
+		radial-gradient(900px 520px at 85% 12%, rgba(255,255,255,.06), rgba(0,0,0,0) 52%),
+		linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.70));
+}
+
+body.light::before{
+	background:
+		linear-gradient(180deg, rgba(246,247,251,.70), rgba(246,247,251,.92)),
+		url('queen.jpg') center/cover no-repeat;
+	background-attachment:fixed;
+	filter:saturate(1.03) contrast(1.02) brightness(1.02);
+}
+body.light::after{
+	background:
+		radial-gradient(900px 520px at 18% 0%, rgba(250,204,21,.14), rgba(255,255,255,0) 55%),
+		radial-gradient(900px 520px at 85% 12%, rgba(0,0,0,.05), rgba(255,255,255,0) 52%),
+		linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.75));
+}
+
+header{
+	position:fixed;
+	top:0;
+	width:100%;
+	backdrop-filter:blur(22px);
+	background:
+		linear-gradient(180deg, rgba(18,18,20,.70), rgba(18,18,20,.48)),
+		url('sorten.jpg') center/cover no-repeat;
+	padding:12px;
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	z-index:1000;
+	gap:10px;
+	border-bottom:1px solid rgba(255,255,255,.10);
+	box-shadow:0 12px 30px rgba(0,0,0,.22);
+}
+
+header div{font-weight:600}
+
+button{
+	border:none;
+	padding:8px 12px;
+	border-radius:12px;
+	background:rgba(255,255,255,0.05);
+	color:#fff;
+}
+
+.section{padding:80px 16px 120px}
+.hidden{display:none}
+
+.hero{
+	height:200px;
+	border-radius:20px;
+	overflow:hidden;
+	margin-bottom:16px;
+	position:relative;
+	border:1px solid var(--stroke);
+	box-shadow:var(--shadow);
+}
+.hero img{
+	width:100%;
+	height:100%;
+	object-fit:cover;
+	filter:brightness(0.7);
+	opacity:1;
+	transition:opacity 3s ease;
+}
+/* Light mode: reveal queen background first, then fade hero image to 75% */
+body.light .hero img{opacity:0}
+body.light.heroLoaded .hero img{opacity:.75}
+.hero h1{
+	position:absolute;
+	bottom:16px;
+	left:16px;
+	margin:0;
+	font-size:1.4rem;
+}
+
+/* Category pills */
+.pills{
+	position:sticky;
+	top:56px;
+	z-index:900;
+	display:flex;
+	gap:8px;
+	flex-wrap:wrap;
+	padding:10px 0 12px;
+	background:linear-gradient(180deg, rgba(11,11,12,.95), rgba(11,11,12,.75) 55%, rgba(11,11,12,0));
+}
+.pill{
+	padding:9px 12px;
+	border-radius:999px;
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.05);
+	color:var(--text);
+	font-weight:600;
+}
+.pill[aria-pressed="true"]{
+	border-color:rgba(250,204,21,.55);
+	background:rgba(250,204,21,.12);
+}
+
+.card{
+	background:rgba(21,21,23,.74);
+	border:1px solid rgba(255,255,255,.12);
+	border-radius:18px;
+	padding:14px;
+	margin-bottom:10px;
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	transition:transform .12s ease, background .2s ease, box-shadow .12s ease, border-color .2s ease;
+	user-select:none;
+	backdrop-filter:blur(14px);
+}
+body.light .card{background:rgba(255,255,255,.82);border-color:rgba(0,0,0,.10)}
+
+/* Haptic illusion: quick scale + shadow pop */
+.card.haptic{
+	transform:scale(0.985);
+	box-shadow:0 18px 40px rgba(0,0,0,.55);
+	background:#1c1c1f;
+}
+.card:active{
+	transform:scale(0.965);
+	background:#1c1c1f;
+}
+
+.card img{
+	width:50px;
+	height:50px;
+	border-radius:12px;
+	object-fit:cover;
+	margin-right:10px;
+	border:1px solid rgba(255,255,255,.08);
+}
+
+.card-content{display:flex;align-items:center;min-width:0}
+.price{color:var(--accent);font-weight:600;white-space:nowrap}
+.muted{color:var(--muted);font-size:.88rem}
+
+#orderBar{
+	position:fixed;
+	bottom:70px;
+	left:12px;
+	right:12px;
+	background:rgba(255,255,255,0.08);
+	backdrop-filter:blur(20px);
+	padding:16px;
+	border-radius:18px;
+	text-align:center;
+	font-weight:700;
+	box-shadow:var(--shadow);
+	border:1px solid rgba(255,255,255,.10);
+}
+
+/* Order overview sheet */
+.sheet{
+	position:fixed;
+	left:0;
+	right:0;
+	bottom:-110%;
+	z-index:1800;
+	transition:bottom .22s ease;
+}
+.sheet.open{bottom:0}
+.sheet .inner{
+	margin:0 auto;
+	max-width:720px;
+	background:var(--card);
+	border-top-left-radius:22px;
+	border-top-right-radius:22px;
+	border:1px solid var(--stroke);
+	box-shadow:0 -18px 55px rgba(0,0,0,.55);
+	overflow:hidden;
+}
+.sheetHeader{
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
+	gap:10px;
+	padding:12px 14px;
+	border-bottom:1px solid var(--stroke);
+}
+.sheetHeader h2{margin:0;font-size:15px;letter-spacing:.01em}
+.smallBtn{
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.06);
+	padding:8px 10px;
+	border-radius:12px;
+	font-weight:700;
+}
+body.light .smallBtn{background:rgba(0,0,0,.04)}
+.closeX{
+	width:38px;height:38px;
+	border-radius:14px;
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.06);
+	color:var(--text);
+	font-size:18px;
+	line-height:1;
+}
+body.light .closeX{background:rgba(0,0,0,.04)}
+.sheetBody{padding:12px 14px;display:grid;gap:12px}
+.lines{display:grid;gap:10px}
+.line{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.lineTitle{font-weight:700}
+.lineMeta{font-size:12px;color:var(--muted);margin-top:2px}
+.qty{display:inline-flex;align-items:center;gap:8px}
+.qty button{
+	width:36px;height:36px;
+	border-radius:12px;
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.06);
+	color:var(--text);
+	font-weight:900;
+}
+body.light .qty button{background:rgba(0,0,0,.04)}
+.qty .n{min-width:22px;text-align:center;font-weight:900}
+
+.upsellBox{
+	border:1px solid var(--stroke);
+	border-radius:18px;
+	padding:12px;
+	background:rgba(255,255,255,.04);
+}
+.upsellTitle{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800}
+
+/* Upsell tiles */
+.upsellTiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media (max-width:420px){.upsellTiles{grid-template-columns:1fr}}
+.upsellTile{
+	position:relative;
+	display:flex;
+	gap:10px;
+	align-items:center;
+	padding:10px;
+	border-radius:16px;
+	border:1px solid rgba(255,255,255,.12);
+	background:rgba(0,0,0,.18);
+	backdrop-filter:blur(10px);
+}
+body.light .upsellTile{background:rgba(255,255,255,.78);border-color:rgba(0,0,0,.10)}
+.upsellTileImg{width:44px;height:44px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,.10)}
+body.light .upsellTileImg{border-color:rgba(0,0,0,.10)}
+.upsellName{font-weight:900;line-height:1.15}
+.upsellHint{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.25}
+.upsellRight{margin-left:auto;display:flex;align-items:center;gap:8px}
+.addMini{
+	border:none;
+	width:38px;
+	height:38px;
+	padding:0;
+	border-radius:14px;
+	display:inline-flex;
+	align-items:center;
+	justify-content:center;
+	background:linear-gradient(135deg, #fde047, var(--accent));
+	color:#2a1a00;
+	font-weight:950;
+	font-size:18px;
+	line-height:1;
+}
+.addMini.added{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:var(--text)}
+body.light .addMini.added{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.10);color:var(--text)}
+.checkBadge{
+	display:inline-flex;
+	align-items:center;
+	justify-content:center;
+	width:28px;
+	height:28px;
+	border-radius:999px;
+	border:1px solid rgba(37,211,102,.45);
+	background:rgba(37,211,102,.16);
+	color:#b7ffd1;
+	font-weight:950;
+}
+body.light .checkBadge{color:#0d6b3a}
+
+/* Checkmark flash on any add */
+.card.addedFlash{
+	border-color:rgba(250,204,21,.55);
+	box-shadow:0 18px 45px rgba(250,204,21,.10), 0 18px 40px rgba(0,0,0,.55);
+}
+.card.addedFlash::after{
+	content:"✓";
+	position:absolute;
+	top:10px;
+	right:10px;
+	width:28px;
+	height:28px;
+	border-radius:999px;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	background:rgba(37,211,102,.18);
+	border:1px solid rgba(37,211,102,.45);
+	color:#b7ffd1;
+	font-weight:950;
+}
+body.light .card.addedFlash::after{color:#0d6b3a}
+.card{position:relative}
+
+/* ===== Discover: fact tiles + favourites ===== */
+.factsGrid{display:grid;grid-template-columns:repeat(4, 1fr);gap:10px}
+@media (max-width:900px){.factsGrid{grid-template-columns:repeat(3, 1fr)}}
+@media (max-width:620px){.factsGrid{grid-template-columns:repeat(2, 1fr)}}
+@media (max-width:380px){.factsGrid{grid-template-columns:1fr}}
+
+.factTile{
+	position:relative;
+	border-radius:18px;
+	border:1px solid rgba(255,255,255,.14);
+	background:rgba(0,0,0,.10);
+	backdrop-filter:blur(14px);
+	padding:12px;
+	min-height:92px;
+	display:flex;
+	flex-direction:column;
+	gap:10px;
+	cursor:pointer;
+	user-select:none;
+	transition:transform .12s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+/* Mobile contrast: keep text readable via subtle text-shadow + darker gradient at bottom */
+.factTile::before{
+	content:"";
+	position:absolute;
+	inset:0;
+	border-radius:18px;
+	pointer-events:none;
+	background:linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.20));
+}
+body.light .factTile{
+	background:rgba(255,255,255,.56);
+	border-color:rgba(0,0,0,.10);
+}
+body.light .factTile::before{background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.06))}
+.factTile:active{transform:scale(.98)}
+.factTxt{font-size:13px;line-height:1.28;font-weight:700;position:relative;text-shadow:0 1px 14px rgba(0,0,0,.28)}
+body.light .factTxt{text-shadow:0 1px 12px rgba(255,255,255,.55)}
+.factMeta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;position:relative}
+.factTag{font-size:11px;color:var(--muted)}
+.factDot{width:8px;height:8px;border-radius:999px;background:rgba(250,204,21,.72);box-shadow:0 0 0 4px rgba(250,204,21,.10)}
+.factPinned{border-color:rgba(37,211,102,.45);box-shadow:0 18px 55px rgba(37,211,102,.08)}
+
+.favZone{margin-top:12px;border-radius:18px;border:1px dashed rgba(255,255,255,.18);padding:12px;background:rgba(0,0,0,.10)}
+body.light .favZone{border-color:rgba(0,0,0,.14);background:rgba(255,255,255,.55)}
+.favHint{font-size:12px;color:var(--muted)}
+.favRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.favChip{
+	display:inline-flex;
+	align-items:center;
+	gap:8px;
+	padding:8px 10px;
+	border-radius:999px;
+	border:1px solid rgba(255,255,255,.14);
+	background:rgba(255,255,255,.06);
+	font-size:12px;
+	max-width:100%;
+}
+body.light .favChip{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.10)}
+.favChip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+
+.factOverlay{
+	position:fixed;
+	inset:0;
+	z-index:2200;
+	display:none;
+	align-items:flex-end;
+	justify-content:center;
+	background:rgba(0,0,0,.55);
+	backdrop-filter:blur(8px);
+	padding:14px;
+}
+.factOverlay.open{display:flex}
+.factModal{
+	width:min(720px, 100%);
+	background:var(--card);
+	border:1px solid var(--stroke);
+	border-radius:22px;
+	box-shadow:0 22px 70px rgba(0,0,0,.55);
+	padding:14px;
+}
+.factKicker{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.factText{font-size:15px;line-height:1.35;font-weight:800;margin-top:8px}
+
+.toast{
+	position:fixed;
+	left:14px;
+	right:14px;
+	bottom:14px;
+	z-index:2400;
+	margin:0 auto;
+	max-width:720px;
+	background:rgba(20,20,20,.82);
+	border:1px solid rgba(255,255,255,.12);
+	backdrop-filter:blur(14px);
+	padding:10px 12px;
+	border-radius:16px;
+	font-size:13px;
+	color:rgba(255,255,255,.92);
+	opacity:0;
+	transform:translateY(8px);
+	transition:opacity .18s ease, transform .18s ease;
+	pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+body.light .toast{background:rgba(255,255,255,.85);border-color:rgba(0,0,0,.10);color:rgba(0,0,0,.86)}
+
+.sheetFooter{padding:12px 14px;border-top:1px solid var(--stroke);display:grid;gap:10px}
+.totalRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.totalRow span:first-child{color:var(--muted);font-size:12px}
+.totalRow strong{font-size:16px}
+.cta{
+	width:100%;
+	border:none;
+	padding:14px;
+	border-radius:18px;
+	background:linear-gradient(135deg, #2bf07c, #25D366);
+	color:#06220f;
+	font-weight:950;
+	letter-spacing:.01em;
+}
+.cta[disabled]{opacity:.45}
+
+
+/* Fly-to-cart */
+.fly{
+	position:fixed;
+	z-index:2000;
+	width:56px;
+	height:56px;
+	border-radius:16px;
+	overflow:hidden;
+	pointer-events:none;
+	box-shadow:0 18px 50px rgba(0,0,0,.55);
+	border:1px solid rgba(255,255,255,.12);
+	transform:translate3d(var(--x1),var(--y1),0) scale(1);
+	opacity:1;
+	animation:flyToBar .62s cubic-bezier(.2,.85,.2,1) forwards;
+}
+.fly img{width:100%;height:100%;object-fit:cover;display:block}
+@keyframes flyToBar{
+	0%{transform:translate3d(var(--x1),var(--y1),0) scale(1);opacity:1}
+	80%{opacity:1}
+	100%{transform:translate3d(var(--x2),var(--y2),0) scale(.18);opacity:0}
+}
+.pulse{animation:pulse .35s ease}
+@keyframes pulse{0%{transform:scale(1)}55%{transform:scale(1.05)}100%{transform:scale(1)}}
+
+</style>
+</head>
+<body data-mode="order">
+
+<header>
+	<button id="brandBtn" type="button" style="display:inline-flex;align-items:center;gap:8px;font-weight:900;background:transparent;border:none;padding:6px 8px;border-radius:12px;color:inherit">
+		<span aria-hidden="true">🐝</span>
+		<span>Stadthonig</span>
+	</button>
+	<div style="display:flex;gap:8px;align-items:center">
+		<button onclick="setMode('order')">Bestellen</button>
+		<button onclick="setMode('discover')">Entdecken</button>
+		<button id="themeToggle" type="button" title="Hellmodus">🌙</button>
+	</div>
+</header>
+
+<div id="menu" class="section">
+	<div class="hero">
+		<img src="miel.png" alt="">
+		<h1>Frischer Stadthonig 🍯</h1>
+	</div>
+
+	<!-- Category pills (top scroll) -->
+	<div class="pills" id="catPills" aria-label="Kategorien"></div>
+
+	<div id="items"></div>
+</div>
+
+<div id="discover" class="section hidden">
+	<div class="hero">
+		<img src="miel.png" alt="">
+		<h1>Queenbee Secrets 👑🐝</h1>
+	</div>
+
+	<div class="card" style="display:block">
+		<div style="font-weight:900;letter-spacing:.01em">20 Fakten über die Bienenkönigin</div>
+		<div class="muted" style="margin-top:6px">Tippe auf einen Fact → Zoom. Halte gedrückt → zieh ihn in deine Favoriten.</div>
+	</div>
+
+	<div class="card" style="display:block">
+		<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+			<div>
+				<div style="font-weight:900">Deine Favoriten</div>
+				<div class="muted" style="margin-top:4px">„I never knew that about bees“ — lokal gespeichert.</div>
+			</div>
+			<button class="smallBtn" id="clearBeeFavs" type="button">Reset</button>
+		</div>
+		<div class="favZone" id="favZone" aria-label="Favoriten Drop Zone">
+			<div class="favHint">Ziehen & loslassen, um einen Fact zu pinnen</div>
+			<div class="favRow" id="favRow"></div>
+		</div>
+	</div>
+
+	<div class="factsGrid" id="factsGrid"></div>
+
+	<div class="card" style="display:block">
+		<div style="font-weight:900">Was ist „am unbekanntesten“?</div>
+		<div class="muted" style="margin-top:6px">Ohne Backend können wir keine globale Rangliste speichern. Aber: Jeder User baut lokal eine „Most Mindblowing“ Liste – und kann sie als Link teilen (Idea: #beeTop=...).</div>
+	</div>
+
+	<!-- Zoom overlay -->
+	<div class="factOverlay" id="factOverlay" aria-hidden="true">
+		<div class="factModal" role="dialog" aria-modal="true">
+			<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+				<div>
+					<div class="factKicker" id="factKicker">Fact</div>
+					<div class="factText" id="factText"></div>
+					<div class="muted" style="margin-top:10px">Tip: Halte gedrückt im Grid → Favorit.</div>
+				</div>
+				<button class="closeX" id="closeFact" type="button" aria-label="Schließen">×</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="orderBar" onclick="openSheet()">🧾 0 Artikel • 0€</div>
+
+<!-- Order overview (in-app) -->
+<div class="sheet" id="sheet" aria-hidden="true">
+	<div class="inner">
+		<div class="sheetHeader">
+			<h2>Bestellung</h2>
+			<div style="display:flex;gap:8px;align-items:center">
+				<button class="smallBtn" id="clearCart" type="button">Leeren</button>
+				<button class="closeX" id="closeSheet" type="button" aria-label="Schließen">×</button>
+			</div>
+		</div>
+		<div class="sheetBody">
+			<div class="lines" id="lines"></div>
+			<div class="upsellBox" id="upsellBox" style="display:none"></div>
+		</div>
+		<div class="sheetFooter">
+			<div class="totalRow"><span>Summe</span> <strong id="sheetTotal">0€</strong></div>
+			<button class="cta" id="sendBtn" type="button" disabled>WhatsApp öffnen</button>
+			<div style="font-size:12px;color:var(--muted)">Du siehst zuerst alles hier, dann geht’s zu WhatsApp.</div>
+		</div>
+	</div>
+</div>
+
+<script>
+let cart=[];
+
+// ===== Discover facts data (Queen-only) =====
+const QUEEN_FACTS = [
+	"Die Königin sieht oft nur an einem einzigen Tag wirklich die Sonne: beim Hochzeitsflug.",
+	"Sie wird nicht zur Königin geboren – sie wird durch Gelee Royale zur Königin gemacht.",
+	"Sie kann Spermien in der Spermatheka jahrelang speichern – ein biologischer Tresor.",
+	"Sie entscheidet aktiv, ob ein Ei befruchtet wird: befruchtet = Arbeiterin/Königin, unbefruchtet = Drohne.",
+	"Königinnenwechsel kann völlig still passieren (stille Umweiselung) – ohne Drama, fast unsichtbar.",
+	"Ihre Pheromone wirken wie ein Betriebssystem: Sie halten den Stock sozial stabil.",
+	"Sie wird 24/7 vom Hofstaat gefüttert und geputzt – Royal Service nonstop.",
+	"Ihr Stachel ist glatter als der der Arbeiterinnen und wird v.a. gegen Rivalinnen eingesetzt.",
+	"Wenn mehrere Königinnen schlüpfen, kommt es oft zu einem echten Duell um den Thron.",
+	"Ein kleiner Kreis Arbeiterinnen verteilt ihren Duft im ganzen Stock – wie ein Netzwerk.",
+	"In Spitzenzeiten legt sie extrem viele Eier pro Tag – wie ein lebendiger Produktionsmotor.",
+	"Königinnen können durch Vibrationen/Laute (Piping) kommunizieren – besonders bei Umweiselung.",
+	"Beim Schwärmen nimmt das Volk die Königin mit – wie ein Umzug mit der Gründerin.",
+	"Genetisch ist sie fast wie eine Arbeiterin – der Unterschied ist Entwicklungsprogramm + Ernährung.",
+	"Ihre Körperform ist fürs Eierlegen optimiert, nicht fürs Sammeln.",
+	"Sie fliegt selten – wenn, dann ist es ein Schlüsselmoment (Hochzeit, Schwarm, Notfall).",
+	"Arbeiterinnen erkennen sie nicht am Gesicht, sondern an Duftsignaturen und Kontaktchemie.",
+	"Ohne Königin versuchen Arbeiterinnen Notlösungen – legen Eier, aber es entstehen nur Drohnen.",
+	"Eine gute Königin ist für den Stock eher Ressource als Chefin: Der Schwarm ist die Intelligenz.",
+	"Wenn die Königin schwächelt, verändert sich die Stimmung im Stock, bevor Menschen es merken.",
+];
+
+const DISCOVER = {
+	favLimit: 3,
+	storageKey: 'BZZZ_QUEEN_FACTS_STATE',
+	state: { favIds: [], clicks: {} },
+};
+
+function loadDiscoverState(){
+	try{
+		const raw = JSON.parse(localStorage.getItem(DISCOVER.storageKey) || '{}');
+		DISCOVER.state.favIds = Array.isArray(raw.favIds) ? raw.favIds : [];
+		DISCOVER.state.clicks = raw.clicks && typeof raw.clicks === 'object' ? raw.clicks : {};
+	}catch(e){}
+}
+function saveDiscoverState(){
+	localStorage.setItem(DISCOVER.storageKey, JSON.stringify(DISCOVER.state));
+}
+function factId(i){ return 'qf_' + i; }
+function isFav(id){ return DISCOVER.state.favIds.includes(id); }
+function addFav(id){
+	if(isFav(id)) return;
+	DISCOVER.state.favIds = [id, ...DISCOVER.state.favIds].slice(0, DISCOVER.favLimit);
+	saveDiscoverState();
+	renderFavs();
+	renderFacts();
+	toast('Gepinnt: „I never knew that about bees“');
+}
+function removeFav(id){
+	DISCOVER.state.favIds = DISCOVER.state.favIds.filter(x=>x!==id);
+	saveDiscoverState();
+	renderFavs();
+	renderFacts();
+}
+function bumpClick(id){
+	DISCOVER.state.clicks[id] = (DISCOVER.state.clicks[id]||0)+1;
+	saveDiscoverState();
+}
+
+function topUnknownLocal(limit=5){
+	const pairs = Object.entries(DISCOVER.state.clicks);
+	pairs.sort((a,b)=> (b[1]||0) - (a[1]||0));
+	return pairs.slice(0, limit);
+}
+
+function renderFavs(){
+	const row = document.getElementById('favRow');
+	if(!row) return;
+	row.innerHTML = DISCOVER.state.favIds.length ? DISCOVER.state.favIds.map(id=>{
+		const i = Number(id.replace('qf_',''));
+		const txt = QUEEN_FACTS[i] || '';
+		return `<div class="favChip" data-unfav="${id}"><strong>★</strong> <span>${txt}</span></div>`;
+	}).join('') : `<div class="muted" style="margin-top:10px">Noch keine Favoriten.</div>`;
+}
+
+function renderFacts(){
+	const grid = document.getElementById('factsGrid');
+	if(!grid) return;
+	grid.innerHTML = QUEEN_FACTS.map((t, i)=>{
+		const id = factId(i);
+		const pinned = isFav(id);
+		return `
+			<div class="factTile ${pinned?'factPinned':''}" data-fact="${id}" draggable="false">
+				<div class="factTxt">${t}</div>
+				<div class="factMeta">
+					<div class="factTag">Queen fact</div>
+					<div class="factDot" aria-hidden="true"></div>
+				</div>
+			</div>
+		`;
+	}).join('');
+}
+
+function openFact(id){
+	const i = Number(String(id).replace('qf_',''));
+	const t = QUEEN_FACTS[i];
+	if(!t) return;
+	bumpClick(id);
+	const overlay = document.getElementById('factOverlay');
+	if(!overlay) return;
+	document.getElementById('factKicker').textContent = isFav(id) ? 'Favorit ★' : 'Fact';
+	document.getElementById('factText').textContent = t;
+	overlay.classList.add('open');
+	overlay.setAttribute('aria-hidden','false');
+}
+function closeFact(){
+	const overlay = document.getElementById('factOverlay');
+	if(!overlay) return;
+	overlay.classList.remove('open');
+	overlay.setAttribute('aria-hidden','true');
+}
+
+let toastTimer = null;
+function toast(msg){
+	let el = document.getElementById('toast');
+	if(!el){
+		el = document.createElement('div');
+		el.className = 'toast';
+		el.id = 'toast';
+		document.body.appendChild(el);
+	}
+	el.textContent = msg;
+	el.classList.add('show');
+	clearTimeout(toastTimer);
+	toastTimer = setTimeout(()=>el.classList.remove('show'), 1600);
+}
+
+function bindDiscover(){
+	loadDiscoverState();
+	renderFavs();
+	renderFacts();
+
+	// Tap to zoom
+	document.getElementById('factsGrid')?.addEventListener('click', (e)=>{
+		const tile = e.target.closest('[data-fact]');
+		if(!tile) return;
+		openFact(tile.dataset.fact);
+	});
+	document.getElementById('closeFact')?.addEventListener('click', closeFact);
+	document.getElementById('factOverlay')?.addEventListener('click', (e)=>{
+		if(e.target.id === 'factOverlay') closeFact();
+	});
+
+	// Un-fav
+	document.getElementById('favRow')?.addEventListener('click', (e)=>{
+		const chip = e.target.closest('[data-unfav]');
+		if(!chip) return;
+		removeFav(chip.dataset.unfav);
+	});
+	document.getElementById('clearBeeFavs')?.addEventListener('click', ()=>{
+		DISCOVER.state.favIds = [];
+		saveDiscoverState();
+		renderFavs();
+		renderFacts();
+	});
+
+	// Long-press to drag pin (mobile-friendly-ish)
+	let holdTimer = null;
+	let holdId = null;
+	const grid = document.getElementById('factsGrid');
+	grid?.addEventListener('pointerdown', (e)=>{
+		const tile = e.target.closest('[data-fact]');
+		if(!tile) return;
+		holdId = tile.dataset.fact;
+		holdTimer = setTimeout(()=>{
+			// Enter "drag" mode: mark tile draggable and hint user
+			tile.setAttribute('draggable','true');
+			tile.classList.add('haptic');
+			setTimeout(()=>tile.classList.remove('haptic'), 180);
+			toast('Jetzt ziehen → zu Favoriten');
+		}, 420);
+	});
+	grid?.addEventListener('pointerup', ()=>{ clearTimeout(holdTimer); holdTimer=null; holdId=null; });
+	grid?.addEventListener('pointercancel', ()=>{ clearTimeout(holdTimer); holdTimer=null; holdId=null; });
+
+	grid?.addEventListener('dragstart', (e)=>{
+		const tile = e.target.closest('[data-fact]');
+		if(!tile) return;
+		e.dataTransfer?.setData('text/plain', tile.dataset.fact);
+		// reset draggable quickly to avoid oddness
+		setTimeout(()=>tile.setAttribute('draggable','false'), 0);
+	});
+
+	const favZone = document.getElementById('favZone');
+	favZone?.addEventListener('dragover', (e)=>{ e.preventDefault(); });
+	favZone?.addEventListener('drop', (e)=>{
+		e.preventDefault();
+		const id = e.dataTransfer?.getData('text/plain');
+		if(id) addFav(id);
+	});
+}
+
+// Items now have categories
+const ITEMS = [
+	{ name:'Blütenhonig', price:6, cat:'Honig', note:'mild & floral', img:'honigjar.jpg' },
+	{ name:'Waldhonig', price:9, cat:'Honig', note:'kräftig & dunkel', img:'sorten.jpg' },
+	{ name:'Honig-Duo Set', price:14, cat:'Sets', note:'2 Gläser zum Vorteil', img:'ikeav.jpg' },
+	{ name:'Propolis', price:12, cat:'Extras', note:'natürliches Antibiotikum', img:'sace.jpg' },
+];
+
+const UI = { cat:'Alle' };
+
+function setMode(mode){
+	document.body.dataset.mode=mode;
+	document.getElementById('menu').classList.toggle('hidden',mode!=='order');
+	document.getElementById('discover').classList.toggle('hidden',mode!=='discover');
+}
+
+function fmtEuro(n){
+	return String(n).replace('.', ',') + '€';
+}
+
+function renderCats(){
+	const cats = ['Alle', ...Array.from(new Set(ITEMS.map(x=>x.cat)))];
+	const root = document.getElementById('catPills');
+	root.innerHTML = cats.map(c=>{
+		const pressed = (UI.cat === c);
+		return `<button class="pill" type="button" data-cat="${c}" aria-pressed="${pressed}">${c}</button>`;
+	}).join('');
+}
+
+function filterItems(){
+	if(UI.cat === 'Alle') return ITEMS;
+	return ITEMS.filter(x=>x.cat === UI.cat);
+}
+
+function renderItems(){
+	const root = document.getElementById('items');
+	root.innerHTML = filterItems().map(x=>{
+		return `
+			<div class="card" data-item="${x.name}">
+				<div class="card-content">
+					<img src="${x.img}" alt="">
+					<div style="min-width:0">
+						<div>${x.name}</div>
+						<div class="muted">${x.note}</div>
+					</div>
+				</div>
+				<div class="price">${fmtEuro(x.price)}</div>
+			</div>
+		`;
+	}).join('');
+}
+
+function hapticIllusion(el){
+	if(!el) return;
+	el.classList.add('haptic');
+	setTimeout(()=>el.classList.remove('haptic'), 110);
+}
+
+function flyToCart(fromEl){
+	try{
+		const bar = document.getElementById('orderBar');
+		if(!fromEl || !bar) return;
+		const img = fromEl.querySelector('img');
+		if(!img) return;
+
+		const r1 = img.getBoundingClientRect();
+		const r2 = bar.getBoundingClientRect();
+
+		const x1 = (r1.left + r1.width/2 - 28);
+		const y1 = (r1.top + r1.height/2 - 28);
+		const x2 = (r2.left + r2.width/2 - 28);
+		const y2 = (r2.top + 18);
+
+		const node = document.createElement('div');
+		node.className = 'fly';
+		node.style.setProperty('--x1', `${x1}px`);
+		node.style.setProperty('--y1', `${y1}px`);
+		node.style.setProperty('--x2', `${x2}px`);
+		node.style.setProperty('--y2', `${y2}px`);
+		node.innerHTML = `<img src="${img.src}" alt="">`;
+		document.body.appendChild(node);
+		bar.classList.add('pulse');
+		setTimeout(()=>bar.classList.remove('pulse'), 380);
+		setTimeout(()=>node.remove(), 700);
+	}catch(e){}
+}
+
+function addFlash(el){
+	if(!el) return;
+	el.classList.add('addedFlash');
+	setTimeout(()=>el.classList.remove('addedFlash'), 520);
+}
+
+function addItem(name,price,fromEl){
+	const item=cart.find(i=>i.name===name);
+	if(item)item.qty++; else cart.push({name,price,qty:1});
+	updateBar();
+	renderSheet();
+	hapticIllusion(fromEl);
+	flyToCart(fromEl);
+	addFlash(fromEl);
+}
+
+function setQty(name, delta){
+	const item = cart.find(i=>i.name===name);
+	if(!item) return;
+	item.qty = Math.max(0, item.qty + delta);
+	if(item.qty===0) cart = cart.filter(x=>x.name!==name);
+	updateBar();
+	renderSheet();
+}
+
+function calcCount(){
+	return cart.reduce((s,i)=>s+i.qty,0);
+}
+function calcTotal(){
+	return cart.reduce((s,i)=>s+i.qty*i.price,0);
+}
+
+function updateBar(){
+	const count=calcCount();
+	const total=calcTotal();
+	document.getElementById('orderBar').innerText=`🧾 ${count} Artikel • ${total}€`;
+}
+
+function buildOrderText(){
+	let text="🧾 Stadthonig Bestellung\n\n";
+	cart.forEach(i=>text+=`• ${i.qty}x ${i.name}\n`);
+	const total=calcTotal();
+	text+="\n💰 Gesamt: "+total+"€";
+	return text;
+}
+
+function sendOrder(){
+	if(!calcCount()) return;
+	window.open("https://wa.me/?text="+encodeURIComponent(buildOrderText()));
+}
+
+function openSheet(){
+	document.getElementById('sheet')?.classList.add('open');
+	document.getElementById('sheet')?.setAttribute('aria-hidden','false');
+	renderSheet();
+}
+function closeSheet(){
+	document.getElementById('sheet')?.classList.remove('open');
+	document.getElementById('sheet')?.setAttribute('aria-hidden','true');
+}
+
+function clearCart(){
+	cart = [];
+	updateBar();
+	renderSheet();
+}
+
+function inCart(name){
+	return cart.some(i=>i.name===name);
+}
+
+function pickUpsells(){
+	// Simple rules tuned for honey products
+	if(!calcCount()) return [];
+	const list = [];
+
+	// 1) Push sets early
+	if((inCart('Blütenhonig') || inCart('Waldhonig')) && !inCart('Honig-Duo Set')){
+		list.push({ name:'Honig-Duo Set', hint:'Bestseller Bundle – perfekt als Geschenk.' });
+	}
+	// 2) Wellness add-on
+	if((inCart('Blütenhonig') || inCart('Waldhonig') || inCart('Honig-Duo Set')) && !inCart('Propolis')){
+		list.push({ name:'Propolis', hint:'Viele nehmen Propolis dazu (Wellness).' });
+	}
+	// 3) Add a honey if they started with propolis
+	if(inCart('Propolis') && !inCart('Blütenhonig')){
+		list.push({ name:'Blütenhonig', hint:'Mild & floral – super zu Tee.' });
+	}
+
+	// Ensure max 2 tiles (clean UI)
+	return list.slice(0,2);
+}
+
+function renderSheet(){
+	const lines = document.getElementById('lines');
+	const totalEl = document.getElementById('sheetTotal');
+	const sendBtn = document.getElementById('sendBtn');
+	if(!lines || !totalEl || !sendBtn) return;
+
+	const total = calcTotal();
+	totalEl.textContent = total + '€';
+	sendBtn.disabled = calcCount()===0;
+
+	lines.innerHTML = cart.length ? cart.map(i=>{
+		return `
+			<div class="line">
+				<div>
+					<div class="lineTitle">${i.name}</div>
+					<div class="lineMeta">${i.price}€ pro Stück</div>
+				</div>
+				<div class="qty">
+					<button type="button" data-dec="${i.name}">−</button>
+					<div class="n">${i.qty}</div>
+					<button type="button" data-inc="${i.name}">+</button>
+				</div>
+			</div>
+		`;
+	}).join('') : `<div style="color:var(--muted);font-size:13px">Noch nichts im Warenkorb.</div>`;
+
+	const upsells = pickUpsells();
+	const box = document.getElementById('upsellBox');
+	if(box){
+		if(upsells.length){
+			box.style.display = 'block';
+			box.innerHTML = `
+				<div class="upsellTitle">Empfehlungen</div>
+				<div class="upsellTiles">
+					${upsells.map(u=>{
+						const item = ITEMS.find(x=>x.name===u.name);
+						const img = item?.img || 'honigjar.jpg';
+						const added = inCart(u.name);
+						return `
+							<div class="upsellTile" data-upsell="${u.name}">
+								<img class="upsellTileImg" src="${img}" alt="">
+								<div>
+									<div class="upsellName">${u.name}</div>
+									<div class="upsellHint">${u.hint}</div>
+								</div>
+								<div class="upsellRight">
+									${added ? `<span class="checkBadge">✓</span>` : ''}
+									<button class="addMini ${added?'added':''}" type="button" data-upsell-btn="${u.name}" aria-label="Hinzufügen">+</button>
+								</div>
+							</div>
+						`;
+					}).join('')}
+				</div>
+			`;
+		}else{
+			box.style.display = 'none';
+			box.innerHTML = '';
+		}
+	}
+}
+
+// (Virtual assistant removed)
+
+// Events for pills + cards + sheet
+function bind(){
+	document.getElementById('catPills').addEventListener('click', (e)=>{
+		const btn = e.target.closest('[data-cat]');
+		if(!btn) return;
+		UI.cat = btn.dataset.cat;
+		renderAll();
+	});
+
+	document.getElementById('items').addEventListener('pointerdown', (e)=>{
+		const card = e.target.closest('.card');
+		if(card) hapticIllusion(card);
+	});
+
+	document.getElementById('items').addEventListener('click', (e)=>{
+		const card = e.target.closest('.card');
+		if(!card) return;
+		const name = card.dataset.item;
+		const item = ITEMS.find(x=>x.name===name);
+		if(!item) return;
+		addItem(item.name, item.price, card);
+	});
+
+	document.getElementById('closeSheet')?.addEventListener('click', closeSheet);
+	document.getElementById('clearCart')?.addEventListener('click', ()=>{ clearCart(); });
+	document.getElementById('sendBtn')?.addEventListener('click', ()=>{ sendOrder(); });
+
+	document.getElementById('lines')?.addEventListener('click', (e)=>{
+		const inc = e.target.closest('[data-inc]');
+		const dec = e.target.closest('[data-dec]');
+		if(inc) setQty(inc.dataset.inc, +1);
+		if(dec) setQty(dec.dataset.dec, -1);
+	});
+	// Upsell add
+	document.getElementById('upsellBox')?.addEventListener('click', (e)=>{
+		const btn = e.target.closest('[data-upsell]');
+		if(!btn) return;
+		const name = btn.dataset.upsell;
+		const item = ITEMS.find(x=>x.name===name);
+		if(!item) return;
+		addItem(item.name, item.price, null);
+	});
+}
+
+function renderAll(){
+	renderCats();
+	renderItems();
+}
+
+function applyTheme(mode){
+	const light = (mode === 'light');
+	document.body.classList.toggle('light', light);
+	const btn = document.getElementById('themeToggle');
+	if(btn){
+		btn.textContent = light ? '☀️' : '🌙';
+		btn.title = light ? 'Dunkelmodus' : 'Hellmodus';
+	}
+	localStorage.setItem('BZZZ_THEME', light ? 'light' : 'dark');
+	// Mobile browser top bar color hint
+	let meta = document.querySelector('meta[name="theme-color"]');
+	if(!meta){
+		meta = document.createElement('meta');
+		meta.setAttribute('name','theme-color');
+		document.head.appendChild(meta);
+	}
+	meta.setAttribute('content', light ? '#f6f7fb' : '#0b0b0c');
+}
+
+function initTheme(){
+	const saved = localStorage.getItem('BZZZ_THEME') || 'dark';
+	applyTheme(saved);
+	document.getElementById('themeToggle')?.addEventListener('click', ()=>{
+		const isLight = document.body.classList.contains('light');
+		applyTheme(isLight ? 'dark' : 'light');
+	});
+	// Brand click: always return to main order screen
+	document.getElementById('brandBtn')?.addEventListener('click', ()=>setMode('order'));
+}
+
+renderAll();
+bind();
+initTheme();
+bindDiscover();
+
+// Progressive hero fade in light mode (wait 5s, then fade to 75% over 3s)
+setTimeout(()=>{
+	if(document.body.classList.contains('light')){
+		document.body.classList.add('heroLoaded');
+	}
+}, 5000);
+
+</script>
+
+</body>
+</html>

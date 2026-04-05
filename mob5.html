@@ -1,0 +1,2285 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Stadthonig – Premium Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+	--bg:#0b0b0c;
+	--card:#151517;
+	--accent:#facc15;
+	--text:#f5f5f7;
+	--muted:#9ca3af;
+	--stroke:rgba(255,255,255,.10);
+	--shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* Light theme overrides */
+body.light{
+	--bg:#f6f7fb;
+	--card:#ffffff;
+	--text:#101114;
+	--muted:#5b6472;
+	--stroke:rgba(0,0,0,.10);
+	--shadow:0 10px 30px rgba(0,0,0,0.12);
+}
+body.light header{background:linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.58));border-bottom:1px solid rgba(0,0,0,.10);box-shadow:0 12px 30px rgba(0,0,0,.10)}
+body.light button{background:rgba(0,0,0,0.04);color:#101114}
+body.light #orderBar{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.10)}
+body.light #assistant{background:rgba(255,255,255,0.85);border-color:rgba(0,0,0,0.10)}
+body.light input{background:rgba(0,0,0,0.06);color:#101114}
+body.light .biene{color:#b45309}
+body.light .user{color:#2563eb}
+
+:root{
+}
+
+*{box-sizing:border-box}
+body{
+	margin:0;
+	font-family:Inter, sans-serif;
+	background:var(--bg);
+	color:var(--text);
+	min-height:100vh;
+}
+
+/* Sticky background image + glamour shading */
+body::before{
+	content:"";
+	position:fixed;
+	inset:0;
+	z-index:-2;
+	background:
+		linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.86)),
+		url('queen.jpg') center/cover no-repeat;
+	background-attachment:fixed;
+	filter:saturate(1.08) contrast(1.06) brightness(.78);
+	transform:scale(1.03);
+}
+body::after{
+	content:"";
+	position:fixed;
+	inset:0;
+	z-index:-1;
+	background:
+		radial-gradient(900px 520px at 18% 0%, rgba(250,204,21,.12), rgba(0,0,0,0) 55%),
+		radial-gradient(900px 520px at 85% 12%, rgba(255,255,255,.06), rgba(0,0,0,0) 52%),
+		linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.70));
+}
+
+body.light::before{
+	background:
+		linear-gradient(180deg, rgba(246,247,251,.70), rgba(246,247,251,.92)),
+		url('queen.jpg') center/cover no-repeat;
+	background-attachment:fixed;
+	filter:saturate(1.03) contrast(1.02) brightness(1.02);
+}
+body.light::after{
+	background:
+		radial-gradient(900px 520px at 18% 0%, rgba(250,204,21,.14), rgba(255,255,255,0) 55%),
+		radial-gradient(900px 520px at 85% 12%, rgba(0,0,0,.05), rgba(255,255,255,0) 52%),
+		linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.75));
+}
+
+header{
+	position:fixed;
+	top:0;
+	width:100%;
+	backdrop-filter:blur(22px);
+	background:
+		linear-gradient(180deg, rgba(18,18,20,.70), rgba(18,18,20,.48)),
+		url('sorten.jpg') center/cover no-repeat;
+	padding:12px;
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	z-index:1000;
+	gap:10px;
+	border-bottom:1px solid rgba(255,255,255,.10);
+	box-shadow:0 12px 30px rgba(0,0,0,.22);
+}
+
+header div{font-weight:600}
+
+button{
+	border:none;
+	padding:8px 12px;
+	border-radius:12px;
+	background:rgba(255,255,255,0.05);
+	color:#fff;
+}
+
+.section{padding:80px 16px 120px}
+.hidden{display:none}
+
+.hero{
+	height:200px;
+	border-radius:20px;
+	overflow:hidden;
+	margin-bottom:16px;
+	position:relative;
+	border:1px solid var(--stroke);
+	box-shadow:var(--shadow);
+}
+.hero img{
+	width:100%;
+	height:100%;
+	object-fit:cover;
+	filter:brightness(0.7);
+	opacity:1;
+	transition:opacity 3s ease;
+}
+/* Light mode: reveal queen background first, then fade hero image to 75% */
+body.light .hero img{opacity:0}
+body.light.heroLoaded .hero img{opacity:.75}
+.hero h1{
+	position:absolute;
+	bottom:16px;
+	left:16px;
+	margin:0;
+	font-size:1.4rem;
+}
+
+/* Contact hero special background */
+.contactHero img{filter:brightness(0.62) saturate(1.08)}
+
+/* Category pills */
+.pills{
+	position:sticky;
+	top:56px;
+	z-index:900;
+	display:flex;
+	gap:8px;
+	flex-wrap:wrap;
+	padding:10px 0 12px;
+	background:linear-gradient(180deg, rgba(11,11,12,.95), rgba(11,11,12,.75) 55%, rgba(11,11,12,0));
+}
+.pill{
+	padding:9px 12px;
+	border-radius:999px;
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.05);
+	color:var(--text);
+	font-weight:600;
+}
+.pill[aria-pressed="true"]{
+	border-color:rgba(250,204,21,.55);
+	background:rgba(250,204,21,.12);
+}
+
+.card{
+	background:rgba(21,21,23,.74);
+	border:1px solid rgba(255,255,255,.12);
+	border-radius:20px;
+	padding:16px;
+	margin-bottom:12px;
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	gap:12px;
+	transition:transform .12s ease, background .2s ease, box-shadow .12s ease, border-color .2s ease;
+	user-select:none;
+	backdrop-filter:blur(14px);
+	min-height:86px;
+}
+body.light .card{background:rgba(255,255,255,.86);border-color:rgba(0,0,0,.10)}
+
+/* Mobile-first: bigger product tiles, same tap/haptic behavior */
+@media (max-width:520px){
+	#menu .card{padding:18px;min-height:98px}
+	#menu .card img{width:74px;height:74px}
+	#menu .card div{font-size:16px;font-weight:900;letter-spacing:.01em}
+	#menu .card .muted{font-size:13px}
+	#menu .price{font-size:18px}
+}
+@media (min-width:521px){
+	#menu .card div{font-weight:850}
+}
+
+
+/* Haptic illusion: quick scale + shadow pop */
+.card.haptic{
+	transform:scale(0.985);
+	box-shadow:0 18px 40px rgba(0,0,0,.55);
+	background:#1c1c1f;
+}
+.card:active{
+	transform:scale(0.975);
+	background:#1c1c1f;
+}
+
+.card img{
+	width:66px;
+	height:66px;
+	border-radius:16px;
+	object-fit:cover;
+	margin-right:0;
+	border:1px solid rgba(255,255,255,.08);
+}
+
+.card-content{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.price{color:var(--accent);font-weight:950;white-space:nowrap;font-size:16px;letter-spacing:.01em}
+.muted{color:var(--muted);font-size:.92rem;line-height:1.15}
+
+#orderBar{
+	position:fixed;
+	bottom:70px;
+	left:12px;
+	right:12px;
+	background:rgba(255,255,255,0.08);
+	backdrop-filter:blur(20px);
+	padding:16px;
+	border-radius:18px;
+	text-align:center;
+	font-weight:700;
+	box-shadow:var(--shadow);
+	border:1px solid rgba(255,255,255,.10);
+}
+
+/* Order overview sheet */
+.sheet{
+	position:fixed;
+	left:0;
+	right:0;
+	bottom:-110%;
+	z-index:1800;
+	transition:bottom .22s ease;
+}
+.sheet.open{bottom:0}
+.sheet .inner{
+	margin:0 auto;
+	max-width:720px;
+	background:var(--card);
+	border-top-left-radius:22px;
+	border-top-right-radius:22px;
+	border:1px solid var(--stroke);
+	box-shadow:0 -18px 55px rgba(0,0,0,.55);
+	overflow:hidden;
+}
+.sheetHeader{
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
+	gap:10px;
+	padding:12px 14px;
+	border-bottom:1px solid var(--stroke);
+}
+.sheetHeader h2{margin:0;font-size:15px;letter-spacing:.01em}
+.smallBtn{
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.06);
+	padding:8px 10px;
+	border-radius:12px;
+	font-weight:700;
+}
+body.light .smallBtn{background:rgba(0,0,0,.04)}
+.closeX{
+	width:38px;height:38px;
+	border-radius:14px;
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.06);
+	color:var(--text);
+	font-size:18px;
+	line-height:1;
+}
+body.light .closeX{background:rgba(0,0,0,.04)}
+.sheetBody{padding:12px 14px;display:grid;gap:12px}
+.lines{display:grid;gap:10px}
+.line{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.lineTitle{font-weight:700}
+.lineMeta{font-size:12px;color:var(--muted);margin-top:2px}
+.qty{display:inline-flex;align-items:center;gap:8px}
+.qty button{
+	width:36px;height:36px;
+	border-radius:12px;
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.06);
+	color:var(--text);
+	font-weight:900;
+}
+body.light .qty button{background:rgba(0,0,0,.04)}
+.qty .n{min-width:22px;text-align:center;font-weight:900}
+
+.giftBox{
+	border:1px solid var(--stroke);
+	border-radius:18px;
+	padding:12px;
+	background:rgba(255,255,255,.04);
+}
+.giftTitle{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800}
+.giftRow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.switch{
+	display:flex;align-items:center;gap:10px;
+	border:1px solid rgba(255,255,255,.12);
+	background:rgba(0,0,0,.18);
+	padding:10px 12px;
+	border-radius:16px;
+	flex:1;
+}
+body.light .switch{background:rgba(255,255,255,.78);border-color:rgba(0,0,0,.10)}
+.switch input{width:18px;height:18px}
+.switch strong{font-weight:900}
+.badgePrice{color:var(--accent);font-weight:900;white-space:nowrap}
+
+.occasions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ocBtn{
+	padding:8px 10px;
+	border-radius:999px;
+	border:1px solid rgba(255,255,255,.14);
+	background:rgba(255,255,255,.06);
+	font-weight:800;
+	font-size:12px;
+	color:var(--text);
+}
+.ocBtn[aria-pressed="true"]{border-color:rgba(250,204,21,.55);background:rgba(250,204,21,.14)}
+body.light .ocBtn{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.10)}
+
+.field{margin-top:10px}
+.field label{display:block;font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}
+.field input,.field textarea{
+	width:100%;
+	border-radius:16px;
+	border:1px solid rgba(255,255,255,.12);
+	background:rgba(0,0,0,.18);
+	color:var(--text);
+	padding:10px 12px;
+	outline:none;
+	font-family:inherit;
+}
+body.light .field input, body.light .field textarea{background:rgba(255,255,255,.78);border-color:rgba(0,0,0,.10)}
+.field textarea{min-height:78px;resize:none}
+.helpTiny{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.25}
+
+.upsellBox{
+	border:1px solid var(--stroke);
+	border-radius:18px;
+	padding:12px;
+	background:rgba(255,255,255,.04);
+}
+.upsellTitle{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800}
+
+/* Upsell tiles */
+.upsellTiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media (max-width:420px){.upsellTiles{grid-template-columns:1fr}}
+.upsellTile{
+	position:relative;
+	display:flex;
+	gap:10px;
+	align-items:center;
+	padding:10px;
+	border-radius:16px;
+	border:1px solid rgba(255,255,255,.12);
+	background:rgba(0,0,0,.18);
+	backdrop-filter:blur(10px);
+}
+body.light .upsellTile{background:rgba(255,255,255,.78);border-color:rgba(0,0,0,.10)}
+.upsellTileImg{width:44px;height:44px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,.10)}
+body.light .upsellTileImg{border-color:rgba(0,0,0,.10)}
+.upsellName{font-weight:900;line-height:1.15}
+.upsellHint{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.25}
+.upsellRight{margin-left:auto;display:flex;align-items:center;gap:8px}
+.addMini{
+	border:none;
+	width:38px;
+	height:38px;
+	padding:0;
+	border-radius:14px;
+	display:inline-flex;
+	align-items:center;
+	justify-content:center;
+	background:linear-gradient(135deg, #fde047, var(--accent));
+	color:#2a1a00;
+	font-weight:950;
+	font-size:18px;
+	line-height:1;
+}
+.addMini.added{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:var(--text)}
+body.light .addMini.added{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.10);color:var(--text)}
+.checkBadge{
+	display:inline-flex;
+	align-items:center;
+	justify-content:center;
+	width:28px;
+	height:28px;
+	border-radius:999px;
+	border:1px solid rgba(37,211,102,.45);
+	background:rgba(37,211,102,.16);
+	color:#b7ffd1;
+	font-weight:950;
+}
+body.light .checkBadge{color:#0d6b3a}
+
+/* Checkmark flash on any add */
+.card.addedFlash{
+	border-color:rgba(250,204,21,.55);
+	box-shadow:0 18px 45px rgba(250,204,21,.10), 0 18px 40px rgba(0,0,0,.55);
+}
+.card.addedFlash::after{
+	content:"✓";
+	position:absolute;
+	top:10px;
+	right:10px;
+	width:28px;
+	height:28px;
+	border-radius:999px;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	background:rgba(37,211,102,.18);
+	border:1px solid rgba(37,211,102,.45);
+	color:#b7ffd1;
+	font-weight:950;
+}
+body.light .card.addedFlash::after{color:#0d6b3a}
+.card{position:relative}
+
+/* ===== Discover: fact tiles + favourites ===== */
+
+/* Tinder-ish swipe game (mobile-first) */
+.swipeStage{position:relative;height:320px;margin-bottom:10px}
+@media (max-width:420px){.swipeStage{height:360px}}
+@media (min-width:820px){.swipeStage{height:280px}}
+.swipeCard{
+	position:absolute;
+	inset:0;
+	border-radius:22px;
+	border:1px solid rgba(255,255,255,.14);
+	background:rgba(0,0,0,.10);
+	backdrop-filter:blur(16px);
+	padding:14px;
+	display:flex;
+	flex-direction:column;
+	justify-content:space-between;
+	gap:12px;
+	box-shadow:0 24px 70px rgba(0,0,0,.35);
+	touch-action:none;
+}
+body.light .swipeCard{background:rgba(255,255,255,.56);border-color:rgba(0,0,0,.10)}
+.swipeBig{font-weight:950;line-height:1.22;font-size:16px;text-shadow:0 1px 16px rgba(0,0,0,.28)}
+.swipeHintRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.swipeBtns{display:flex;gap:10px;margin-top:10px;align-items:stretch}
+.swipeBtns button{
+	flex:1;
+	min-height:56px;
+	text-align:left;
+	padding:14px 14px;
+	border-radius:18px;
+	font-weight:950;
+	letter-spacing:.01em;
+	border:1px solid rgba(255,255,255,.18);
+	box-shadow:0 16px 40px rgba(0,0,0,.28);
+	position:relative;
+	overflow:hidden;
+}
+#btnKnew{
+	background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
+	border-color:rgba(255,255,255,.22);
+}
+#btnMind{
+	text-align:right;
+	background:linear-gradient(135deg, rgba(250,204,21,.22), rgba(250,204,21,.06));
+	border-color:rgba(250,204,21,.35);
+}
+#btnFavShare{
+	flex:0 0 auto;
+	min-width:118px;
+	text-align:center;
+	background:linear-gradient(135deg, rgba(37,211,102,.22), rgba(37,211,102,.08));
+	border-color:rgba(37,211,102,.35);
+	color:rgba(255,255,255,.96);
+}
+body.light #btnFavShare{
+	background:linear-gradient(135deg, rgba(37,211,102,.26), rgba(37,211,102,.12));
+	border-color:rgba(13,107,58,.22);
+}
+/* Press feedback */
+.swipeBtns button:active{transform:scale(.985)}
+
+/* Bee burst particles */
+.beeBurst{
+	position:absolute;
+	left:0;top:0;
+	pointer-events:none;
+	z-index:5;
+}
+.bee{
+	position:absolute;
+	font-size:18px;
+	will-change:transform, opacity;
+	filter:drop-shadow(0 10px 18px rgba(0,0,0,.35));
+	opacity:0;
+	animation:beeFly .95s ease-out forwards;
+}
+@keyframes beeFly{
+	0%{opacity:0;transform:translate3d(var(--x0),var(--y0),0) scale(.8) rotate(0deg)}
+	10%{opacity:1}
+	100%{opacity:0;transform:translate3d(var(--x1),var(--y1),0) scale(1.15) rotate(var(--r))}
+}
+body.light #btnKnew{background:linear-gradient(135deg, rgba(0,0,0,.05), rgba(0,0,0,.02));border-color:rgba(0,0,0,.10)}
+body.light #btnMind{background:linear-gradient(135deg, rgba(250,204,21,.35), rgba(250,204,21,.12));border-color:rgba(180,83,9,.25)}
+body.light .swipeBtns button{box-shadow:0 14px 30px rgba(0,0,0,.14)}
+.kbd{font-size:11px;color:var(--muted);margin-top:6px}
+.swipePill{font-size:12px;font-weight:900;border-radius:999px;padding:8px 10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06)}
+body.light .swipePill{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.10)}
+.swipePill.left{opacity:.95}
+.swipePill.right{border-color:rgba(250,204,21,.35);background:rgba(250,204,21,.10)}
+.swipeBadge{
+	position:absolute;
+	top:14px;
+	left:14px;
+	padding:8px 10px;
+	border-radius:14px;
+	border:1px solid rgba(255,255,255,.16);
+	background:rgba(0,0,0,.25);
+	font-weight:950;
+	transform:rotate(-10deg);
+	opacity:0;
+	transition:opacity .1s ease;
+}
+.swipeBadge.right{left:auto;right:14px;transform:rotate(10deg);border-color:rgba(250,204,21,.35);background:rgba(250,204,21,.14);color:var(--text)}
+body.light .swipeBadge{background:rgba(255,255,255,.55);border-color:rgba(0,0,0,.10)}
+.swipeStats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.statChip{display:inline-flex;align-items:center;gap:8px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.12);padding:8px 10px;font-weight:900;font-size:12px}
+body.light .statChip{background:rgba(255,255,255,.55);border-color:rgba(0,0,0,.10)}
+
+/* Only show swipe game on smaller screens; grid remains for tablets/desktop */
+@media (min-width:900px){
+	/* On desktop: show swipe too, with buttons/keyboard */
+	.factsGrid{display:none}
+}
+@media (max-width:899px){
+	.factsGrid{display:none}
+}
+.factsGrid{display:grid;grid-template-columns:repeat(4, 1fr);gap:10px}
+@media (max-width:900px){.factsGrid{grid-template-columns:repeat(3, 1fr)}}
+@media (max-width:620px){.factsGrid{grid-template-columns:repeat(2, 1fr)}}
+@media (max-width:380px){.factsGrid{grid-template-columns:1fr}}
+
+.factTile{
+	position:relative;
+	border-radius:18px;
+	border:1px solid rgba(255,255,255,.18);
+	/* Lighter glass so background image shines through, but still readable */
+	background:rgba(255,255,255,.06);
+	backdrop-filter:blur(16px);
+	padding:12px;
+	min-height:92px;
+	display:flex;
+	flex-direction:column;
+	gap:10px;
+	cursor:pointer;
+	user-select:none;
+	transition:transform .12s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+/* Mobile contrast: stronger bottom "ink" for readability */
+.factTile::before{
+	content:"";
+	position:absolute;
+	inset:0;
+	border-radius:18px;
+	pointer-events:none;
+	background:
+		linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.34));
+}
+body.light .factTile{
+	background:rgba(255,255,255,.62);
+	border-color:rgba(0,0,0,.10);
+}
+body.light .factTile::before{
+	background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.10));
+}
+.factTile:active{transform:scale(.98)}
+.factTxt{
+	font-size:13px;
+	line-height:1.30;
+	font-weight:820;
+	position:relative;
+	color:rgba(255,255,255,.96);
+	text-shadow:0 2px 20px rgba(0,0,0,.55);
+}
+body.light .factTxt{
+	color:rgba(10,10,12,.92);
+	text-shadow:0 1px 0 rgba(255,255,255,.55);
+}
+.factMeta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;position:relative}
+.factTag{font-size:11px;color:var(--muted)}
+.factDot{width:8px;height:8px;border-radius:999px;background:rgba(250,204,21,.72);box-shadow:0 0 0 4px rgba(250,204,21,.10)}
+.factPinned{border-color:rgba(37,211,102,.45);box-shadow:0 18px 55px rgba(37,211,102,.08)}
+
+.favZone{margin-top:12px;border-radius:18px;border:1px dashed rgba(255,255,255,.18);padding:12px;background:rgba(0,0,0,.10);position:relative;overflow:hidden}
+
+/* Speech bubble when pinned */
+.bubble{
+	position:absolute;
+	left:12px;
+	top:12px;
+	max-width:78%;
+	padding:10px 12px;
+	border-radius:16px;
+	border:1px solid rgba(255,255,255,.14);
+	background:rgba(0,0,0,.35);
+	backdrop-filter:blur(10px);
+	font-weight:850;
+	font-size:12px;
+	line-height:1.25;
+	opacity:0;
+	transform:translateY(8px) scale(.98);
+	pointer-events:none;
+	animation:bubblePop 1.65s ease forwards;
+}
+.bubble::after{
+	content:"";
+	position:absolute;
+	left:16px;
+	bottom:-7px;
+	width:14px;
+	height:14px;
+	background:inherit;
+	border-left:1px solid rgba(255,255,255,.14);
+	border-bottom:1px solid rgba(255,255,255,.14);
+	transform:rotate(45deg);
+}
+body.light .bubble{background:rgba(255,255,255,.70);border-color:rgba(0,0,0,.10)}
+body.light .bubble::after{border-left-color:rgba(0,0,0,.10);border-bottom-color:rgba(0,0,0,.10)}
+@keyframes bubblePop{
+	0%{opacity:0;transform:translateY(10px) scale(.98)}
+	12%{opacity:1;transform:translateY(0) scale(1)}
+	70%{opacity:1;transform:translateY(0) scale(1)}
+	100%{opacity:0;transform:translateY(-6px) scale(.98)}
+}
+body.light .favZone{border-color:rgba(0,0,0,.14);background:rgba(255,255,255,.55)}
+.favHint{font-size:12px;color:var(--muted)}
+.favRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.favChip{
+	display:inline-flex;
+	align-items:center;
+	gap:8px;
+	padding:8px 10px;
+	border-radius:999px;
+	border:1px solid rgba(255,255,255,.14);
+	background:rgba(255,255,255,.06);
+	font-size:12px;
+	max-width:100%;
+}
+body.light .favChip{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.10)}
+.favChip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+
+.factOverlay{
+	position:fixed;
+	inset:0;
+	z-index:2200;
+	display:none;
+	align-items:flex-end;
+	justify-content:center;
+	background:rgba(0,0,0,.55);
+	backdrop-filter:blur(8px);
+	padding:14px;
+}
+.factOverlay.open{display:flex}
+.factModal{
+	width:min(720px, 100%);
+	background:var(--card);
+	border:1px solid var(--stroke);
+	border-radius:22px;
+	box-shadow:0 22px 70px rgba(0,0,0,.55);
+	padding:14px;
+}
+.factKicker{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.factText{font-size:15px;line-height:1.35;font-weight:800;margin-top:8px}
+
+.toast{
+	position:fixed;
+	left:14px;
+	right:14px;
+	bottom:14px;
+	z-index:2400;
+	margin:0 auto;
+	max-width:720px;
+	background:rgba(20,20,20,.82);
+	border:1px solid rgba(255,255,255,.12);
+	backdrop-filter:blur(14px);
+	padding:10px 12px;
+	border-radius:16px;
+	font-size:13px;
+	color:rgba(255,255,255,.92);
+	opacity:0;
+	transform:translateY(8px);
+	transition:opacity .18s ease, transform .18s ease;
+	pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+body.light .toast{background:rgba(255,255,255,.85);border-color:rgba(0,0,0,.10);color:rgba(0,0,0,.86)}
+
+/* City Perks */
+.perksGrid{display:grid;grid-template-columns:repeat(2, 1fr);gap:10px}
+@media (max-width:420px){.perksGrid{grid-template-columns:1fr}}
+.perkTile{position:relative;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.12);backdrop-filter:blur(14px);padding:12px;overflow:hidden}
+body.light .perkTile{background:rgba(255,255,255,.62);border-color:rgba(0,0,0,.10)}
+.perkTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.perkName{font-weight:950;line-height:1.1}
+.perkCat{font-size:12px;color:var(--muted);margin-top:4px}
+.perkDesc{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.25}
+.perkActions{display:flex;gap:8px;margin-top:12px}
+.perkActions button{flex:1}
+.copyBtn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06)}
+body.light .copyBtn{border-color:rgba(0,0,0,.10);background:rgba(0,0,0,.04)}
+
+.sheetFooter{padding:12px 14px;border-top:1px solid var(--stroke);display:grid;gap:10px}
+.totalRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.totalRow span:first-child{color:var(--muted);font-size:12px}
+.totalRow strong{font-size:16px}
+.cta{
+	width:100%;
+	border:none;
+	padding:14px;
+	border-radius:18px;
+	background:linear-gradient(135deg, #2bf07c, #25D366);
+	color:#06220f;
+	font-weight:950;
+	letter-spacing:.01em;
+}
+.cta[disabled]{opacity:.45}
+
+
+/* Fly-to-cart */
+.fly{
+	position:fixed;
+	z-index:2000;
+	width:56px;
+	height:56px;
+	border-radius:16px;
+	overflow:hidden;
+	pointer-events:none;
+	box-shadow:0 18px 50px rgba(0,0,0,.55);
+	border:1px solid rgba(255,255,255,.12);
+	transform:translate3d(var(--x1),var(--y1),0) scale(1);
+	opacity:1;
+	animation:flyToBar .62s cubic-bezier(.2,.85,.2,1) forwards;
+}
+.fly img{width:100%;height:100%;object-fit:cover;display:block}
+@keyframes flyToBar{
+	0%{transform:translate3d(var(--x1),var(--y1),0) scale(1);opacity:1}
+	80%{opacity:1}
+	100%{transform:translate3d(var(--x2),var(--y2),0) scale(.18);opacity:0}
+}
+.pulse{animation:pulse .35s ease}
+@keyframes pulse{0%{transform:scale(1)}55%{transform:scale(1.05)}100%{transform:scale(1)}}
+
+</style>
+</head>
+<body data-mode="order">
+
+<header>
+	<button id="brandBtn" type="button" style="display:inline-flex;align-items:center;gap:8px;font-weight:900;background:transparent;border:none;padding:6px 8px;border-radius:12px;color:inherit">
+		<span aria-hidden="true">🐝</span>
+		<span>Stadthonig</span>
+	</button>
+	<div style="display:flex;gap:8px;align-items:center">
+		<button onclick="setMode('order')">Bestellen</button>
+		<button onclick="setMode('discover')">Entdecken</button>
+		<button onclick="setMode('perks')">City Perks</button>
+		<button onclick="setMode('contact')">Kontakt</button>
+		<button onclick="setMode('admin')">Admin</button>
+		<button id="themeToggle" type="button" title="Hellmodus">🌙</button>
+	</div>
+</header>
+
+<div id="menu" class="section">
+	<div class="hero">
+		<img src="miel.png" alt="">
+		<h1>Frischer Stadthonig 🍯</h1>
+	</div>
+
+	<!-- Category pills (top scroll) -->
+	<div class="pills" id="catPills" aria-label="Kategorien"></div>
+
+	<div id="items"></div>
+</div>
+
+<div id="discover" class="section hidden">
+	<div class="hero">
+		<img src="miel.png" alt="">
+		<h1>Queenbee Secrets 👑🐝</h1>
+	</div>
+
+	<div class="card" style="display:block">
+		<div style="font-weight:900;letter-spacing:.01em">20 Fakten über die Bienenkönigin</div>
+		<div class="muted" style="margin-top:6px">Tippe auf einen Fact → Zoom. Halte gedrückt (ca. 1 Sek.) → wird als Favorit gespeichert.</div>
+	</div>
+
+	<div class="card" style="display:block">
+		<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+			<div>
+				<div style="font-weight:900">Deine Favoriten</div>
+				<div class="muted" style="margin-top:4px">„I never knew that about bees“ — lokal gespeichert.</div>
+			</div>
+			<div style="display:flex;gap:8px;align-items:center">
+				<button class="smallBtn" id="shareBeeFavs" type="button">📤 Send to a friend</button>
+				<button class="smallBtn" id="clearBeeFavs" type="button">Reset</button>
+			</div>
+		</div>
+		<div class="favZone" id="favZone" aria-label="Favoriten Drop Zone">
+			<div class="favHint">Füge Favoriten per Long-Hold hinzu (oder: swipe game nutzen).</div>
+			<div class="favRow" id="favRow"></div>
+		</div>
+	</div>
+
+	<div class="card" style="display:block">
+		<div style="font-weight:900">Swipe Game</div>
+		<div class="muted" style="margin-top:6px">Swipe links = „Schon gewusst“ • Swipe rechts = „Mindblown“</div>
+	</div>
+	<div class="swipeStats" id="swipeStats"></div>
+	<div class="swipeStage" id="swipeStage" aria-label="Fact swipe game"></div>
+	<div class="factsGrid" id="factsGrid"></div>
+
+	<div class="card" style="display:block">
+		<div style="font-weight:900">Was ist „am unbekanntesten“?</div>
+		<div class="muted" style="margin-top:6px">Ohne Backend können wir keine globale Rangliste speichern. Aber: Jeder User baut lokal eine „Most Mindblowing“ Liste – und kann sie als Link teilen (Idea: #beeTop=...).</div>
+	</div>
+
+	<!-- Zoom overlay -->
+	<div class="factOverlay" id="factOverlay" aria-hidden="true">
+		<div class="factModal" role="dialog" aria-modal="true">
+			<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+				<div>
+					<div class="factKicker" id="factKicker">Fact</div>
+					<div class="factText" id="factText"></div>
+					<div class="muted" style="margin-top:10px">Tip: Long-hold im Grid (650ms) → automatisch Favorit.</div>
+					<div class="swipeBtns" style="margin-top:12px">
+						<button class="copyBtn" type="button" id="ovKnew">Schon gewusst – ich bin ein Bienen-Nerd</button>
+						<button type="button" id="ovWow">Wooooaah… mein Gehirn macht Bzzzzt</button>
+					</div>
+				</div>
+				<button class="closeX" id="closeFact" type="button" aria-label="Schließen">×</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="contact" class="section hidden">
+	<div class="hero contactHero">
+		<img src="vrc.jpg" alt="">
+		<h1>Kontakt</h1>
+	</div>
+	<div class="card" style="display:block">
+		<div style="font-weight:900;letter-spacing:.01em">Schreib uns auf WhatsApp</div>
+		<div class="muted" style="margin-top:6px">Schnellste Antwort – ideal für Bestellungen, Fragen, City Perks.</div>
+		<div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+			<button class="cta" type="button" style="flex:1;min-width:220px" onclick="window.open('https://wa.me/?text='+encodeURIComponent('Hi! I have a question about Stadthonig… 🐝'))">WhatsApp öffnen</button>
+		</div>
+	</div>
+</div>
+
+<div id="admin" class="section hidden">
+	<div class="hero">
+		<img src="vrc.jpg" alt="">
+		<h1>Admin</h1>
+	</div>
+	<div class="card" style="display:block">
+		<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+			<div>
+				<div style="font-weight:900;letter-spacing:.01em">Lokale Statistik</div>
+				<div class="muted" style="margin-top:6px">Nur auf diesem Gerät (LocalStorage). Kein Backend.</div>
+			</div>
+			<button class="smallBtn" id="adminLock" type="button">🔒 Lock</button>
+		</div>
+
+		<div id="adminGate" style="margin-top:12px">
+			<div class="muted" style="margin-bottom:8px">PIN eingeben</div>
+			<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+				<input id="adminPin" inputmode="numeric" placeholder="PIN" style="flex:1;min-width:180px;padding:12px 12px;border-radius:14px;border:1px solid var(--stroke);background:rgba(0,0,0,.18);color:var(--text)" />
+				<button class="smallBtn" id="adminUnlock" type="button">Unlock</button>
+			</div>
+			<div class="muted" style="margin-top:8px;font-size:12px">Default PIN: 1234 (änderbar im Code).</div>
+		</div>
+
+		<div id="adminPanel" style="margin-top:12px;display:none">
+			<div class="card" style="display:block;margin:12px 0 0">
+				<div style="font-weight:900">Discover</div>
+				<div class="muted" style="margin-top:6px" id="adminDiscoverStats">–</div>
+				<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+					<button class="smallBtn" id="adminResetDiscover" type="button">Reset Discover</button>
+					<button class="smallBtn" id="adminDump" type="button">Copy JSON</button>
+				</div>
+			</div>
+
+			<div class="card" style="display:block;margin:12px 0 0">
+				<div style="font-weight:900">Cart / Gift</div>
+				<div class="muted" style="margin-top:6px" id="adminGiftStats">–</div>
+				<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+					<button class="smallBtn" id="adminResetGift" type="button">Reset Gift</button>
+				</div>
+			</div>
+
+			<div class="card" style="display:block;margin:12px 0 0">
+				<div style="font-weight:900">Promo / Specials (lokal)</div>
+				<div class="muted" style="margin-top:6px">Nur dieses Gerät. Wirkt sofort auf Order UI + WhatsApp Text.</div>
+
+				<div style="margin-top:10px;display:grid;gap:10px">
+					<label class="switch" style="margin:0">
+						<input id="promoEnabled" type="checkbox">
+						<div>
+							<strong>Promo aktiv</strong><br><span class="muted">Banner + Preis-Discount</span>
+						</div>
+					</label>
+
+					<div class="field" style="margin:0">
+						<label>Promo Text</label>
+						<input id="promoText" placeholder="Heute Special…">
+					</div>
+
+					<div class="field" style="margin:0">
+						<label>Voucher Code (optional)</label>
+						<input id="promoVoucher" placeholder="BEE10">
+					</div>
+
+					<div class="field" style="margin:0">
+						<label>Discount % (für ausgewählte Items)</label>
+						<input id="promoPct" inputmode="numeric" placeholder="10">
+					</div>
+
+					<div style="display:flex;gap:8px;flex-wrap:wrap">
+						<button class="smallBtn" id="promoToggleWald" type="button">Toggle Waldhonig</button>
+						<button class="smallBtn" id="promoToggleBluete" type="button">Toggle Blütenhonig</button>
+						<button class="smallBtn" id="promoToggleDuo" type="button">Toggle Duo Set</button>
+					</div>
+
+					<label class="switch" style="margin:0">
+						<input id="promoFreeWrap" type="checkbox">
+						<div>
+							<strong>Free Gift Wrap</strong><br><span class="muted">Wrap Fee wird 0€</span>
+						</div>
+					</label>
+
+					<div style="display:flex;gap:8px;flex-wrap:wrap">
+						<button class="smallBtn" id="promoSave" type="button">Save Promo</button>
+						<button class="smallBtn" id="promoClear" type="button">Clear Promo</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="perks" class="section hidden">
+	<div class="hero">
+		<img src="miel.png" alt="">
+		<h1>City Perks ✨</h1>
+	</div>
+	<div class="card" style="display:block">
+		<div style="font-weight:900;letter-spacing:.01em">Partner aus der Stadt</div>
+		<div class="muted" style="margin-top:6px">Flowers, Cafés, Wellness – als Concierge via WhatsApp.</div>
+	</div>
+	<div class="perksGrid" id="perksGrid"></div>
+</div>
+
+<div id="orderBar" onclick="openSheet()">🧾 0 Artikel • 0€</div>
+
+<!-- Order overview (in-app) -->
+<div class="sheet" id="sheet" aria-hidden="true">
+	<div class="inner">
+		<div class="sheetHeader">
+			<h2>Bestellung</h2>
+			<div style="display:flex;gap:8px;align-items:center">
+				<button class="smallBtn" id="clearCart" type="button">Leeren</button>
+				<button class="closeX" id="closeSheet" type="button" aria-label="Schließen">×</button>
+			</div>
+		</div>
+		<div class="sheetBody">
+			<div class="lines" id="lines"></div>
+			<div class="giftBox" id="giftBox"></div>
+			<div class="upsellBox" id="upsellBox" style="display:none"></div>
+		</div>
+		<div class="sheetFooter">
+			<div class="totalRow"><span>Summe</span> <strong id="sheetTotal">0€</strong></div>
+			<button class="cta" id="sendBtn" type="button" disabled>WhatsApp öffnen</button>
+			<div style="font-size:12px;color:var(--muted)">Du siehst zuerst alles hier, dann geht’s zu WhatsApp.</div>
+		</div>
+	</div>
+</div>
+
+<script>
+let cart=[];
+
+// ===== Gift / occasions (no backend) =====
+const GIFT = {
+	wrapFee: 2,
+	storageKey: 'BZZZ_GIFT_STATE',
+	state: {
+		wrap: false,
+		shipToOther: false,
+		occasion: 'none',
+		card: '',
+		recipientName: '',
+		recipientAddress: '',
+		recipientPhone: '',
+		partnerAdds: [],
+	},
+};
+
+const OCCASIONS = [
+	{ id:'birthday', label:'Geburtstag', template:'Alles Gute zum Geburtstag! 🍯\nKleiner Genuss aus der Stadt – viel Freude damit.' },
+	{ id:'thanks', label:'Danke', template:'Danke! 🍯\nEin kleines süßes Zeichen der Wertschätzung.' },
+	{ id:'getwell', label:'Gute Besserung', template:'Gute Besserung! 🍯\nEin Löffel Honig, ein bisschen Wärme.' },
+	{ id:'newhome', label:'Neues Zuhause', template:'Willkommen im neuen Zuhause! 🍯\nAuf viele schöne Momente.' },
+	{ id:'corporate', label:'Business', template:'Vielen Dank für die Zusammenarbeit. 🍯\nMit besten Grüßen.' },
+];
+
+function loadGiftState(){
+	try{
+		const raw = JSON.parse(localStorage.getItem(GIFT.storageKey) || '{}');
+		GIFT.state = { ...GIFT.state, ...raw };
+	}catch(e){}
+}
+function saveGiftState(){
+	localStorage.setItem(GIFT.storageKey, JSON.stringify(GIFT.state));
+}
+function sanitizeLine(s){
+	return String(s||'').replace(/\s+/g,' ').trim();
+}
+function giftTotal(){
+	// promo can optionally waive gift wrap fee (local only)
+	const p = activePromo();
+	if(p?.freeGiftWrap) return 0;
+	return GIFT.state.wrap ? GIFT.wrapFee : 0;
+} 
+
+// ===== Discover facts data (Queen-only) =====
+const QUEEN_FACTS = [
+	"Die Königin sieht oft nur an einem einzigen Tag wirklich die Sonne: beim Hochzeitsflug.",
+	"Sie wird nicht zur Königin geboren – sie wird durch Gelee Royale zur Königin gemacht.",
+	"Sie kann Spermien in der Spermatheka jahrelang speichern – ein biologischer Tresor.",
+	"Sie entscheidet aktiv, ob ein Ei befruchtet wird: befruchtet = Arbeiterin/Königin, unbefruchtet = Drohne.",
+	"Königinnenwechsel kann völlig still passieren (stille Umweiselung) – ohne Drama, fast unsichtbar.",
+	"Ihre Pheromone wirken wie ein Betriebssystem: Sie halten den Stock sozial stabil.",
+	"Sie wird 24/7 vom Hofstaat gefüttert und geputzt – Royal Service nonstop.",
+	"Ihr Stachel ist glatter als der der Arbeiterinnen und wird v.a. gegen Rivalinnen eingesetzt.",
+	"Wenn mehrere Königinnen schlüpfen, kommt es oft zu einem echten Duell um den Thron.",
+	"Ein kleiner Kreis Arbeiterinnen verteilt ihren Duft im ganzen Stock – wie ein Netzwerk.",
+	"In Spitzenzeiten legt sie extrem viele Eier pro Tag – wie ein lebendiger Produktionsmotor.",
+	"Königinnen können durch Vibrationen/Laute (Piping) kommunizieren – besonders bei Umweiselung.",
+	"Beim Schwärmen nimmt das Volk die Königin mit – wie ein Umzug mit der Gründerin.",
+	"Genetisch ist sie fast wie eine Arbeiterin – der Unterschied ist Entwicklungsprogramm + Ernährung.",
+	"Ihre Körperform ist fürs Eierlegen optimiert, nicht fürs Sammeln.",
+	"Sie fliegt selten – wenn, dann ist es ein Schlüsselmoment (Hochzeit, Schwarm, Notfall).",
+	"Arbeiterinnen erkennen sie nicht am Gesicht, sondern an Duftsignaturen und Kontaktchemie.",
+	"Ohne Königin versuchen Arbeiterinnen Notlösungen – legen Eier, aber es entstehen nur Drohnen.",
+	"Eine gute Königin ist für den Stock eher Ressource als Chefin: Der Schwarm ist die Intelligenz.",
+	"Wenn die Königin schwächelt, verändert sich die Stimmung im Stock, bevor Menschen es merken.",
+];
+
+const DISCOVER = {
+	favLimit: 3,
+	storageKey: 'BZZZ_QUEEN_FACTS_STATE',
+	state: { favIds: [], clicks: {}, swipe: { knew:0, mindblown:0, seen:[] } },
+};
+
+function loadDiscoverState(){
+	try{
+		const raw = JSON.parse(localStorage.getItem(DISCOVER.storageKey) || '{}');
+		DISCOVER.state.favIds = Array.isArray(raw.favIds) ? raw.favIds : [];
+		DISCOVER.state.clicks = raw.clicks && typeof raw.clicks === 'object' ? raw.clicks : {};
+		DISCOVER.state.swipe = raw.swipe && typeof raw.swipe === 'object' ? { knew:0, mindblown:0, seen:[], ...raw.swipe } : { knew:0, mindblown:0, seen:[] };
+	}catch(e){}
+}
+function saveDiscoverState(){
+	localStorage.setItem(DISCOVER.storageKey, JSON.stringify(DISCOVER.state));
+}
+function factId(i){ return 'qf_' + i; }
+function isFav(id){ return DISCOVER.state.favIds.includes(id); }
+function bubbleInFavZone(msg){
+	const z = document.getElementById('favZone');
+	if(!z) return;
+	const b = document.createElement('div');
+	b.className = 'bubble';
+	b.textContent = msg;
+	z.appendChild(b);
+	setTimeout(()=>b.remove(), 1700);
+}
+
+function addFav(id){
+	if(isFav(id)) return;
+	DISCOVER.state.favIds = [id, ...DISCOVER.state.favIds].slice(0, DISCOVER.favLimit);
+	saveDiscoverState();
+	renderFavs();
+	renderFacts();
+	const i = Number(String(id).replace('qf_',''));
+	const short = sanitizeLine(QUEEN_FACTS[i] || '').slice(0, 60);
+	bubbleInFavZone('★ Added to favourites: ' + short + (short.length>=60?'…':''));
+	toast('★ Added to favourites');
+}
+function removeFav(id){
+	DISCOVER.state.favIds = DISCOVER.state.favIds.filter(x=>x!==id);
+	saveDiscoverState();
+	renderFavs();
+	renderFacts();
+}
+function bumpClick(id){
+	DISCOVER.state.clicks[id] = (DISCOVER.state.clicks[id]||0)+1;
+	saveDiscoverState();
+}
+
+function topUnknownLocal(limit=5){
+	const pairs = Object.entries(DISCOVER.state.clicks);
+	pairs.sort((a,b)=> (b[1]||0) - (a[1]||0));
+	return pairs.slice(0, limit);
+}
+
+function renderFavs(){
+	const row = document.getElementById('favRow');
+	if(!row) return;
+	row.innerHTML = DISCOVER.state.favIds.length ? DISCOVER.state.favIds.map(id=>{
+		const i = Number(id.replace('qf_',''));
+		const txt = QUEEN_FACTS[i] || '';
+		return `<div class="favChip" data-unfav="${id}"><strong>★</strong> <span>${txt}</span></div>`;
+	}).join('') : `<div class="muted" style="margin-top:10px">Noch keine Favoriten.</div>`;
+}
+
+function renderFacts(){
+	const grid = document.getElementById('factsGrid');
+	if(!grid) return;
+	grid.innerHTML = QUEEN_FACTS.map((t, i)=>{
+		const id = factId(i);
+		const pinned = isFav(id);
+		return `
+			<div class="factTile ${pinned?'factPinned':''}" data-fact="${id}" draggable="false">
+				<div class="factTxt">${t}</div>
+				<div class="factMeta">
+					<div class="factTag">Queen fact</div>
+					<div class="factDot" aria-hidden="true"></div>
+				</div>
+			</div>
+		`;
+	}).join('');
+}
+
+function renderSwipeStats(){
+	const el = document.getElementById('swipeStats');
+	if(!el) return;
+	const s = DISCOVER.state.swipe || {knew:0,mindblown:0,seen:[]};
+	el.innerHTML = `
+		<div class="statChip">Schon gewusst: ${s.knew||0}</div>
+		<div class="statChip">Mindblown: ${s.mindblown||0}</div>
+		<div class="statChip">Gesehen: ${(s.seen||[]).length}/${QUEEN_FACTS.length}</div>
+	`;
+}
+
+function nextUnseenFactIndex(){
+	const seen = new Set((DISCOVER.state.swipe?.seen)||[]);
+	for(let i=0;i<QUEEN_FACTS.length;i++){
+		const id = factId(i);
+		if(!seen.has(id)) return i;
+	}
+	return -1;
+}
+
+function renderSwipeDeck(){
+	const stage = document.getElementById('swipeStage');
+	if(!stage) return;
+	const i = nextUnseenFactIndex();
+	if(i<0){
+		stage.innerHTML = `<div class="swipeCard" style="justify-content:center;align-items:center;text-align:center">
+			<div style="font-weight:950;font-size:18px">Du bist durch! 🐝</div>
+			<div class="muted" style="margin-top:6px">Reset = Seite neu laden oder LocalStorage löschen.</div>
+		</div>`;
+		renderSwipeStats();
+		return;
+	}
+	const id = factId(i);
+	const text = QUEEN_FACTS[i];
+	stage.innerHTML = `
+		<div class="swipeCard" id="swipeCard" data-fact="${id}">
+			<div class="swipeBig">${text}</div>
+			<div>
+				<div class="swipeHintRow">
+					<div class="swipePill left">← Schon gewusst</div>
+					<div class="swipePill right">Mindblown →</div>
+				</div>
+				<div class="swipeBtns" style="margin-top:12px">
+					<button class="copyBtn" type="button" id="btnKnew">Schon gewusst – ich bin ein Bienen-Nerd</button>
+					<button class="midBtn" type="button" id="btnFavShare" aria-label="Add to favourites (send to friend)">Add to favourites (send to friend)</button>
+					<button type="button" id="btnMind">Wooooaah… mein Gehirn macht Bzzzzt</button>
+				</div>
+			</div>
+		</div>
+	`;
+	bindSwipeCard();
+	bindSwipeButtons();
+	renderSwipeStats();
+}
+
+function commitSwipe(id, dir){
+	DISCOVER.state.swipe = DISCOVER.state.swipe || {knew:0,mindblown:0,seen:[]};
+	const s = DISCOVER.state.swipe;
+	if(!(s.seen||[]).includes(id)) s.seen = [...(s.seen||[]), id];
+	if(dir==='left') s.knew = (s.knew||0)+1;
+	if(dir==='right') s.mindblown = (s.mindblown||0)+1;
+	saveDiscoverState();
+	renderSwipeDeck();
+}
+
+function spawnBeeBurst(btn, count, dir){
+	try{
+		if(!btn) return;
+		const wrap = document.createElement('div');
+		wrap.className = 'beeBurst';
+		wrap.style.width = btn.offsetWidth + 'px';
+		wrap.style.height = btn.offsetHeight + 'px';
+		btn.appendChild(wrap);
+
+		const baseX = (dir==='right') ? (btn.offsetWidth-24) : 14;
+		const baseY = Math.max(18, Math.min(btn.offsetHeight-18, btn.offsetHeight*0.55));
+
+		for(let i=0;i<count;i++){
+			const b = document.createElement('div');
+			b.className = 'bee';
+			b.textContent = '🐝';
+			const spread = (dir==='right') ? 160 : 110;
+			const up = 140;
+			const dx = (dir==='right' ? 1 : -1) * (30 + Math.random()*spread);
+			const dy = -(30 + Math.random()*up);
+			const r = (Math.random()*70 - 35) + 'deg';
+			b.style.setProperty('--x0', baseX+'px');
+			b.style.setProperty('--y0', baseY+'px');
+			b.style.setProperty('--x1', (baseX+dx)+'px');
+			b.style.setProperty('--y1', (baseY+dy)+'px');
+			b.style.setProperty('--r', r);
+			b.style.animationDelay = (i*8)+'ms';
+			wrap.appendChild(b);
+		}
+		setTimeout(()=>wrap.remove(), 1100);
+	}catch(e){}
+}
+
+function bindSwipeButtons(){
+	const card = document.getElementById('swipeCard');
+	if(!card) return;
+	const btnK = document.getElementById('btnKnew');
+	const btnM = document.getElementById('btnMind');
+	const btnMid = document.getElementById('btnFavShare');
+
+	// Avoid touch devices triggering click-through + make gesture feel "sticky"
+	btnK?.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
+	btnM?.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
+	btnMid?.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
+
+	// Buttons behave exactly like a swipe (persisted via commitSwipe -> saveDiscoverState)
+	btnK?.addEventListener('click', (e)=>{
+		e.preventDefault(); e.stopPropagation();
+		spawnBeeBurst(btnK, 1, 'left');
+		commitSwipe(card.dataset.fact, 'left');
+	});
+	btnM?.addEventListener('click', (e)=>{
+		e.preventDefault(); e.stopPropagation();
+		spawnBeeBurst(btnM, 12, 'right');
+		commitSwipe(card.dataset.fact, 'right');
+	});
+
+	// Mid button: quick pin (no share)
+	btnMid?.addEventListener('click', (e)=>{
+		e.preventDefault(); e.stopPropagation();
+		const id = card.dataset.fact;
+		if(!id) return;
+		addFav(id);
+
+		// Inline visual confirmation on the button
+		try{
+			const prev = btnMid.textContent;
+			btnMid.textContent = '✓ Added';
+			btnMid.disabled = true;
+			setTimeout(()=>{ btnMid.disabled = false; btnMid.textContent = prev; }, 900);
+		}catch(err){}
+	});
+}
+
+let swipeKeyBound = false;
+function bindSwipeKeyboard(){
+	if(swipeKeyBound) return;
+	swipeKeyBound = true;
+	window.addEventListener('keydown', (e)=>{
+		// only when discover view is open
+		const disc = document.getElementById('discover');
+		if(!disc || disc.classList.contains('hidden')) return;
+		const card = document.getElementById('swipeCard');
+		if(!card) return;
+		if(e.key === 'ArrowLeft'){ e.preventDefault(); commitSwipe(card.dataset.fact, 'left'); }
+		if(e.key === 'ArrowRight'){ e.preventDefault(); commitSwipe(card.dataset.fact, 'right'); }
+		if(e.key === ' '){ e.preventDefault(); openFact(card.dataset.fact); }
+	});
+}
+
+function shareFavouritesToWhatsApp(){
+	const ids = DISCOVER.state.favIds || [];
+	if(!ids.length){ toast('No favourites yet'); return; }
+	let text = "Hey! Did you know beeezzzzz… 🐝\n\nI saved these Queenbee facts:\n\n";
+	ids.forEach((id, idx)=>{
+		const i = Number(String(id).replace('qf_',''));
+		const t = QUEEN_FACTS[i] || '';
+		text += `${idx+1}) ${sanitizeLine(t)}\n`;
+	});
+	text += "\nWhich one blew your mind? 💥🍯";
+	window.open("https://wa.me/?text="+encodeURIComponent(text));
+}
+
+function bindSwipeCard(){
+	const card = document.getElementById('swipeCard');
+	if(!card) return;
+	let startX=0, startY=0, dx=0, dy=0, active=false;
+	const leftBadge = document.getElementById('badgeLeft');
+	const rightBadge = document.getElementById('badgeRight');
+
+	function setStyle(){
+		const rot = Math.max(-14, Math.min(14, dx/18));
+		card.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotate(${rot}deg)`;
+		const a = Math.min(1, Math.abs(dx)/90);
+		if(dx<0){ if(leftBadge) leftBadge.style.opacity = a; if(rightBadge) rightBadge.style.opacity = 0; }
+		else{ if(rightBadge) rightBadge.style.opacity = a; if(leftBadge) leftBadge.style.opacity = 0; }
+	}
+	function reset(){
+		dx=0; dy=0;
+		card.style.transition='transform .18s ease';
+		setStyle();
+		setTimeout(()=>card.style.transition='', 180);
+		if(leftBadge) leftBadge.style.opacity=0;
+		if(rightBadge) rightBadge.style.opacity=0;
+	}
+	function finish(dir){
+		card.style.transition='transform .22s ease';
+		const offX = dir==='right' ? window.innerWidth : -window.innerWidth;
+		card.style.transform = `translate3d(${offX}px, ${dy}px, 0) rotate(${dir==='right'?12:-12}deg)`;
+		setTimeout(()=>commitSwipe(card.dataset.fact, dir), 180);
+	}
+
+	card.addEventListener('pointerdown', (e)=>{
+		active=true;
+		startX=e.clientX; startY=e.clientY;
+		card.setPointerCapture?.(e.pointerId);
+	});
+	card.addEventListener('pointermove', (e)=>{
+		if(!active) return;
+		dx = e.clientX - startX;
+		dy = (e.clientY - startY) * 0.25;
+		setStyle();
+	});
+	card.addEventListener('pointerup', ()=>{
+		if(!active) return;
+		active=false;
+		if(dx > 110) return finish('right');
+		if(dx < -110) return finish('left');
+		reset();
+	});
+	card.addEventListener('pointercancel', ()=>{ active=false; reset(); });
+
+	// Tap = open zoom (same as grid)
+	card.addEventListener('click', ()=>openFact(card.dataset.fact));
+}
+
+function bindOverlayButtons(factId){
+	const k = document.getElementById('ovKnew');
+	const w = document.getElementById('ovWow');
+	if(!k || !w) return;
+	// prevent overlay click-through
+	k.addEventListener('pointerdown', (e)=>e.stopPropagation());
+	w.addEventListener('pointerdown', (e)=>e.stopPropagation());
+	k.addEventListener('click', (e)=>{
+		e.preventDefault(); e.stopPropagation();
+		spawnBeeBurst(k, 1, 'left');
+		commitSwipe(factId, 'left');
+		closeFact();
+	});
+	w.addEventListener('click', (e)=>{
+		e.preventDefault(); e.stopPropagation();
+		spawnBeeBurst(w, 12, 'right');
+		commitSwipe(factId, 'right');
+		closeFact();
+	});
+}
+
+function openFact(id){
+	const i = Number(String(id).replace('qf_',''));
+	const t = QUEEN_FACTS[i];
+	if(!t) return;
+	bumpClick(id);
+	const overlay = document.getElementById('factOverlay');
+	if(!overlay) return;
+	document.getElementById('factKicker').textContent = isFav(id) ? 'Favorit ★' : 'Fact';
+	document.getElementById('factText').textContent = t;
+	overlay.classList.add('open');
+	overlay.setAttribute('aria-hidden','false');
+	bindOverlayButtons(id);
+}
+function closeFact(){
+	const overlay = document.getElementById('factOverlay');
+	if(!overlay) return;
+	overlay.classList.remove('open');
+	overlay.setAttribute('aria-hidden','true');
+}
+
+let toastTimer = null;
+function toast(msg){
+	let el = document.getElementById('toast');
+	if(!el){
+		el = document.createElement('div');
+		el.className = 'toast';
+		el.id = 'toast';
+		document.body.appendChild(el);
+	}
+	el.textContent = msg;
+	el.classList.add('show');
+	clearTimeout(toastTimer);
+	toastTimer = setTimeout(()=>el.classList.remove('show'), 1600);
+}
+
+// ===== City Perks (partner marketplace, no backend) =====
+const PERKS = [
+	{ id:'flowers', icon:'💐', name:'Flowers', cat:'Gift add-on', desc:'Bouquet zum Honig – wir koordinieren per WhatsApp.', voucher:'BEEFLOWER', waPreset:'Hi! I want to add Flowers (Bouquet) to my honey order. My preferred style: ___ . Delivery time: ___ .' },
+	{ id:'delivery', icon:'🚚', name:'Delivery Upgrade', cat:'Same-day / time slot', desc:'Schnelle Lieferung oder Wunschzeitfenster (Concierge).', voucher:'FASTBEE', waPreset:'Hi! I want a delivery upgrade (same-day / time slot). Address & time: ___ .' },
+	{ id:'cafes', icon:'☕', name:'Cafés', cat:'City perks', desc:'Empfehlungen + Gutscheine von Partner-Cafés.', voucher:'HONEYCOFFEE', waPreset:'Hi! I want a café voucher / recommendation near: ___ .' },
+	{ id:'tcm', icon:'🧖', name:'TCM Massage', cat:'Wellness', desc:'TCM / Massage Voucher – als Geschenk dazu.', voucher:'ZENBEE', waPreset:'Hi! I want a TCM massage / wellness voucher. Occasion: ___ .' },
+	{ id:'wellness', icon:'🌿', name:'Wellness', cat:'Self-care', desc:'Sauna / Spa / Ritual – wir schicken Optionen.', voucher:'CALMBEE', waPreset:'Hi! I want a wellness perk. Budget: ___ . Date: ___ .' },
+];
+
+function renderPerks(){
+	const root = document.getElementById('perksGrid');
+	if(!root) return;
+	root.innerHTML = PERKS.map(p=>{
+		return `
+			<div class="perkTile" data-perk="${p.id}">
+				<div class="perkTop">
+					<div>
+						<div class="perkName">${p.icon} ${p.name}</div>
+						<div class="perkCat">${p.cat}</div>
+					</div>
+					<div style="font-weight:900;color:var(--accent)">${p.voucher ? p.voucher : ''}</div>
+				</div>
+				<div class="perkDesc">${p.desc}</div>
+				<div class="perkActions">
+					<button class="copyBtn" type="button" data-copy="${p.voucher||''}">Code kopieren</button>
+					<button type="button" data-perkwa="${p.id}">WhatsApp</button>
+				</div>
+			</div>
+		`;
+	}).join('');
+}
+
+function openPerkWhatsApp(id){
+	const p = PERKS.find(x=>x.id===id);
+	if(!p) return;
+	let text = "✨ City Perks Anfrage\n\n";
+	text += "• Perk: " + p.name + "\n";
+	if(p.voucher) text += "• Voucher: " + p.voucher + "\n";
+	text += "\n" + p.waPreset;
+	window.open("https://wa.me/?text="+encodeURIComponent(text));
+}
+
+function togglePartnerAdd(label){
+	let arr = Array.isArray(GIFT.state.partnerAdds) ? GIFT.state.partnerAdds : [];
+	if(arr.includes(label)) arr = arr.filter(x=>x!==label); else arr = [...arr, label];
+	GIFT.state.partnerAdds = arr;
+	saveGiftState();
+	renderSheet();
+}
+
+function bindDiscover(){
+	loadDiscoverState();
+	renderFavs();
+	renderFacts();
+	renderSwipeDeck();
+	bindSwipeKeyboard();
+
+	// Tap to zoom
+	document.getElementById('factsGrid')?.addEventListener('click', (e)=>{
+		const tile = e.target.closest('[data-fact]');
+		if(!tile) return;
+		openFact(tile.dataset.fact);
+	});
+	document.getElementById('closeFact')?.addEventListener('click', closeFact);
+	document.getElementById('factOverlay')?.addEventListener('click', (e)=>{
+		if(e.target.id === 'factOverlay') closeFact();
+	});
+
+	// Un-fav
+	document.getElementById('favRow')?.addEventListener('click', (e)=>{
+		const chip = e.target.closest('[data-unfav]');
+		if(!chip) return;
+		removeFav(chip.dataset.unfav);
+	});
+	document.getElementById('shareBeeFavs')?.addEventListener('click', ()=>{ shareFavouritesToWhatsApp(); });
+	document.getElementById('clearBeeFavs')?.addEventListener('click', ()=>{
+		DISCOVER.state.favIds = [];
+		saveDiscoverState();
+		renderFavs();
+		renderFacts();
+	});
+
+	// Long-hold to add to favourites (no drag needed)
+	let holdTimer = null;
+	let holdId = null;
+	const grid = document.getElementById('factsGrid');
+	grid?.addEventListener('pointerdown', (e)=>{
+		const tile = e.target.closest('[data-fact]');
+		if(!tile) return;
+		holdId = tile.dataset.fact;
+		holdTimer = setTimeout(()=>{
+			// Add directly (more intuitive than drag)
+			tile.classList.add('haptic');
+			setTimeout(()=>tile.classList.remove('haptic'), 180);
+			addFav(holdId);
+		}, 650);
+	});
+	grid?.addEventListener('pointerup', ()=>{ clearTimeout(holdTimer); holdTimer=null; holdId=null; });
+	grid?.addEventListener('pointercancel', ()=>{ clearTimeout(holdTimer); holdTimer=null; holdId=null; });
+
+	const favZone = document.getElementById('favZone');
+	favZone?.addEventListener('dragover', (e)=>{ e.preventDefault(); });
+	favZone?.addEventListener('drop', (e)=>{
+		e.preventDefault();
+		const id = e.dataTransfer?.getData('text/plain');
+		if(id) addFav(id);
+	});
+}
+
+// Items now have categories
+const ITEMS = [
+	{ name:'Blütenhonig', price:6, cat:'Honig', note:'mild & floral', img:'honigjar.jpg' },
+	{ name:'Waldhonig', price:9, cat:'Honig', note:'kräftig & dunkel', img:'sorten.jpg' },
+	{ name:'Honig-Duo Set', price:14, cat:'Sets', note:'2 Gläser zum Vorteil', img:'ikeav.jpg' },
+	{ name:'Propolis', price:12, cat:'Extras', note:'natürliches Antibiotikum', img:'sace.jpg' },
+];
+
+const UI = { cat:'Alle' };
+
+function setMode(mode){
+	document.body.dataset.mode=mode;
+	document.getElementById('menu').classList.toggle('hidden',mode!=='order');
+	document.getElementById('discover').classList.toggle('hidden',mode!=='discover');
+	document.getElementById('perks').classList.toggle('hidden',mode!=='perks');
+	document.getElementById('contact').classList.toggle('hidden',mode!=='contact');
+	document.getElementById('admin').classList.toggle('hidden',mode!=='admin');
+	if(mode==='admin') renderAdmin();
+}
+
+function fmtEuro(n){
+	return String(n).replace('.', ',') + '€';
+}
+
+function renderCats(){
+	const cats = ['Alle', ...Array.from(new Set(ITEMS.map(x=>x.cat)))];
+	const root = document.getElementById('catPills');
+	root.innerHTML = cats.map(c=>{
+		const pressed = (UI.cat === c);
+		return `<button class="pill" type="button" data-cat="${c}" aria-pressed="${pressed}">${c}</button>`;
+	}).join('');
+}
+
+function filterItems(){
+	if(UI.cat === 'Alle') return ITEMS;
+	return ITEMS.filter(x=>x.cat === UI.cat);
+}
+
+function renderItems(){
+	const root = document.getElementById('items');
+	const banner = promoBannerHTML();
+	root.innerHTML = banner + filterItems().map(x=>{
+		const p = activePromo();
+		const newPrice = effectivePrice(x);
+		const isDiscount = (newPrice !== x.price);
+		const priceHTML = isDiscount
+			? `<span style="opacity:.65;text-decoration:line-through;margin-right:8px">${fmtEuro(x.price)}</span><span>${fmtEuro(newPrice)}</span>`
+			: `${fmtEuro(x.price)}`;
+		return `
+			<div class="card" data-item="${x.name}">
+				<div class="card-content">
+					<img src="${x.img}" alt="">
+					<div style="min-width:0">
+						<div>${x.name}</div>
+						<div class="muted">${x.note}</div>
+					</div>
+				</div>
+				<div class="price">${priceHTML}</div>
+			</div>
+		`;
+	}).join('');
+}
+
+function hapticIllusion(el){
+	if(!el) return;
+	el.classList.add('haptic');
+	setTimeout(()=>el.classList.remove('haptic'), 110);
+}
+
+function flyToCart(fromEl){
+	try{
+		const bar = document.getElementById('orderBar');
+		if(!fromEl || !bar) return;
+		const img = fromEl.querySelector('img');
+		if(!img) return;
+
+		const r1 = img.getBoundingClientRect();
+		const r2 = bar.getBoundingClientRect();
+
+		const x1 = (r1.left + r1.width/2 - 28);
+		const y1 = (r1.top + r1.height/2 - 28);
+		const x2 = (r2.left + r2.width/2 - 28);
+		const y2 = (r2.top + 18);
+
+		const node = document.createElement('div');
+		node.className = 'fly';
+		node.style.setProperty('--x1', `${x1}px`);
+		node.style.setProperty('--y1', `${y1}px`);
+		node.style.setProperty('--x2', `${x2}px`);
+		node.style.setProperty('--y2', `${y2}px`);
+		node.innerHTML = `<img src="${img.src}" alt="">`;
+		document.body.appendChild(node);
+		bar.classList.add('pulse');
+		setTimeout(()=>bar.classList.remove('pulse'), 380);
+		setTimeout(()=>node.remove(), 700);
+	}catch(e){}
+}
+
+function addFlash(el){
+	if(!el) return;
+	el.classList.add('addedFlash');
+	setTimeout(()=>el.classList.remove('addedFlash'), 520);
+}
+
+function addItem(name,price,fromEl){
+	const item=cart.find(i=>i.name===name);
+	if(item)item.qty++; else cart.push({name,price,qty:1});
+	updateBar();
+	renderSheet();
+	hapticIllusion(fromEl);
+	flyToCart(fromEl);
+	addFlash(fromEl);
+}
+
+function setQty(name, delta){
+	const item = cart.find(i=>i.name===name);
+	if(!item) return;
+	item.qty = Math.max(0, item.qty + delta);
+	if(item.qty===0) cart = cart.filter(x=>x.name!==name);
+	updateBar();
+	renderSheet();
+}
+
+function calcCount(){
+	return cart.reduce((s,i)=>s+i.qty,0);
+}
+function calcTotal(){
+	return cart.reduce((s,i)=>s+i.qty*i.price,0) + giftTotal();
+}
+
+function updateBar(){
+	const count=calcCount();
+	const total=calcTotal();
+	document.getElementById('orderBar').innerText=`🧾 ${count} Artikel • ${total}€`;
+}
+
+function buildOrderText(){
+	let text="🧾 Stadthonig Bestellung\n\n";
+	cart.forEach(i=>text+=`• ${i.qty}x ${i.name}\n`);
+	const p = activePromo();
+	if(p && p.voucher){
+		text += `\n✨ Special: ${sanitizeLine(p.text||'')}`;
+		text += `\n🏷️ Code: ${sanitizeLine(p.voucher)}`;
+	}
+
+	// Gift options
+	if(GIFT.state.wrap){
+		text += `\n🎁 Geschenkverpackung: Ja (+${GIFT.wrapFee}€)`;
+	}
+	if(GIFT.state.occasion && GIFT.state.occasion !== 'none'){
+		const occ = OCCASIONS.find(o=>o.id===GIFT.state.occasion);
+		if(occ) text += `\n🎉 Anlass: ${occ.label}`;
+	}
+	if(String(GIFT.state.card||'').trim()){
+		text += "\n💌 Karte: \"" + sanitizeLine(GIFT.state.card) + "\"";
+	}
+	if(GIFT.state.shipToOther){
+		text += "\n\n📦 Lieferung an:";
+		if(String(GIFT.state.recipientName||'').trim()) text += "\n• " + sanitizeLine(GIFT.state.recipientName);
+		if(String(GIFT.state.recipientAddress||'').trim()) text += "\n• " + sanitizeLine(GIFT.state.recipientAddress);
+		if(String(GIFT.state.recipientPhone||'').trim()) text += "\n• Tel: " + sanitizeLine(GIFT.state.recipientPhone);
+	}
+	if(Array.isArray(GIFT.state.partnerAdds) && GIFT.state.partnerAdds.length){
+		text += "\n\n🤝 Partner Add-ons:";
+		GIFT.state.partnerAdds.forEach(x=> text += "\n• " + sanitizeLine(x));
+	}
+
+	const total=calcTotal();
+	text+="\n\n💰 Gesamt: "+total+"€";
+	return text;
+}
+
+function sendOrder(){
+	if(!calcCount()) return;
+	window.open("https://wa.me/?text="+encodeURIComponent(buildOrderText()));
+}
+
+function openSheet(){
+	document.getElementById('sheet')?.classList.add('open');
+	document.getElementById('sheet')?.setAttribute('aria-hidden','false');
+	renderSheet();
+}
+function closeSheet(){
+	document.getElementById('sheet')?.classList.remove('open');
+	document.getElementById('sheet')?.setAttribute('aria-hidden','true');
+}
+
+function clearCart(){
+	cart = [];
+	updateBar();
+	renderSheet();
+}
+
+function inCart(name){
+	return cart.some(i=>i.name===name);
+}
+
+function pickUpsells(){
+	// Simple rules tuned for honey products
+	if(!calcCount()) return [];
+	const list = [];
+
+	// 1) Push sets early
+	if((inCart('Blütenhonig') || inCart('Waldhonig')) && !inCart('Honig-Duo Set')){
+		list.push({ name:'Honig-Duo Set', hint:'Bestseller Bundle – perfekt als Geschenk.' });
+	}
+	// 2) Wellness add-on
+	if((inCart('Blütenhonig') || inCart('Waldhonig') || inCart('Honig-Duo Set')) && !inCart('Propolis')){
+		list.push({ name:'Propolis', hint:'Viele nehmen Propolis dazu (Wellness).' });
+	}
+	// 3) Add a honey if they started with propolis
+	if(inCart('Propolis') && !inCart('Blütenhonig')){
+		list.push({ name:'Blütenhonig', hint:'Mild & floral – super zu Tee.' });
+	}
+
+	// Ensure max 2 tiles (clean UI)
+	return list.slice(0,2);
+}
+
+function renderGiftBox(){
+	const box = document.getElementById('giftBox');
+	if(!box) return;
+	const p = Array.isArray(GIFT.state.partnerAdds) ? GIFT.state.partnerAdds : [];
+	const hasFlowers = p.includes('Flowers (Bouquet)');
+	const hasDelivery = p.includes('Delivery Upgrade (Same-day / time slot)');
+	const hasWellness = p.includes('Wellness Voucher (TCM/Massage)');
+	box.innerHTML = `
+		<div class="giftTitle">GESCHENK (optional)</div>
+		<div class="giftRow">
+			<label class="switch">
+				<input id="giftWrap" type="checkbox" ${GIFT.state.wrap?'checked':''}>
+				<div>
+					<strong>Geschenkverpackung</strong><br><span class="muted">Schnell & schön</span>
+				</div>
+			</label>
+			<div class="badgePrice">+${GIFT.wrapFee}€</div>
+		</div>
+
+		<div class="field">
+			<label>Gift Boosters (Partner)</label>
+			<div class="occasions">
+				<button class="ocBtn" type="button" data-partneradd="Flowers (Bouquet)" aria-pressed="${hasFlowers}">💐 Flowers</button>
+				<button class="ocBtn" type="button" data-partneradd="Delivery Upgrade (Same-day / time slot)" aria-pressed="${hasDelivery}">🚚 Delivery</button>
+				<button class="ocBtn" type="button" data-partneradd="Wellness Voucher (TCM/Massage)" aria-pressed="${hasWellness}">🧖 Wellness</button>
+			</div>
+			<div class="helpTiny">Fügt eine Zeile zur WhatsApp-Bestellung hinzu (Concierge).</div>
+		</div>
+
+		<div class="field">
+			<label>Anlass (1 Tap)</label>
+			<div class="occasions">
+				<button class="ocBtn" type="button" data-occ="none" aria-pressed="${GIFT.state.occasion==='none'}">Ohne</button>
+				${OCCASIONS.map(o=>`<button class="ocBtn" type="button" data-occ="${o.id}" aria-pressed="${GIFT.state.occasion===o.id}">${o.label}</button>`).join('')}
+			</div>
+			<div class="helpTiny">Wählt automatisch einen Kartentext (du kannst ihn ändern).</div>
+		</div>
+
+		<div class="field">
+			<label>💌 Kartentext</label>
+			<textarea id="cardMsg" maxlength="160" placeholder="Kurze Nachricht…">${GIFT.state.card||''}</textarea>
+			<div class="helpTiny">Max. 160 Zeichen – perfekt für WhatsApp.</div>
+		</div>
+
+		<div class="giftRow">
+			<label class="switch">
+				<input id="shipOther" type="checkbox" ${GIFT.state.shipToOther?'checked':''}>
+				<div>
+					<strong>An andere Adresse liefern</strong><br><span class="muted">Für Geschenke</span>
+				</div>
+			</label>
+		</div>
+
+		<div id="recipientFields" style="display:${GIFT.state.shipToOther?'block':'none'}">
+			<div class="field"><label>Empfänger Name</label><input id="recName" value="${GIFT.state.recipientName||''}" placeholder="Name"></div>
+			<div class="field"><label>Adresse</label><input id="recAddr" value="${GIFT.state.recipientAddress||''}" placeholder="Straße, Nr, Stadt"></div>
+			<div class="field"><label>Telefon (optional)</label><input id="recPhone" value="${GIFT.state.recipientPhone||''}" placeholder="+49 …"></div>
+			<div class="helpTiny">Ohne Backend bleibt das lokal – wird in die WhatsApp-Bestellung geschrieben.</div>
+		</div>
+	`;
+}
+
+function renderSheet(){
+	const lines = document.getElementById('lines');
+	const totalEl = document.getElementById('sheetTotal');
+	const sendBtn = document.getElementById('sendBtn');
+	if(!lines || !totalEl || !sendBtn) return;
+
+	renderGiftBox();
+
+	const total = calcTotal();
+	totalEl.textContent = total + '€';
+	sendBtn.disabled = calcCount()===0;
+
+	lines.innerHTML = cart.length ? cart.map(i=>{
+		return `
+			<div class="line">
+				<div>
+					<div class="lineTitle">${i.name}</div>
+					<div class="lineMeta">${i.price}€ pro Stück</div>
+				</div>
+				<div class="qty">
+					<button type="button" data-dec="${i.name}">−</button>
+					<div class="n">${i.qty}</div>
+					<button type="button" data-inc="${i.name}">+</button>
+				</div>
+			</div>
+		`;
+	}).join('') : `<div style="color:var(--muted);font-size:13px">Noch nichts im Warenkorb.</div>`;
+
+	const upsells = pickUpsells();
+	const box = document.getElementById('upsellBox');
+	if(box){
+		if(upsells.length){
+			box.style.display = 'block';
+			box.innerHTML = `
+				<div class="upsellTitle">Empfehlungen</div>
+				<div class="upsellTiles">
+					${upsells.map(u=>{
+						const item = ITEMS.find(x=>x.name===u.name);
+						const img = item?.img || 'honigjar.jpg';
+						const added = inCart(u.name);
+						return `
+							<div class="upsellTile" data-upsell="${u.name}">
+								<img class="upsellTileImg" src="${img}" alt="">
+								<div>
+									<div class="upsellName">${u.name}</div>
+									<div class="upsellHint">${u.hint}</div>
+								</div>
+								<div class="upsellRight">
+									${added ? `<span class="checkBadge">✓</span>` : ''}
+									<button class="addMini ${added?'added':''}" type="button" data-upsell-btn="${u.name}" aria-label="Hinzufügen">+</button>
+								</div>
+							</div>
+						`;
+					}).join('')}
+				</div>
+			`;
+		}else{
+			box.style.display = 'none';
+			box.innerHTML = '';
+		}
+	}
+}
+
+// (Virtual assistant removed)
+
+// Events for pills + cards + sheet
+function bind(){
+	// Gift box events
+	document.getElementById('sheet')?.addEventListener('change', (e)=>{
+		if(e.target?.id === 'giftWrap'){
+			GIFT.state.wrap = !!e.target.checked;
+			saveGiftState();
+			renderSheet();
+		}
+		if(e.target?.id === 'shipOther'){
+			GIFT.state.shipToOther = !!e.target.checked;
+			saveGiftState();
+			renderSheet();
+		}
+		if(e.target?.id === 'recName'){
+			GIFT.state.recipientName = e.target.value;
+			saveGiftState();
+		}
+		if(e.target?.id === 'recAddr'){
+			GIFT.state.recipientAddress = e.target.value;
+			saveGiftState();
+		}
+		if(e.target?.id === 'recPhone'){
+			GIFT.state.recipientPhone = e.target.value;
+			saveGiftState();
+		}
+	});
+
+	document.getElementById('sheet')?.addEventListener('input', (e)=>{
+		if(e.target?.id === 'cardMsg'){
+			GIFT.state.card = e.target.value;
+			saveGiftState();
+		}
+	});
+
+	document.getElementById('sheet')?.addEventListener('click', (e)=>{
+		const b = e.target.closest('[data-occ]');
+		if(b){
+			const id = b.dataset.occ;
+			GIFT.state.occasion = id;
+			if(id === 'none'){
+				// keep existing card
+			}else{
+				const occ = OCCASIONS.find(o=>o.id===id);
+				if(occ) GIFT.state.card = occ.template;
+			}
+			saveGiftState();
+			renderSheet();
+			return;
+		}
+
+		const pa = e.target.closest('[data-partneradd]');
+		if(pa){
+			togglePartnerAdd(pa.dataset.partneradd);
+			return;
+		}
+	});
+
+	// City perks actions
+	document.getElementById('perksGrid')?.addEventListener('click', async (e)=>{
+		const copy = e.target.closest('[data-copy]');
+		if(copy){
+			const code = copy.dataset.copy;
+			if(code){
+				try{ await navigator.clipboard.writeText(code); toast('Voucher kopiert: '+code); }
+				catch(err){ toast('Copy nicht verfügbar'); }
+			}else{
+				toast('Kein Code');
+			}
+			return;
+		}
+		const wa = e.target.closest('[data-perkwa]');
+		if(wa){
+			openPerkWhatsApp(wa.dataset.perkwa);
+		}
+	});
+
+	document.getElementById('catPills').addEventListener('click', (e)=>{
+		const btn = e.target.closest('[data-cat]');
+		if(!btn) return;
+		UI.cat = btn.dataset.cat;
+		renderAll();
+	});
+
+	document.getElementById('items').addEventListener('pointerdown', (e)=>{
+		const card = e.target.closest('.card');
+		if(card) hapticIllusion(card);
+	});
+
+	document.getElementById('items').addEventListener('click', (e)=>{
+		const card = e.target.closest('.card');
+		if(!card) return;
+		const name = card.dataset.item;
+		const item = ITEMS.find(x=>x.name===name);
+		if(!item) return;
+		addItem(item.name, effectivePrice(item), card);
+	});
+
+	document.getElementById('closeSheet')?.addEventListener('click', closeSheet);
+	document.getElementById('clearCart')?.addEventListener('click', ()=>{ clearCart(); });
+	document.getElementById('sendBtn')?.addEventListener('click', ()=>{ sendOrder(); });
+
+	document.getElementById('lines')?.addEventListener('click', (e)=>{
+		const inc = e.target.closest('[data-inc]');
+		const dec = e.target.closest('[data-dec]');
+		if(inc) setQty(inc.dataset.inc, +1);
+		if(dec) setQty(dec.dataset.dec, -1);
+	});
+	// Upsell add
+	document.getElementById('upsellBox')?.addEventListener('click', (e)=>{
+		const btn = e.target.closest('[data-upsell]');
+		if(!btn) return;
+		const name = btn.dataset.upsell;
+		const item = ITEMS.find(x=>x.name===name);
+		if(!item) return;
+		addItem(item.name, item.price, null);
+	});
+}
+
+function renderAll(){
+	renderCats();
+	renderItems();
+}
+
+function applyTheme(mode){
+	const light = (mode === 'light');
+	document.body.classList.toggle('light', light);
+	const btn = document.getElementById('themeToggle');
+	if(btn){
+		btn.textContent = light ? '☀️' : '🌙';
+		btn.title = light ? 'Dunkelmodus' : 'Hellmodus';
+	}
+	localStorage.setItem('BZZZ_THEME', light ? 'light' : 'dark');
+	// Mobile browser top bar color hint
+	let meta = document.querySelector('meta[name="theme-color"]');
+	if(!meta){
+		meta = document.createElement('meta');
+		meta.setAttribute('name','theme-color');
+		document.head.appendChild(meta);
+	}
+	meta.setAttribute('content', light ? '#f6f7fb' : '#0b0b0c');
+}
+
+// ===== Local admin (no backend) =====
+const ADMIN = {
+	pin: '1234',
+	key: 'BZZZ_ADMIN_UNLOCKED'
+};
+function isAdminUnlocked(){
+	return localStorage.getItem(ADMIN.key) === '1';
+}
+function lockAdmin(){
+	localStorage.removeItem(ADMIN.key);
+}
+function unlockAdmin(pin){
+	if(String(pin||'').trim() === ADMIN.pin){
+		localStorage.setItem(ADMIN.key, '1');
+		return true;
+	}
+	return false;
+}
+const PROMO = {
+	key: 'BZZZ_PROMO_STATE',
+	defaults: {
+		enabled: false,
+		text: 'Heute Special: 10% auf Waldhonig 🍯',
+		voucher: 'BEE10',
+		discountPercent: 10,
+		items: { 'Waldhonig': true },
+		freeGiftWrap: false,
+	}
+};
+function loadPromo(){
+	try{
+		const raw = JSON.parse(localStorage.getItem(PROMO.key) || '{}');
+		return { ...PROMO.defaults, ...raw, items: { ...PROMO.defaults.items, ...(raw.items||{}) } };
+	}catch(e){
+		return { ...PROMO.defaults, items:{...PROMO.defaults.items} };
+	}
+}
+function savePromo(state){
+	localStorage.setItem(PROMO.key, JSON.stringify(state));
+}
+function activePromo(){
+	const p = loadPromo();
+	return p.enabled ? p : null;
+}
+function effectivePrice(item){
+	const p = activePromo();
+	if(!p) return item.price;
+	if(p.items && p.items[item.name]){
+		const pct = Number(p.discountPercent||0);
+		if(pct>0) return Math.max(0, Math.round((item.price*(100-pct))/100));
+	}
+	return item.price;
+}
+function promoBannerHTML(){
+	const p = activePromo();
+	if(!p) return '';
+	const v = (p.voucher && String(p.voucher).trim()) ? ` • Code: ${String(p.voucher).trim()}` : '';
+	return `<div class="card" style="display:block;border-color:rgba(37,211,102,.35);background:rgba(37,211,102,.10)">
+		<div style="font-weight:950">✨ Special</div>
+		<div class="muted" style="margin-top:6px">${sanitizeLine(p.text||'')}${v}</div>
+	</div>`;
+}
+
+function getLocalJSON(){
+	return {
+		theme: localStorage.getItem('BZZZ_THEME'),
+		gift: JSON.parse(localStorage.getItem(GIFT.storageKey) || '{}'),
+		discover: JSON.parse(localStorage.getItem(DISCOVER.storageKey) || '{}'),
+		promo: JSON.parse(localStorage.getItem(PROMO.key) || '{}'),
+	};
+}
+function renderAdmin(){
+	const gate = document.getElementById('adminGate');
+	const panel = document.getElementById('adminPanel');
+	if(!gate || !panel) return;
+	const unlocked = isAdminUnlocked();
+	gate.style.display = unlocked ? 'none' : 'block';
+	panel.style.display = unlocked ? 'block' : 'none';
+	if(!unlocked) return;
+
+	try{
+		const d = JSON.parse(localStorage.getItem(DISCOVER.storageKey) || '{}');
+		const g = JSON.parse(localStorage.getItem(GIFT.storageKey) || '{}');
+		const favCount = (d.favIds||[]).length;
+		const seenCount = (d.swipe?.seen||[]).length;
+		const knew = (d.swipe?.knew||0);
+		const mind = (d.swipe?.mindblown||0);
+		document.getElementById('adminDiscoverStats').textContent = `Favs: ${favCount}/${DISCOVER.favLimit} • Seen: ${seenCount}/${QUEEN_FACTS.length} • Knew: ${knew} • Mindblown: ${mind}`;
+		document.getElementById('adminGiftStats').textContent = `wrap: ${!!g.wrap} • shipToOther: ${!!g.shipToOther} • occasion: ${g.occasion||'none'} • partnerAdds: ${(g.partnerAdds||[]).length}`;
+	}catch(e){
+		document.getElementById('adminDiscoverStats').textContent = 'No data';
+		document.getElementById('adminGiftStats').textContent = 'No data';
+	}
+
+	// Promo panel defaults
+	try{
+		const p = loadPromo();
+		const set = (id, val)=>{ const el=document.getElementById(id); if(el) el.value = val; };
+		const setC = (id, val)=>{ const el=document.getElementById(id); if(el) el.checked = !!val; };
+		setC('promoEnabled', p.enabled);
+		set('promoText', p.text||'');
+		set('promoVoucher', p.voucher||'');
+		set('promoPct', String(p.discountPercent ?? ''));
+		setC('promoFreeWrap', p.freeGiftWrap);
+	}catch(e){}
+}
+
+function bindAdmin(){
+	document.getElementById('adminUnlock')?.addEventListener('click', ()=>{
+		const pin = document.getElementById('adminPin')?.value;
+		if(unlockAdmin(pin)){
+			toast('Admin unlocked');
+			renderAdmin();
+		}else{
+			toast('Wrong PIN');
+		}
+	});
+	document.getElementById('adminPin')?.addEventListener('keydown', (e)=>{
+		if(e.key==='Enter') document.getElementById('adminUnlock')?.click();
+	});
+	document.getElementById('adminLock')?.addEventListener('click', ()=>{
+		lockAdmin();
+		toast('Locked');
+		renderAdmin();
+	});
+	document.getElementById('adminResetDiscover')?.addEventListener('click', ()=>{
+		localStorage.removeItem(DISCOVER.storageKey);
+		loadDiscoverState();
+		renderFavs();
+		renderFacts();
+		renderSwipeDeck();
+		renderAdmin();
+		toast('Discover reset');
+	});
+	document.getElementById('adminResetGift')?.addEventListener('click', ()=>{
+		localStorage.removeItem(GIFT.storageKey);
+		loadGiftState();
+		renderSheet();
+		renderAdmin();
+		toast('Gift reset');
+	});
+	document.getElementById('adminDump')?.addEventListener('click', async ()=>{
+		try{
+			const json = JSON.stringify(getLocalJSON(), null, 2);
+			await navigator.clipboard.writeText(json);
+			toast('Copied JSON');
+		}catch(e){
+			toast('Copy not available');
+		}
+	});
+
+	// ===== Promo controls (local only) =====
+	const readPromoFromUI = ()=>{
+		const p = loadPromo();
+		const enabled = !!document.getElementById('promoEnabled')?.checked;
+		const freeWrap = !!document.getElementById('promoFreeWrap')?.checked;
+		const text = document.getElementById('promoText')?.value ?? p.text;
+		const voucher = document.getElementById('promoVoucher')?.value ?? p.voucher;
+		const pctRaw = document.getElementById('promoPct')?.value;
+		const pct = Math.max(0, Math.min(90, Number(pctRaw||0)));
+		return {
+			...p,
+			enabled,
+			freeGiftWrap: freeWrap,
+			text: String(text||''),
+			voucher: String(voucher||''),
+			discountPercent: isFinite(pct) ? pct : 0,
+		};
+	};
+	const applyPromoNow = ()=>{
+		renderItems();
+		updateBar();
+		if(document.getElementById('sheet')?.classList.contains('open')) renderSheet();
+	};
+
+	// live apply on toggle and typing
+	document.getElementById('promoEnabled')?.addEventListener('change', ()=>{ savePromo(readPromoFromUI()); applyPromoNow(); toast('Promo updated'); });
+	document.getElementById('promoFreeWrap')?.addEventListener('change', ()=>{ savePromo(readPromoFromUI()); applyPromoNow(); toast('Promo updated'); });
+	document.getElementById('promoText')?.addEventListener('input', ()=>{ savePromo(readPromoFromUI()); applyPromoNow(); });
+	document.getElementById('promoVoucher')?.addEventListener('input', ()=>{ savePromo(readPromoFromUI()); applyPromoNow(); });
+	document.getElementById('promoPct')?.addEventListener('input', ()=>{ savePromo(readPromoFromUI()); applyPromoNow(); });
+
+	document.getElementById('promoToggleWald')?.addEventListener('click', ()=>{
+		const p = loadPromo();
+		p.items = p.items || {};
+		p.items['Waldhonig'] = !p.items['Waldhonig'];
+		savePromo(p);
+		renderAdmin();
+		applyPromoNow();
+		toast('Toggled Waldhonig');
+	});
+	document.getElementById('promoToggleBluete')?.addEventListener('click', ()=>{
+		const p = loadPromo();
+		p.items = p.items || {};
+		p.items['Blütenhonig'] = !p.items['Blütenhonig'];
+		savePromo(p);
+		renderAdmin();
+		applyPromoNow();
+		toast('Toggled Blütenhonig');
+	});
+	document.getElementById('promoToggleDuo')?.addEventListener('click', ()=>{
+		const p = loadPromo();
+		p.items = p.items || {};
+		p.items['Honig-Duo Set'] = !p.items['Honig-Duo Set'];
+		savePromo(p);
+		renderAdmin();
+		applyPromoNow();
+		toast('Toggled Duo Set');
+	});
+
+	document.getElementById('promoSave')?.addEventListener('click', ()=>{
+		savePromo(readPromoFromUI());
+		applyPromoNow();
+		toast('Promo saved');
+	});
+	document.getElementById('promoClear')?.addEventListener('click', ()=>{
+		localStorage.removeItem(PROMO.key);
+		renderAdmin();
+		applyPromoNow();
+		toast('Promo cleared');
+	});
+}
+
+function initTheme(){
+	const saved = localStorage.getItem('BZZZ_THEME') || 'dark';
+	applyTheme(saved);
+	document.getElementById('themeToggle')?.addEventListener('click', ()=>{
+		const isLight = document.body.classList.contains('light');
+		applyTheme(isLight ? 'dark' : 'light');
+	});
+	// Brand click: always return to main order screen
+	document.getElementById('brandBtn')?.addEventListener('click', ()=>setMode('order'));
+}
+
+loadGiftState();
+renderAll();
+renderPerks();
+bind();
+initTheme();
+bindDiscover();
+bindAdmin();
+
+// Progressive hero fade in light mode (wait 5s, then fade to 75% over 3s)
+setTimeout(()=>{
+	if(document.body.classList.contains('light')){
+		document.body.classList.add('heroLoaded');
+	}
+}, 5000);
+
+</script>
+
+</body>
+</html>

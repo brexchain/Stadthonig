@@ -1,0 +1,3491 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Stadthonig – Premium Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+	--bg:#0b0b0c;
+	--card:#151517;
+	--accent:#facc15;
+	--text:#f5f5f7;
+	--muted:#9ca3af;
+	--stroke:rgba(255,255,255,.10);
+	--shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* Light theme overrides */
+body.light{
+	--bg:#f6f7fb;
+	--card:#ffffff;
+	--text:#101114;
+	--muted:#5b6472;
+	--stroke:rgba(0,0,0,.10);
+	--shadow:0 10px 30px rgba(0,0,0,0.12);
+}
+body.light header{background:linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.58));border-bottom:1px solid rgba(0,0,0,.10);box-shadow:0 12px 30px rgba(0,0,0,.10)}
+body.light button{background:rgba(0,0,0,0.04);color:#101114}
+body.light #orderBar{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.10)}
+body.light #assistant{background:rgba(255,255,255,0.85);border-color:rgba(0,0,0,0.10)}
+body.light input{background:rgba(0,0,0,0.06);color:#101114}
+body.light .biene{color:#b45309}
+body.light .user{color:#2563eb}
+
+:root{
+}
+
+*{box-sizing:border-box}
+body{
+	margin:0;
+	font-family:Inter, sans-serif;
+	background:var(--bg);
+	color:var(--text);
+	min-height:100vh;
+}
+
+/* Sticky background image + glamour shading */
+body::before{
+	content:"";
+	position:fixed;
+	inset:0;
+	z-index:-2;
+	background:
+		linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.86)),
+		url('queen.jpg') center/cover no-repeat;
+	background-attachment:fixed;
+	filter:saturate(1.08) contrast(1.06) brightness(.78);
+	transform:scale(1.03);
+}
+body::after{
+	content:"";
+	position:fixed;
+	inset:0;
+	z-index:-1;
+	background:
+		radial-gradient(900px 520px at 18% 0%, rgba(250,204,21,.12), rgba(0,0,0,0) 55%),
+		radial-gradient(900px 520px at 85% 12%, rgba(255,255,255,.06), rgba(0,0,0,0) 52%),
+		linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.70));
+}
+
+body.light::before{
+	background:
+		linear-gradient(180deg, rgba(246,247,251,.70), rgba(246,247,251,.92)),
+		url('queen.jpg') center/cover no-repeat;
+	background-attachment:fixed;
+	filter:saturate(1.03) contrast(1.02) brightness(1.02);
+}
+body.light::after{
+	background:
+		radial-gradient(900px 520px at 18% 0%, rgba(250,204,21,.14), rgba(255,255,255,0) 55%),
+		radial-gradient(900px 520px at 85% 12%, rgba(0,0,0,.05), rgba(255,255,255,0) 52%),
+		linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.75));
+}
+
+header{
+	position:fixed;
+	top:0;
+	width:100%;
+	backdrop-filter:blur(22px);
+	background:
+		linear-gradient(180deg, rgba(18,18,20,.70), rgba(18,18,20,.48)),
+		url('sorten.jpg') center/cover no-repeat;
+	padding:12px;
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	z-index:1000;
+	gap:10px;
+	border-bottom:1px solid rgba(255,255,255,.10);
+	box-shadow:0 12px 30px rgba(0,0,0,.22);
+}
+
+header div{font-weight:600}
+
+button{
+	border:none;
+	padding:8px 12px;
+	border-radius:12px;
+	background:rgba(255,255,255,0.05);
+	color:#fff;
+}
+
+.section{padding:80px 16px 120px}
+.hidden{display:none}
+
+.hero{
+	height:200px;
+	border-radius:20px;
+	overflow:hidden;
+	margin-bottom:16px;
+	position:relative;
+	border:1px solid var(--stroke);
+	box-shadow:var(--shadow);
+}
+.hero img{
+	width:100%;
+	height:100%;
+	object-fit:cover;
+	filter:brightness(0.7);
+	opacity:1;
+	transition:opacity 3s ease;
+}
+/* Light mode: reveal queen background first, then fade hero image to 75% */
+body.light .hero img{opacity:0}
+body.light.heroLoaded .hero img{opacity:.75}
+.hero h1{
+	position:absolute;
+	bottom:16px;
+	left:16px;
+	margin:0;
+	font-size:1.4rem;
+}
+
+/* Contact hero special background */
+.contactHero img{filter:brightness(0.62) saturate(1.08)}
+
+/* Category pills */
+.pills{
+	position:sticky;
+	top:56px;
+	z-index:900;
+	display:flex;
+	gap:8px;
+	flex-wrap:wrap;
+	padding:10px 0 12px;
+	background:linear-gradient(180deg, rgba(11,11,12,.95), rgba(11,11,12,.75) 55%, rgba(11,11,12,0));
+}
+.pill{
+	padding:9px 12px;
+	border-radius:999px;
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.05);
+	color:var(--text);
+	font-weight:600;
+}
+.pill[aria-pressed="true"]{
+	border-color:rgba(250,204,21,.55);
+	background:rgba(250,204,21,.12);
+}
+
+.card{
+	background:rgba(21,21,23,.74);
+	border:1px solid rgba(255,255,255,.12);
+	border-radius:20px;
+	padding:16px;
+	margin-bottom:12px;
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	gap:12px;
+	transition:transform .12s ease, background .2s ease, box-shadow .12s ease, border-color .2s ease;
+	user-select:none;
+	backdrop-filter:blur(14px);
+	min-height:86px;
+}
+body.light .card{background:rgba(255,255,255,.86);border-color:rgba(0,0,0,.10)}
+
+/* Mobile-first: bigger product tiles, same tap/haptic behavior */
+@media (max-width:520px){
+	#menu .card{padding:18px;min-height:98px}
+	#menu .card img{width:74px;height:74px}
+	#menu .card div{font-size:16px;font-weight:900;letter-spacing:.01em}
+	#menu .card .muted{font-size:13px}
+	#menu .price{font-size:18px}
+}
+@media (min-width:521px){
+	#menu .card div{font-weight:850}
+}
+
+
+/* Haptic illusion: quick scale + shadow pop */
+.card.haptic{
+	transform:scale(0.985);
+	box-shadow:0 18px 40px rgba(0,0,0,.55);
+	background:#1c1c1f;
+}
+.card:active{
+	transform:scale(0.975);
+	background:#1c1c1f;
+}
+
+.card img{
+	width:66px;
+	height:66px;
+	border-radius:16px;
+	object-fit:cover;
+	margin-right:0;
+	border:1px solid rgba(255,255,255,.08);
+}
+
+.card-content{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.price{color:var(--accent);font-weight:950;white-space:nowrap;font-size:16px;letter-spacing:.01em}
+.muted{color:var(--muted);font-size:.92rem;line-height:1.15}
+
+/* Main page product tiles: readable cards + tap-to-zoom quick view */
+#menu .card{
+	background:rgba(0,0,0,.18);
+	border-color:rgba(255,255,255,.16);
+	backdrop-filter:blur(16px);
+}
+body.light #menu .card{
+	background:rgba(255,255,255,.70);
+	border-color:rgba(0,0,0,.10);
+}
+#menu .card img{
+	width:84px;
+	height:84px;
+	border-radius:20px;
+}
+#menu .price{font-size:18px}
+
+/* QuickView modal */
+.qvOverlay{
+	position:fixed;
+	inset:0;
+	z-index:2600;
+	display:none;
+	align-items:flex-end;
+	justify-content:center;
+	background:rgba(0,0,0,.55);
+	backdrop-filter:blur(10px);
+	padding:14px;
+}
+.qvOverlay.open{display:flex}
+.qvModal{
+	width:min(720px, 100%);
+	background:var(--card);
+	border:1px solid var(--stroke);
+	border-radius:22px;
+	box-shadow:0 22px 70px rgba(0,0,0,.55);
+	padding:14px;
+}
+.qvTop{display:flex;gap:12px;align-items:center}
+.qvImg{
+	width:120px;height:120px;
+	border-radius:22px;
+	object-fit:cover;
+	border:1px solid rgba(255,255,255,.12);
+}
+body.light .qvImg{border-color:rgba(0,0,0,.10)}
+.qvName{font-weight:950;font-size:18px;line-height:1.1}
+.qvNote{color:var(--muted);margin-top:6px;line-height:1.2}
+.qvPrice{color:var(--accent);font-weight:950;margin-top:10px}
+.qvActions{display:flex;gap:10px;margin-top:12px}
+.qvActions button{flex:1;min-height:52px;border-radius:18px;font-weight:950}
+.qvClose{width:42px;height:42px;border-radius:16px}
+.qvHint{font-size:12px;color:var(--muted);margin-top:10px}
+
+#orderBar{
+	position:fixed;
+	bottom:70px;
+	left:12px;
+	right:12px;
+	background:rgba(255,255,255,0.08);
+	backdrop-filter:blur(20px);
+	padding:16px;
+	border-radius:18px;
+	text-align:center;
+	font-weight:700;
+	box-shadow:var(--shadow);
+	border:1px solid rgba(255,255,255,.10);
+}
+
+/* Order overview (centered modal) */
+.sheet{
+	position:fixed;
+	inset:0;
+	z-index:1800;
+	display:none;
+	align-items:center;
+	justify-content:center;
+	padding:14px;
+	background:rgba(0,0,0,.55);
+	backdrop-filter:blur(10px);
+}
+.sheet.open{display:flex}
+.sheet .inner{
+	width:min(720px, 100%);
+	background:var(--card);
+	border-radius:22px;
+	border:1px solid var(--stroke);
+	box-shadow:0 22px 70px rgba(0,0,0,.65);
+	overflow:hidden;
+	max-height:calc(100vh - 28px);
+	display:flex;
+	flex-direction:column;
+}
+/* allow scrolling inside when content is tall */
+.sheetBody{overflow:auto;max-height:none;flex:1;min-height:0}
+.sheetHeader{
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
+	gap:10px;
+	padding:12px 14px;
+	border-bottom:1px solid var(--stroke);
+	position:sticky;
+	top:0;
+	background:var(--card);
+	z-index:10;
+}
+.sheetHeader h2{margin:0;font-size:15px;letter-spacing:.01em}
+.smallBtn{
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.06);
+	padding:8px 10px;
+	border-radius:12px;
+	font-weight:700;
+}
+body.light .smallBtn{background:rgba(0,0,0,.04)}
+.closeX{
+	width:38px;height:38px;
+	border-radius:14px;
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.06);
+	color:var(--text);
+	font-size:18px;
+	line-height:1;
+	pointer-events:auto;
+	position:relative;
+	z-index:30;
+}
+body.light .closeX{background:rgba(0,0,0,.04)}
+.sheetBody{padding:12px 14px;display:grid;gap:12px}
+.lines{display:grid;gap:10px}
+.line{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.lineTitle{font-weight:700}
+.lineMeta{font-size:12px;color:var(--muted);margin-top:2px}
+.qty{display:inline-flex;align-items:center;gap:8px}
+.qty button{
+	width:36px;height:36px;
+	border-radius:12px;
+	border:1px solid var(--stroke);
+	background:rgba(255,255,255,.06);
+	color:var(--text);
+	font-weight:900;
+}
+body.light .qty button{background:rgba(0,0,0,.04)}
+.qty .n{min-width:22px;text-align:center;font-weight:900}
+
+.giftBox{
+	border:1px solid var(--stroke);
+	border-radius:18px;
+	padding:12px;
+	background:rgba(255,255,255,.04);
+}
+.giftTitle{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800}
+.giftRow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.switch{
+	display:flex;align-items:center;gap:10px;
+	border:1px solid rgba(255,255,255,.12);
+	background:rgba(0,0,0,.18);
+	padding:10px 12px;
+	border-radius:16px;
+	flex:1;
+}
+body.light .switch{background:rgba(255,255,255,.78);border-color:rgba(0,0,0,.10)}
+.switch input{width:18px;height:18px}
+.switch strong{font-weight:900}
+.badgePrice{color:var(--accent);font-weight:900;white-space:nowrap}
+
+.occasions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ocBtn{
+	padding:8px 10px;
+	border-radius:999px;
+	border:1px solid rgba(255,255,255,.14);
+	background:rgba(255,255,255,.06);
+	font-weight:800;
+	font-size:12px;
+	color:var(--text);
+}
+.ocBtn[aria-pressed="true"]{border-color:rgba(250,204,21,.55);background:rgba(250,204,21,.14)}
+body.light .ocBtn{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.10)}
+
+.field{margin-top:10px}
+.field label{display:block;font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}
+.field input,.field textarea{
+	width:100%;
+	border-radius:16px;
+	border:1px solid rgba(255,255,255,.12);
+	background:rgba(0,0,0,.18);
+	color:var(--text);
+	padding:10px 12px;
+	outline:none;
+	font-family:inherit;
+}
+body.light .field input, body.light .field textarea{background:rgba(255,255,255,.78);border-color:rgba(0,0,0,.10)}
+.field textarea{min-height:78px;resize:none}
+.helpTiny{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.25}
+
+.upsellBox{
+	border:1px solid var(--stroke);
+	border-radius:18px;
+	padding:12px;
+	background:rgba(255,255,255,.04);
+}
+.upsellTitle{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800}
+
+/* Upsell tiles */
+.upsellTiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media (max-width:420px){.upsellTiles{grid-template-columns:1fr}}
+.upsellTile{
+	position:relative;
+	display:flex;
+	gap:10px;
+	align-items:center;
+	padding:10px;
+	border-radius:16px;
+	border:1px solid rgba(255,255,255,.12);
+	background:rgba(0,0,0,.18);
+	backdrop-filter:blur(10px);
+}
+body.light .upsellTile{background:rgba(255,255,255,.78);border-color:rgba(0,0,0,.10)}
+.upsellTileImg{width:44px;height:44px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,.10)}
+body.light .upsellTileImg{border-color:rgba(0,0,0,.10)}
+.upsellName{font-weight:900;line-height:1.15}
+.upsellHint{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.25}
+.upsellRight{margin-left:auto;display:flex;align-items:center;gap:8px}
+.addMini{
+	border:none;
+	width:38px;
+	height:38px;
+	padding:0;
+	border-radius:14px;
+	display:inline-flex;
+	align-items:center;
+	justify-content:center;
+	background:linear-gradient(135deg, #fde047, var(--accent));
+	color:#2a1a00;
+	font-weight:950;
+	font-size:18px;
+	line-height:1;
+}
+.addMini.added{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:var(--text)}
+body.light .addMini.added{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.10);color:var(--text)}
+.checkBadge{
+	display:inline-flex;
+	align-items:center;
+	justify-content:center;
+	width:28px;
+	height:28px;
+	border-radius:999px;
+	border:1px solid rgba(37,211,102,.45);
+	background:rgba(37,211,102,.16);
+	color:#b7ffd1;
+	font-weight:950;
+}
+body.light .checkBadge{color:#0d6b3a}
+
+/* Checkmark flash on any add */
+.card.addedFlash{
+	border-color:rgba(250,204,21,.55);
+	box-shadow:0 18px 45px rgba(250,204,21,.10), 0 18px 40px rgba(0,0,0,.55);
+}
+.card.addedFlash::after{
+	content:"✓";
+	position:absolute;
+	top:10px;
+	right:10px;
+	width:28px;
+	height:28px;
+	border-radius:999px;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	background:rgba(37,211,102,.18);
+	border:1px solid rgba(37,211,102,.45);
+	color:#b7ffd1;
+	font-weight:950;
+}
+body.light .card.addedFlash::after{color:#0d6b3a}
+.card{position:relative}
+
+/* ===== Discover: fact tiles + favourites ===== */
+
+/* Tinder-ish swipe game (mobile-first) */
+.swipeStage{position:relative;height:320px;margin-bottom:10px}
+@media (max-width:420px){.swipeStage{height:360px}}
+@media (min-width:820px){.swipeStage{height:280px}}
+.swipeCard{
+	position:absolute;
+	inset:0;
+	border-radius:22px;
+	border:1px solid rgba(255,255,255,.14);
+	background:transparent;
+	backdrop-filter:none;
+	padding:14px;
+	display:flex;
+	flex-direction:column;
+	justify-content:space-between;
+	gap:12px;
+	box-shadow:none;
+	touch-action:none;
+}
+body.light .swipeCard{background:transparent;border-color:rgba(0,0,0,.10)}
+.swipeBig{font-weight:950;line-height:1.22;font-size:16px;text-shadow:0 1px 16px rgba(0,0,0,.28)}
+.swipeHintRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.swipeBtns{display:flex;gap:10px;margin-top:10px;align-items:stretch}
+.swipeBtns button{
+	flex:1;
+	min-height:56px;
+	text-align:left;
+	padding:14px 14px;
+	border-radius:18px;
+	font-weight:950;
+	letter-spacing:.01em;
+	border:1px solid rgba(255,255,255,.18);
+	box-shadow:0 16px 40px rgba(0,0,0,.28);
+	position:relative;
+	overflow:hidden;
+}
+#btnKnew{
+	background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
+	border-color:rgba(255,255,255,.22);
+}
+#btnMind{
+	text-align:right;
+	background:linear-gradient(135deg, rgba(250,204,21,.22), rgba(250,204,21,.06));
+	border-color:rgba(250,204,21,.35);
+}
+#btnFavShare{
+	flex:0 0 auto;
+	min-width:118px;
+	text-align:center;
+	background:linear-gradient(135deg, rgba(37,211,102,.22), rgba(37,211,102,.08));
+	border-color:rgba(37,211,102,.35);
+	color:rgba(255,255,255,.96);
+}
+body.light #btnFavShare{
+	background:linear-gradient(135deg, rgba(37,211,102,.26), rgba(37,211,102,.12));
+	border-color:rgba(13,107,58,.22);
+}
+/* Press feedback */
+.swipeBtns button:active{transform:scale(.985)}
+
+/* Bee burst particles */
+.beeBurst{
+	position:absolute;
+	left:0;top:0;
+	pointer-events:none;
+	z-index:5;
+}
+.bee{
+	position:absolute;
+	font-size:18px;
+	will-change:transform, opacity;
+	filter:drop-shadow(0 10px 18px rgba(0,0,0,.35));
+	opacity:0;
+	animation:beeFly .95s ease-out forwards;
+}
+@keyframes beeFly{
+	0%{opacity:0;transform:translate3d(var(--x0),var(--y0),0) scale(.8) rotate(0deg)}
+	10%{opacity:1}
+	100%{opacity:0;transform:translate3d(var(--x1),var(--y1),0) scale(1.15) rotate(var(--r))}
+}
+body.light #btnKnew{background:linear-gradient(135deg, rgba(0,0,0,.05), rgba(0,0,0,.02));border-color:rgba(0,0,0,.10)}
+body.light #btnMind{background:linear-gradient(135deg, rgba(250,204,21,.35), rgba(250,204,21,.12));border-color:rgba(180,83,9,.25)}
+body.light .swipeBtns button{box-shadow:0 14px 30px rgba(0,0,0,.14)}
+.kbd{font-size:11px;color:var(--muted);margin-top:6px}
+.swipePill{font-size:12px;font-weight:900;border-radius:999px;padding:8px 10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06)}
+body.light .swipePill{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.10)}
+.swipePill.left{opacity:.95}
+.swipePill.right{border-color:rgba(250,204,21,.35);background:rgba(250,204,21,.10)}
+.swipeBadge{
+	position:absolute;
+	top:14px;
+	left:14px;
+	padding:8px 10px;
+	border-radius:14px;
+	border:1px solid rgba(255,255,255,.16);
+	background:rgba(0,0,0,.25);
+	font-weight:950;
+	transform:rotate(-10deg);
+	opacity:0;
+	transition:opacity .1s ease;
+}
+.swipeBadge.right{left:auto;right:14px;transform:rotate(10deg);border-color:rgba(250,204,21,.35);background:rgba(250,204,21,.14);color:var(--text)}
+body.light .swipeBadge{background:rgba(255,255,255,.55);border-color:rgba(0,0,0,.10)}
+.swipeStats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.statChip{display:inline-flex;align-items:center;gap:8px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.12);padding:8px 10px;font-weight:900;font-size:12px}
+body.light .statChip{background:rgba(255,255,255,.55);border-color:rgba(0,0,0,.10)}
+
+/* Only show swipe game on smaller screens; grid remains for tablets/desktop */
+@media (min-width:900px){
+	/* On desktop: show swipe too, with buttons/keyboard */
+	.factsGrid{display:none}
+}
+@media (max-width:899px){
+	.factsGrid{display:none}
+}
+.factsGrid{display:grid;grid-template-columns:repeat(4, 1fr);gap:10px}
+@media (max-width:900px){.factsGrid{grid-template-columns:repeat(3, 1fr)}}
+@media (max-width:620px){.factsGrid{grid-template-columns:repeat(2, 1fr)}}
+@media (max-width:380px){.factsGrid{grid-template-columns:1fr}}
+
+.factTile{
+	position:relative;
+	border-radius:18px;
+	border:1px solid rgba(255,255,255,.18);
+	/* Lighter glass so background image shines through, but still readable */
+	background:rgba(255,255,255,.06);
+	backdrop-filter:blur(16px);
+	padding:12px;
+	min-height:92px;
+	display:flex;
+	flex-direction:column;
+	gap:10px;
+	cursor:pointer;
+	user-select:none;
+	transition:transform .12s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+/* Mobile contrast: stronger bottom "ink" for readability */
+.factTile::before{
+	content:"";
+	position:absolute;
+	inset:0;
+	border-radius:18px;
+	pointer-events:none;
+	background:
+		linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.34));
+}
+body.light .factTile{
+	background:rgba(255,255,255,.62);
+	border-color:rgba(0,0,0,.10);
+}
+body.light .factTile::before{
+	background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.10));
+}
+.factTile:active{transform:scale(.98)}
+.factTxt{
+	font-size:13px;
+	line-height:1.30;
+	font-weight:820;
+	position:relative;
+	color:rgba(255,255,255,.96);
+	text-shadow:0 2px 20px rgba(0,0,0,.55);
+}
+body.light .factTxt{
+	color:rgba(10,10,12,.92);
+	text-shadow:0 1px 0 rgba(255,255,255,.55);
+}
+.factMeta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;position:relative}
+.factTag{font-size:11px;color:var(--muted)}
+.factDot{width:8px;height:8px;border-radius:999px;background:rgba(250,204,21,.72);box-shadow:0 0 0 4px rgba(250,204,21,.10)}
+.factPinned{border-color:rgba(37,211,102,.45);box-shadow:0 18px 55px rgba(37,211,102,.08)}
+
+.favZone{margin-top:12px;border-radius:18px;border:1px dashed rgba(255,255,255,.18);padding:12px;background:rgba(0,0,0,.10);position:relative;overflow:hidden}
+
+/* Speech bubble when pinned */
+.bubble{
+	position:absolute;
+	left:12px;
+	top:12px;
+	max-width:78%;
+	padding:10px 12px;
+	border-radius:16px;
+	border:1px solid rgba(255,255,255,.14);
+	background:rgba(0,0,0,.35);
+	backdrop-filter:blur(10px);
+	font-weight:850;
+	font-size:12px;
+	line-height:1.25;
+	opacity:0;
+	transform:translateY(8px) scale(.98);
+	pointer-events:none;
+	animation:bubblePop 1.65s ease forwards;
+}
+.bubble::after{
+	content:"";
+	position:absolute;
+	left:16px;
+	bottom:-7px;
+	width:14px;
+	height:14px;
+	background:inherit;
+	border-left:1px solid rgba(255,255,255,.14);
+	border-bottom:1px solid rgba(255,255,255,.14);
+	transform:rotate(45deg);
+}
+body.light .bubble{background:rgba(255,255,255,.70);border-color:rgba(0,0,0,.10)}
+body.light .bubble::after{border-left-color:rgba(0,0,0,.10);border-bottom-color:rgba(0,0,0,.10)}
+@keyframes bubblePop{
+	0%{opacity:0;transform:translateY(10px) scale(.98)}
+	12%{opacity:1;transform:translateY(0) scale(1)}
+	70%{opacity:1;transform:translateY(0) scale(1)}
+	100%{opacity:0;transform:translateY(-6px) scale(.98)}
+}
+body.light .favZone{border-color:rgba(0,0,0,.14);background:rgba(255,255,255,.55)}
+.favHint{font-size:12px;color:var(--muted)}
+.favRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.favChip{
+	display:inline-flex;
+	align-items:center;
+	gap:8px;
+	padding:8px 10px;
+	border-radius:999px;
+	border:1px solid rgba(255,255,255,.14);
+	background:rgba(255,255,255,.06);
+	font-size:12px;
+	max-width:100%;
+}
+body.light .favChip{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.10)}
+.favChip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+
+.factOverlay{
+	position:fixed;
+	inset:0;
+	z-index:2200;
+	display:none;
+	align-items:flex-end;
+	justify-content:center;
+	background:rgba(0,0,0,.55);
+	backdrop-filter:blur(8px);
+	padding:14px;
+}
+.factOverlay.open{display:flex}
+.factModal{
+	width:min(720px, 100%);
+	background:var(--card);
+	border:1px solid var(--stroke);
+	border-radius:22px;
+	box-shadow:0 22px 70px rgba(0,0,0,.55);
+	padding:14px;
+}
+.factKicker{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.factText{font-size:15px;line-height:1.35;font-weight:800;margin-top:8px}
+
+.toast{
+	position:fixed;
+	left:14px;
+	right:14px;
+	bottom:14px;
+	z-index:2400;
+	margin:0 auto;
+	max-width:720px;
+	background:rgba(20,20,20,.82);
+	border:1px solid rgba(255,255,255,.12);
+	backdrop-filter:blur(14px);
+	padding:10px 12px;
+	border-radius:16px;
+	font-size:13px;
+	color:rgba(255,255,255,.92);
+	opacity:0;
+	transform:translateY(8px);
+	transition:opacity .18s ease, transform .18s ease;
+	pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+body.light .toast{background:rgba(255,255,255,.85);border-color:rgba(0,0,0,.10);color:rgba(0,0,0,.86)}
+
+/* City Perks */
+.perksGrid{display:grid;grid-template-columns:repeat(2, 1fr);gap:10px}
+@media (max-width:420px){.perksGrid{grid-template-columns:1fr}}
+.perkTile{position:relative;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.12);backdrop-filter:blur(14px);padding:12px;overflow:hidden}
+body.light .perkTile{background:rgba(255,255,255,.62);border-color:rgba(0,0,0,.10)}
+.perkTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.perkName{font-weight:950;line-height:1.1}
+.perkCat{font-size:12px;color:var(--muted);margin-top:4px}
+.perkDesc{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.25}
+.perkActions{display:flex;gap:8px;margin-top:12px}
+.perkActions button{flex:1}
+.copyBtn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06)}
+body.light .copyBtn{border-color:rgba(0,0,0,.10);background:rgba(0,0,0,.04)}
+
+.sheetFooter{
+	padding:12px 14px;
+	border-top:1px solid var(--stroke);
+	display:grid;
+	gap:10px;
+	position:sticky;
+	bottom:0;
+	background:var(--card);
+	z-index:10;
+}
+.totalRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.totalRow span:first-child{color:var(--muted);font-size:12px}
+.totalRow strong{font-size:16px}
+.cta{
+	width:100%;
+	border:none;
+	padding:14px;
+	border-radius:18px;
+	background:linear-gradient(135deg, #2bf07c, #25D366);
+	color:#06220f;
+	font-weight:950;
+	letter-spacing:.01em;
+}
+.cta[disabled]{opacity:.45}
+
+
+/* Fly-to-cart */
+.fly{
+	position:fixed;
+	z-index:2000;
+	width:56px;
+	height:56px;
+	border-radius:16px;
+	overflow:hidden;
+	pointer-events:none;
+	box-shadow:0 18px 50px rgba(0,0,0,.55);
+	border:1px solid rgba(255,255,255,.12);
+	transform:translate3d(var(--x1),var(--y1),0) scale(1);
+	opacity:1;
+	animation:flyToBar .62s cubic-bezier(.2,.85,.2,1) forwards;
+}
+.fly img{width:100%;height:100%;object-fit:cover;display:block}
+@keyframes flyToBar{
+	0%{transform:translate3d(var(--x1),var(--y1),0) scale(1);opacity:1}
+	80%{opacity:1}
+	100%{transform:translate3d(var(--x2),var(--y2),0) scale(.18);opacity:0}
+}
+.pulse{animation:pulse .35s ease}
+@keyframes pulse{0%{transform:scale(1)}55%{transform:scale(1.05)}100%{transform:scale(1)}}
+
+</style>
+</head>
+<body data-mode="order">
+
+<header>
+	<button id="brandBtn" type="button" style="display:inline-flex;align-items:center;gap:8px;font-weight:900;background:transparent;border:none;padding:6px 8px;border-radius:12px;color:inherit">
+		<span aria-hidden="true">🐝</span>
+		<span id="brandTxt">Stadthonig</span>
+	</button>
+	<div style="display:flex;gap:8px;align-items:center">
+		<button id="navOrder" onclick="setMode('order')">Bestellen</button>
+		<button id="navDiscover" onclick="setMode('discover')">Entdecken</button>
+		<button id="navPerks" onclick="setMode('perks')">City Perks</button>
+		<button id="navContact" onclick="setMode('contact')">Kontakt</button>
+		<button id="navAdmin" onclick="setMode('admin')">Admin</button>
+		<button id="themeToggle" type="button" title="Hellmodus">🌙</button>
+	</div>
+</header>
+
+<div id="menu" class="section">
+	<div class="hero">
+		<img src="miel.png" alt="">
+		<h1 id="heroTitle">Frischer Stadthonig 🍯</h1>
+		<div id="langBar" style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start">
+			<button class="pill" type="button" data-lang="de" aria-pressed="true">DE</button>
+			<button class="pill" type="button" data-lang="en" aria-pressed="false">EN</button>
+			<button class="pill" type="button" data-lang="es" aria-pressed="false">ES</button>
+			<button class="pill" type="button" data-lang="fr" aria-pressed="false">FR</button>
+			<button class="pill" type="button" data-lang="ja" aria-pressed="false">日本語</button>
+			<button class="pill" type="button" data-lang="ar" aria-pressed="false">العربية</button>
+			<button class="pill" type="button" data-lang="zh" aria-pressed="false">中文</button>
+		</div>
+	</div>
+
+	<!-- Category pills (top scroll) -->
+	<div class="pills" id="catPills" aria-label="Kategorien"></div>
+
+	<div id="items"></div>
+
+<!-- Product Quick View -->
+<div class="qvOverlay" id="qvOverlay" aria-hidden="true">
+	<div class="qvModal" role="dialog" aria-modal="true">
+		<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+			<div class="qvTop" style="flex:1">
+				<img class="qvImg" id="qvImg" src="" alt="">
+				<div style="min-width:0;flex:1">
+					<div class="qvName" id="qvName"></div>
+					<div class="qvNote" id="qvNote"></div>
+					<div class="qvPrice" id="qvPrice"></div>
+					<div class="qvHint">Tap “Add” → sofort im Warenkorb. Long text bleibt hier gut lesbar.</div>
+				</div>
+			</div>
+			<button class="closeX qvClose" id="qvClose" type="button" aria-label="Schließen">×</button>
+		</div>
+		<div class="qvActions">
+			<button class="copyBtn" id="qvBack" type="button">Zurück</button>
+			<button class="cta" id="qvAdd" type="button">+ Add to cart</button>
+		</div>
+	</div>
+</div>
+</div>
+
+<div id="discover" class="section hidden">
+	<div class="hero">
+		<img src="miel.png" alt="">
+		<h1 id="discoverTitle">Queenbee Secrets 👑🐝</h1>
+	</div>
+
+	<div class="card" style="display:block">
+		<div id="discoverIntroTitle" style="font-weight:900;letter-spacing:.01em">20 Fakten über die Bienenkönigin</div>
+		<div id="discoverIntroHint" class="muted" style="margin-top:6px">Tippe auf einen Fact → Zoom. Halte gedrückt (ca. 1 Sek.) → wird als Favorit gespeichert.</div>
+	</div>
+
+	<div class="card" style="display:block">
+		<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+			<div>
+				<div id="favTitle" style="font-weight:900">Deine Favoriten</div>
+				<div id="favSub" class="muted" style="margin-top:4px">„I never knew that about bees“ — lokal gespeichert.</div>
+			</div>
+			<div style="display:flex;gap:8px;align-items:center">
+				<button class="smallBtn" id="shareBeeFavs" type="button">📤 Send to a friend</button>
+				<button class="smallBtn" id="clearBeeFavs" type="button">Reset</button>
+			</div>
+		</div>
+		<div class="favZone" id="favZone" aria-label="Favoriten Drop Zone">
+			<div id="favHint" class="favHint">Füge Favoriten per Long-Hold hinzu (oder: swipe game nutzen).</div>
+			<div class="favRow" id="favRow"></div>
+		</div>
+	</div>
+
+	<div class="card" style="display:block">
+		<div id="swipeTitle" style="font-weight:900">Swipe Game</div>
+		<div id="swipeHint" class="muted" style="margin-top:6px">Swipe links = „Schon gewusst“ • Swipe rechts = „Mindblown“</div>
+	</div>
+	<div class="swipeStats" id="swipeStats"></div>
+	<div class="swipeStage" id="swipeStage" aria-label="Fact swipe game"></div>
+	<div class="factsGrid" id="factsGrid"></div>
+
+	<div class="card" style="display:block">
+		<div id="unknownTitle" style="font-weight:900">Was ist „am unbekanntesten“?</div>
+		<div id="unknownHint" class="muted" style="margin-top:6px">Ohne Backend können wir keine globale Rangliste speichern. Aber: Jeder User baut lokal eine „Most Mindblowing“ Liste – und kann sie als Link teilen (Idea: #beeTop=...).</div>
+	</div>
+
+	<!-- Zoom overlay -->
+	<div class="factOverlay" id="factOverlay" aria-hidden="true">
+		<div class="factModal" role="dialog" aria-modal="true">
+			<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+				<div>
+					<div class="factKicker" id="factKicker">Fact</div>
+					<div class="factText" id="factText"></div>
+					<div class="muted" id="factOverlayHint" style="margin-top:10px">Tip: Long-hold im Grid (650ms) → automatisch Favorit.</div>
+					<div class="swipeBtns" style="margin-top:12px">
+						<button class="copyBtn" type="button" id="ovKnew">Schon gewusst – ich bin ein Bienen-Nerd</button>
+						<button type="button" id="ovWow">Wooooaah… mein Gehirn macht Bzzzzt</button>
+					</div>
+				</div>
+				<button class="closeX" id="closeFact" type="button" aria-label="Schließen">×</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="contact" class="section hidden">
+	<div class="hero contactHero">
+		<img src="vrc.jpg" alt="">
+		<h1>Kontakt</h1>
+	</div>
+	<div class="card" style="display:block">
+		<div style="font-weight:900;letter-spacing:.01em">Schreib uns auf WhatsApp</div>
+		<div class="muted" style="margin-top:6px">Schnellste Antwort – ideal für Bestellungen, Fragen, City Perks.</div>
+		<div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+			<button class="cta" type="button" style="flex:1;min-width:220px" onclick="window.open('https://wa.me/?text='+encodeURIComponent('Hi! I have a question about Stadthonig… 🐝'))">WhatsApp öffnen</button>
+		</div>
+	</div>
+</div>
+
+<div id="admin" class="section hidden">
+	<div class="hero">
+		<img src="vrc.jpg" alt="">
+		<h1>Admin</h1>
+	</div>
+	<div class="card" style="display:block">
+		<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+			<div>
+				<div style="font-weight:900;letter-spacing:.01em">Lokale Statistik</div>
+				<div class="muted" style="margin-top:6px">Nur auf diesem Gerät (LocalStorage). Kein Backend.</div>
+			</div>
+			<button class="smallBtn" id="adminLock" type="button">🔒 Lock</button>
+		</div>
+
+		<div id="adminGate" style="margin-top:12px">
+			<div class="muted" style="margin-bottom:8px">PIN eingeben</div>
+			<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+				<input id="adminPin" inputmode="numeric" placeholder="PIN" style="flex:1;min-width:180px;padding:12px 12px;border-radius:14px;border:1px solid var(--stroke);background:rgba(0,0,0,.18);color:var(--text)" />
+				<button class="smallBtn" id="adminUnlock" type="button">Unlock</button>
+			</div>
+			<div class="muted" style="margin-top:8px;font-size:12px">Default PIN: 1234 (änderbar im Code).</div>
+		</div>
+
+		<div id="adminPanel" style="margin-top:12px;display:none">
+			<div class="card" style="display:block;margin:12px 0 0">
+				<div style="font-weight:900">Discover</div>
+				<div class="muted" style="margin-top:6px" id="adminDiscoverStats">–</div>
+				<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+					<button class="smallBtn" id="adminResetDiscover" type="button">Reset Discover</button>
+					<button class="smallBtn" id="adminDump" type="button">Copy JSON</button>
+				</div>
+			</div>
+
+			<div class="card" style="display:block;margin:12px 0 0">
+				<div style="font-weight:900">Cart / Gift</div>
+				<div class="muted" style="margin-top:6px" id="adminGiftStats">–</div>
+				<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+					<button class="smallBtn" id="adminResetGift" type="button">Reset Gift</button>
+				</div>
+			</div>
+
+			<div class="card" style="display:block;margin:12px 0 0">
+				<div style="font-weight:900">Promo / Specials (lokal)</div>
+				<div class="muted" style="margin-top:6px">Nur dieses Gerät. Wirkt sofort auf Order UI + WhatsApp Text.</div>
+
+				<div style="margin-top:10px;display:grid;gap:10px">
+					<label class="switch" style="margin:0">
+						<input id="promoEnabled" type="checkbox">
+						<div>
+							<strong>Promo aktiv</strong><br><span class="muted">Banner + Preis-Discount</span>
+						</div>
+					</label>
+
+					<div class="field" style="margin:0">
+						<label>Promo Text</label>
+						<input id="promoText" placeholder="Heute Special…">
+					</div>
+
+					<div class="field" style="margin:0">
+						<label>Voucher Code (optional)</label>
+						<input id="promoVoucher" placeholder="BEE10">
+					</div>
+
+					<div class="field" style="margin:0">
+						<label>Discount % (für ausgewählte Items)</label>
+						<input id="promoPct" inputmode="numeric" placeholder="10">
+					</div>
+
+					<div style="display:flex;gap:8px;flex-wrap:wrap">
+						<button class="smallBtn" id="promoToggleWald" type="button">Toggle Waldhonig</button>
+						<button class="smallBtn" id="promoToggleBluete" type="button">Toggle Blütenhonig</button>
+						<button class="smallBtn" id="promoToggleDuo" type="button">Toggle Duo Set</button>
+					</div>
+
+					<label class="switch" style="margin:0">
+						<input id="promoFreeWrap" type="checkbox">
+						<div>
+							<strong>Free Gift Wrap</strong><br><span class="muted">Wrap Fee wird 0€</span>
+						</div>
+					</label>
+
+					<div style="display:flex;gap:8px;flex-wrap:wrap">
+						<button class="smallBtn" id="promoSave" type="button">Save Promo</button>
+						<button class="smallBtn" id="promoClear" type="button">Clear Promo</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="perks" class="section hidden">
+	<div class="hero">
+		<img src="miel.png" alt="">
+		<h1>City Perks ✨</h1>
+	</div>
+	<div class="card" style="display:block">
+		<div style="font-weight:900;letter-spacing:.01em">Partner aus der Stadt</div>
+		<div class="muted" style="margin-top:6px">Flowers, Cafés, Wellness – als Concierge via WhatsApp.</div>
+	</div>
+	<div class="perksGrid" id="perksGrid"></div>
+</div>
+
+<div id="orderBar" onclick="openSheet()">🧾 0 <span id="itemsLabel">Artikel</span> • 0€</div>
+
+<!-- Order overview (in-app) -->
+<div class="sheet" id="sheet" aria-hidden="true">
+	<div class="inner">
+		<div class="sheetHeader">
+			<h2 id="sheetTitle">Bestellung</h2>
+			<div style="display:flex;gap:8px;align-items:center">
+				<button class="smallBtn" id="clearCart" type="button" onclick="clearCart()">Leeren</button>
+				<button class="closeX" id="closeSheet" type="button" aria-label="Schließen" onclick="closeSheet()">×</button>
+			</div>
+		</div>
+		<div class="sheetBody">
+			<div class="lines" id="lines"></div>
+			<div class="giftBox" id="giftBox"></div>
+			<div class="upsellBox" id="upsellBox" style="display:none"></div>
+		</div>
+		<div class="sheetFooter">
+			<div id="upsellHint" class="card" style="display:none;align-items:flex-start;gap:12px;border-color:rgba(250,204,21,.25);background:rgba(250,204,21,.08)"></div>
+			<div class="totalRow"><span id="sumLabel">Summe</span> <strong id="sheetTotal">0€</strong></div>
+			<button class="cta" id="sendBtn" type="button" disabled>WhatsApp öffnen</button>
+			<button class="smallBtn" id="reorderBtn" type="button" style="display:none">↻ Letzte Bestellung wiederholen</button>
+			<div id="previewHint" style="font-size:12px;color:var(--muted)">Du siehst zuerst alles hier, dann geht’s zu WhatsApp.</div>
+		</div>
+	</div>
+</div>
+
+<script>
+let cart=[];
+
+// ===== Multilingual (local-only) =====
+const LANG = {
+	key: 'BZZZ_LANG',
+	current: 'de',
+	rtl: new Set(['ar']),
+	order: ['de','en','es','fr','ja','ar','zh'],
+};
+
+const I18N = const I18N = {
+	de: {
+		brand: 'Stadthonig',
+		hero: 'Frischer Stadthonig 🍯',
+		navOrder: 'Bestellen',
+		navDiscover: 'Entdecken',
+		navPerks: 'City Perks',
+		navContact: 'Kontakt',
+		navAdmin: 'Admin',
+		sheetTitle: 'Bestellung',
+		clear: 'Leeren',
+		sum: 'Summe',
+		waOpen: 'WhatsApp öffnen',
+		reorder: '↻ Letzte Bestellung wiederholen',
+		bundles: 'BUNDLES (1 TAP)',
+		upsellTitle: 'Empfehlungen',
+		giftOptional: 'GESCHENK (optional)',
+		itemsLabel: 'Artikel',
+		emptyCart: 'Noch nichts im Warenkorb.',
+		perPiece: 'pro Stück',
+		giftWrapTitle: 'Geschenkverpackung',
+		giftWrapHint: 'Schnell & schön',
+		partnerBoosters: 'Gift Boosters (Partner)',
+		partnerBoostersHint: 'Fügt eine Zeile zur WhatsApp-Bestellung hinzu (Concierge).',
+		occasion: 'Anlass (1 Tap)',
+		occasionHint: 'Wählt automatisch einen Kartentext (du kannst ihn ändern).',
+		occasionNone: 'Ohne',
+		cardText: '💌 Kartentext',
+		cardTextHint: '1 Tap Templates → weniger WhatsApp Ping-Pong.',
+		shipOther: 'An andere Adresse liefern',
+		shipOtherHint: 'Für Geschenke',
+		recipientName: 'Empfänger Name',
+		recipientAddress: 'Adresse',
+		recipientPhone: 'Telefon (optional)',
+		localOnlyHint: 'Ohne Backend bleibt das lokal – wird in die WhatsApp-Bestellung geschrieben.',
+		previewHint: 'Du siehst zuerst alles hier, dann geht’s zu WhatsApp.',
+		// Discover missing keys added
+		discoverTitle: 'Queenbee Secrets 👑🐝',
+		discoverIntroTitle: '20 Fakten über die Bienenkönigin',
+		discoverIntroHint: 'Tippe auf einen Fact → Zoom. Halte gedrückt (ca. 1 Sek.) → wird als Favorit gespeichert.',
+		favTitle: 'Deine Favoriten',
+		favSub: '„I never knew that about bees“ — lokal gespeichert.',
+		shareFavs: '📤 Send to a friend',
+		reset: 'Reset',
+		favHint: 'Füge Favoriten per Long-Hold hinzu (oder: swipe game nutzen).',
+		swipeTitle: 'Swipe Game',
+		swipeHint: 'Swipe links = „Schon gewusst“ • Swipe rechts = „Mindblown“',
+		unknownTitle: 'Was ist „am unbekanntesten“?',
+		unknownHint: 'Ohne Backend können wir keine globale Rangliste speichern. Aber: Jeder User baut lokal eine „Most Mindblowing“ Liste – und kann sie als Link teilen.',
+		factOverlayHint: 'Tip: Long-hold im Grid (650ms) → automatisch Favorit.',
+		btnKnew: 'Schon gewusst – ich bin ein Bienen-Nerd',
+		btnWow: 'Wooooaah… mein Gehirn macht Bzzzzt',
+		btnFav: 'Favorit',
+		btnAdded: '✓ Gespeichert',
+		toastAddedFav: '★ Favorit hinzugefügt',
+		statKnew: 'Schon gewusst',
+		statMind: 'Mindblown',
+		statSeen: 'Gesehen',
+		doneTitle: 'Alle Fakten durch! 🐝',
+		doneHint: 'Reset = Seite neu laden oder LocalStorage leeren.',
+		shareEmpty: 'Noch keine Favoriten.',
+		shareHello: 'Hey! Wusstest du das? 🐝',
+		shareSaved: 'Meine Bienenkönigin-Favoriten:',
+		shareQuestion: 'Was ist dein Mindblown-Fakt? 💥🍯',
+	},
+	en: {
+		brand: 'City Honey',
+		hero: 'Fresh city honey 🍯',
+		navOrder: 'Order',
+		navDiscover: 'Discover',
+		navPerks: 'City Perks',
+		navContact: 'Contact',
+		navAdmin: 'Admin',
+		sheetTitle: 'Order',
+		clear: 'Clear',
+		sum: 'Total',
+		waOpen: 'Open WhatsApp',
+		reorder: '↻ Repeat last order',
+		bundles: 'BUNDLES (1 TAP)',
+		upsellTitle: 'Recommendations',
+		giftOptional: 'GIFT (optional)',
+		itemsLabel: 'items',
+		emptyCart: 'Nothing in the cart yet.',
+		perPiece: 'each',
+		giftWrapTitle: 'Gift wrap',
+		giftWrapHint: 'Quick & pretty',
+		partnerBoosters: 'Gift boosters (partners)',
+		partnerBoostersHint: 'Adds a line to the WhatsApp order (concierge).',
+		occasion: 'Occasion (1 tap)',
+		occasionHint: 'Auto-picks a card text (you can edit it).',
+		occasionNone: 'None',
+		cardText: '💌 Card text',
+		cardTextHint: '1-tap templates → less WhatsApp back-and-forth.',
+		shipOther: 'Ship to another address',
+		shipOtherHint: 'For gifts',
+		recipientName: 'Recipient name',
+		recipientAddress: 'Address',
+		recipientPhone: 'Phone (optional)',
+		localOnlyHint: 'Local only — copied into the WhatsApp order message.',
+		previewHint: 'You review here first, then go to WhatsApp.',
+		discoverTitle: 'Queenbee Secrets 👑🐝',
+		discoverIntroTitle: '20 Queen Bee Facts',
+		discoverIntroHint: 'Tap a fact to zoom. Long-press (~1 sec) to save as a favorite.',
+		favTitle: 'Your Favorites',
+		favSub: '“I never knew that about bees” — saved locally.',
+		shareFavs: '📤 Send to a friend',
+		reset: 'Reset',
+		favHint: 'Add favorites via long-hold (or use the swipe game).',
+		swipeTitle: 'Swipe Game',
+		swipeHint: 'Swipe left = "Knew it" • Swipe right = "Mindblown"',
+		unknownTitle: 'What is the most "unknown" fact?',
+		unknownHint: 'Without a backend, we can’t save a global leaderboard. But you can build a local "Most Mindblowing" list and share it.',
+		factOverlayHint: 'Tip: Long-hold in the grid (650ms) → auto favorite.',
+		btnKnew: 'Knew it – I’m a bee nerd',
+		btnWow: 'Wooooaah… my brain just went Bzzzzt',
+		btnFav: 'Add to Favorites',
+		btnAdded: '✓ Saved',
+		toastAddedFav: '★ Added to favorites',
+		statKnew: 'Knew it',
+		statMind: 'Mindblown',
+		statSeen: 'Seen',
+		doneTitle: 'All done! 🐝',
+		doneHint: 'Reset = Reload page or clear LocalStorage.',
+		shareEmpty: 'No favorites yet.',
+		shareHello: 'Hey! Did you know this? 🐝',
+		shareSaved: 'My Queen Bee Favorites:',
+		shareQuestion: 'Which one blows your mind the most? 💥🍯',
+	},
+	es: {
+		brand: 'Miel Urbano',
+		hero: 'Miel urbano fresco 🍯',
+		navOrder: 'Pedir',
+		navDiscover: 'Descubrir',
+		navPerks: 'City Perks',
+		navContact: 'Contacto',
+		navAdmin: 'Admin',
+		sheetTitle: 'Pedido',
+		clear: 'Vaciar',
+		sum: 'Total',
+		waOpen: 'Abrir WhatsApp',
+		reorder: '↻ Repetir último pedido',
+		bundles: 'PACKS (1 TAP)',
+		upsellTitle: 'Recomendaciones',
+		giftOptional: 'REGALO (opcional)',
+		itemsLabel: 'artículos',
+		emptyCart: 'Aún no hay nada en el carrito.',
+		perPiece: 'cada uno',
+		giftWrapTitle: 'Envoltorio de regalo',
+		giftWrapHint: 'Rápido y bonito',
+		partnerBoosters: 'Extras (partners)',
+		partnerBoostersHint: 'Añade una línea al pedido de WhatsApp (concierge).',
+		occasion: 'Ocasión (1 tap)',
+		occasionHint: 'Elige automáticamente un texto de tarjeta (puedes editarlo).',
+		occasionNone: 'Sin ocasión',
+		cardText: '💌 Texto de la tarjeta',
+		cardTextHint: 'Plantillas de 1 tap → menos mensajes.',
+		shipOther: 'Enviar a otra dirección',
+		shipOtherHint: 'Para regalos',
+		recipientName: 'Nombre del destinatario',
+		recipientAddress: 'Dirección',
+		recipientPhone: 'Teléfono (opcional)',
+		localOnlyHint: 'Solo local — se añade al mensaje de WhatsApp.',
+		previewHint: 'Primero revisas aquí y luego vas a WhatsApp.',
+		discoverTitle: 'Secretos de la Reina 👑🐝',
+		discoverIntroTitle: '20 Datos sobre la Abeja Reina',
+		discoverIntroHint: 'Toca un dato para ampliar. Mantén presionado (~1 seg) para guardar como favorito.',
+		favTitle: 'Tus Favoritos',
+		favSub: '“No sabía eso de las abejas” — guardado localmente.',
+		shareFavs: '📤 Enviar a un amigo',
+		reset: 'Restablecer',
+		favHint: 'Añade favoritos manteniendo presionado (o usa el juego de deslizar).',
+		swipeTitle: 'Juego de Deslizar',
+		swipeHint: 'Deslizar izquierda = "Ya lo sabía" • Deslizar derecha = "Alucinante"',
+		unknownTitle: '¿Qué es lo más "desconocido"?',
+		unknownHint: 'Sin un backend no podemos guardar una clasificación global. Pero puedes crear tu lista local y compartirla.',
+		factOverlayHint: 'Consejo: Mantén presionado en la cuadrícula (650ms) → favorito automático.',
+		btnKnew: 'Ya lo sabía – soy un friki de las abejas',
+		btnWow: 'Uau... mi cerebro acaba de hacer Bzzzzt',
+		btnFav: 'Añadir a Favoritos',
+		btnAdded: '✓ Guardado',
+		toastAddedFav: '★ Añadido a favoritos',
+		statKnew: 'Lo sabía',
+		statMind: 'Alucinante',
+		statSeen: 'Visto',
+		doneTitle: '¡Todo listo! 🐝',
+		doneHint: 'Restablecer = Recargar página o limpiar LocalStorage.',
+		shareEmpty: 'Aún no hay favoritos.',
+		shareHello: '¡Oye! ¿Sabías esto? 🐝',
+		shareSaved: 'Mis favoritos de la Abeja Reina:',
+		shareQuestion: '¿Cuál te sorprende más? 💥🍯',
+	},
+	fr: {
+		brand: 'Miel de Ville',
+		hero: 'Miel de ville fraîche 🍯',
+		navOrder: 'Commander',
+		navDiscover: 'Découvrir',
+		navPerks: 'City Perks',
+		navContact: 'Contact',
+		navAdmin: 'Admin',
+		sheetTitle: 'Commande',
+		clear: 'Vider',
+		sum: 'Total',
+		waOpen: 'Ouvrir WhatsApp',
+		reorder: '↻ Refaire la dernière',
+		bundles: 'BUNDLES (1 TAP)',
+		upsellTitle: 'Suggestions',
+		giftOptional: 'CADEAU (optionnel)',
+		itemsLabel: 'articles',
+		emptyCart: 'Rien dans le panier pour l’instant.',
+		perPiece: 'pièce',
+		giftWrapTitle: 'Emballage cadeau',
+		giftWrapHint: 'Rapide et joli',
+		partnerBoosters: 'Boosters (partenaires)',
+		partnerBoostersHint: 'Ajoute une ligne à la commande WhatsApp (concierge).',
+		occasion: 'Occasion (1 tap)',
+		occasionHint: 'Choisit automatiquement un texte (modifiable).',
+		occasionNone: 'Sans',
+		cardText: '💌 Texte de carte',
+		cardTextHint: 'Templates 1 tap → moins d’allers-retours.',
+		shipOther: 'Livrer à une autre adresse',
+		shipOtherHint: 'Pour les cadeaux',
+		recipientName: 'Nom du destinataire',
+		recipientAddress: 'Adresse',
+		recipientPhone: 'Téléphone (optionnel)',
+		localOnlyHint: 'Local uniquement — recopié dans la commande WhatsApp.',
+		previewHint: 'Tu vérifies ici, puis WhatsApp.',
+		discoverTitle: 'Secrets de Reine 👑🐝',
+		discoverIntroTitle: '20 Faits sur la Reine des Abeilles',
+		discoverIntroHint: 'Appuie sur un fait pour zoomer. Maintiens appuyé (~1 sec) pour ajouter aux favoris.',
+		favTitle: 'Tes Favoris',
+		favSub: '“Je ne savais pas ça sur les abeilles” — sauvegardé localement.',
+		shareFavs: '📤 Envoyer à un ami',
+		reset: 'Réinitialiser',
+		favHint: 'Ajoute des favoris par appui long (ou utilise le jeu de swipe).',
+		swipeTitle: 'Jeu de Swipe',
+		swipeHint: 'Swipe gauche = "Je le savais" • Swipe droite = "Époustouflant"',
+		unknownTitle: 'Quel est le fait le plus "inconnu" ?',
+		unknownHint: 'Sans backend, pas de classement global. Mais chacun peut créer sa liste locale et la partager.',
+		factOverlayHint: 'Astuce : Appui long dans la grille (650ms) → favori automatique.',
+		btnKnew: 'Je le savais – je suis un nerd des abeilles',
+		btnWow: 'Wooooaah… mon cerveau fait Bzzzzt',
+		btnFav: 'Ajouter aux favoris',
+		btnAdded: '✓ Sauvegardé',
+		toastAddedFav: '★ Ajouté aux favoris',
+		statKnew: 'Je savais',
+		statMind: 'Époustouflant',
+		statSeen: 'Vu',
+		doneTitle: 'Tout est fait ! 🐝',
+		doneHint: 'Reset = Recharger la page ou vider le LocalStorage.',
+		shareEmpty: 'Pas encore de favoris.',
+		shareHello: 'Hey ! Tu savais ça ? 🐝',
+		shareSaved: 'Mes favoris sur la Reine des Abeilles :',
+		shareQuestion: 'Lequel t\'impressionne le plus ? 💥🍯',
+	},
+	ja: {
+		brand: '街のはちみつ',
+		hero: 'できたて街はちみつ 🍯',
+		navOrder: '注文',
+		navDiscover: '発見',
+		navPerks: 'City Perks',
+		navContact: '連絡先',
+		navAdmin: 'Admin',
+		sheetTitle: '注文',
+		clear: 'クリア',
+		sum: '合計',
+		waOpen: 'WhatsApp を開く',
+		reorder: '↻ 前回の注文',
+		bundles: 'バンドル (1タップ)',
+		upsellTitle: 'おすすめ',
+		giftOptional: 'ギフト (任意)',
+		itemsLabel: '点',
+		emptyCart: 'カートはまだ空です。',
+		perPiece: '個あたり',
+		giftWrapTitle: 'ギフト包装',
+		giftWrapHint: '早い・きれい',
+		partnerBoosters: 'ギフト追加（パートナー）',
+		partnerBoostersHint: 'WhatsApp注文に1行追加（コンシェルジュ）。',
+		occasion: '用途 (1タップ)',
+		occasionHint: 'カード文面を自動で選択（編集OK）。',
+		occasionNone: 'なし',
+		cardText: '💌 カード文面',
+		cardTextHint: '1タップテンプレ → 往復を減らす。',
+		shipOther: '別住所に配送',
+		shipOtherHint: 'ギフト用',
+		recipientName: '受取人名',
+		recipientAddress: '住所',
+		recipientPhone: '電話（任意）',
+		localOnlyHint: 'ローカルのみ — WhatsApp文面に入ります。',
+		previewHint: 'ここで確認してからWhatsAppへ。',
+		discoverTitle: '女王蜂の秘密 👑🐝',
+		discoverIntroTitle: '女王蜂に関する20の事実',
+		discoverIntroHint: 'タップして拡大。長押し（約1秒）でお気に入りに保存。',
+		favTitle: 'あなたのお気に入り',
+		favSub: '「ミツバチについて知らなかった」— ローカルに保存されます。',
+		shareFavs: '📤 友達に送る',
+		reset: 'リセット',
+		favHint: '長押しでお気に入りに追加（またはスワイプゲームを使用）。',
+		swipeTitle: 'スワイプゲーム',
+		swipeHint: '左スワイプ = 「知ってた」 • 右スワイプ = 「衝撃的」',
+		unknownTitle: '最も「知られていない」事実は？',
+		unknownHint: 'バックエンドがないため、グローバルランキングは保存できません。でも、ローカルでリストを作ってシェアできます。',
+		factOverlayHint: 'ヒント: グリッドで長押し（650ms）→ 自動的にお気に入り。',
+		btnKnew: '知ってた – 私はミツバチオタクです',
+		btnWow: 'うわぁ… 脳がブーンってなった',
+		btnFav: 'お気に入りに追加',
+		btnAdded: '✓ 保存しました',
+		toastAddedFav: '★ お気に入りに追加しました',
+		statKnew: '知ってた',
+		statMind: '衝撃的',
+		statSeen: '見た',
+		doneTitle: 'すべて完了！ 🐝',
+		doneHint: 'リセット = ページを再読み込みするか、LocalStorageをクリアします。',
+		shareEmpty: 'まだお気に入りがありません。',
+		shareHello: 'ねえ！これ知ってた？ 🐝',
+		shareSaved: '私の女王蜂のお気に入り:',
+		shareQuestion: 'どれが一番衝撃的？ 💥🍯',
+	},
+	ar: {
+		brand: 'عسل المدينة',
+		hero: 'عسل مدينة طازج 🍯',
+		navOrder: 'اطلب',
+		navDiscover: 'اكتشف',
+		navPerks: 'مزايا المدينة',
+		navContact: 'تواصل',
+		navAdmin: 'المسؤول',
+		sheetTitle: 'الطلب',
+		clear: 'إفراغ',
+		sum: 'الإجمالي',
+		waOpen: 'فتح واتساب',
+		reorder: '↻ إعادة آخر طلب',
+		bundles: 'حزم (لمسة واحدة)',
+		upsellTitle: 'اقتراحات',
+		giftOptional: 'هدية (اختياري)',
+		itemsLabel: 'عناصر',
+		emptyCart: 'لا يوجد شيء في السلة بعد.',
+		perPiece: 'للقطعة',
+		giftWrapTitle: 'تغليف هدية',
+		giftWrapHint: 'سريع وجميل',
+		partnerBoosters: 'إضافات (شركاء)',
+		partnerBoostersHint: 'يضيف سطرًا إلى طلب واتساب (كونسيرج).',
+		occasion: 'المناسبة (لمسة واحدة)',
+		occasionHint: 'يختار نص بطاقة تلقائياً (يمكنك التعديل).',
+		occasionNone: 'بدون',
+		cardText: '💌 نص البطاقة',
+		cardTextHint: 'قوالب بلمسة واحدة → رسائل أقل.',
+		shipOther: 'إرسال إلى عنوان آخر',
+		shipOtherHint: 'للهدايا',
+		recipientName: 'اسم المستلم',
+		recipientAddress: 'العنوان',
+		recipientPhone: 'الهاتف (اختياري)',
+		localOnlyHint: 'محلي فقط — يُكتب داخل رسالة واتساب.',
+		previewHint: 'تراجع هنا أولاً ثم إلى واتساب.',
+		discoverTitle: 'أسرار الملكة 👑🐝',
+		discoverIntroTitle: '20 حقيقة عن ملكة النحل',
+		discoverIntroHint: 'اضغط على الحقيقة للتكبير. اضغط مطولاً (~ 1 ثانية) للحفظ في المفضلة.',
+		favTitle: 'مفضلاتك',
+		favSub: '”لم أكن أعرف ذلك عن النحل“ — محفوظة محلياً.',
+		shareFavs: '📤 أرسل لصديق',
+		reset: 'إعادة ضبط',
+		favHint: 'أضف للمفضلة بالضغط المطول (أو استخدم لعبة التمرير).',
+		swipeTitle: 'لعبة التمرير',
+		swipeHint: 'تمرير لليسار = "كنت أعرف" • تمرير لليمين = "مذهل"',
+		unknownTitle: 'ما هو الشيء الأكثر "جهلاً"؟',
+		unknownHint: 'بدون خادم خلفي، لا يمكننا حفظ ترتيب عالمي. لكن: يبني كل مستخدم قائمة "الأكثر إذهالاً" محلياً ويمكنه مشاركتها.',
+		factOverlayHint: 'تلميح: الضغط المطول في الشبكة (650 مللي ثانية) → مفضلة تلقائياً.',
+		btnKnew: 'كنت أعرف – أنا مهووس بالنحل',
+		btnWow: 'وااااو… عقلي يطن الآن',
+		btnFav: 'أضف للمفضلة',
+		btnAdded: '✓ تم الحفظ',
+		toastAddedFav: '★ تمت الإضافة للمفضلة',
+		statKnew: 'كنت أعرف',
+		statMind: 'مذهل',
+		statSeen: 'تمت المشاهدة',
+		doneTitle: 'انتهى كل شيء! 🐝',
+		doneHint: 'إعادة ضبط = أعد تحميل الصفحة أو امسح التخزين المحلي.',
+		shareEmpty: 'لا توجد مفضلات بعد.',
+		shareHello: 'مرحباً! هل كنت تعرف هذا؟ 🐝',
+		shareSaved: 'مفضلاتي عن ملكة النحل:',
+		shareQuestion: 'أيها أكثر إذهالاً لك؟ 💥🍯',
+	},
+	zh: {
+		brand: '城市蜂蜜',
+		hero: '新鲜城市蜂蜜 🍯',
+		navOrder: '下单',
+		navDiscover: '发现',
+		navPerks: '城市福利',
+		navContact: '联系',
+		navAdmin: '管理',
+		sheetTitle: '订单',
+		clear: '清空',
+		sum: '合计',
+		waOpen: '打开 WhatsApp',
+		reorder: '↻ 重复上次订单',
+		bundles: '组合 (一键)',
+		upsellTitle: '推荐',
+		giftOptional: '礼物 (可选)',
+		itemsLabel: '件',
+		emptyCart: '购物车还没有东西。',
+		perPiece: '每件',
+		giftWrapTitle: '礼品包装',
+		giftWrapHint: '快速又好看',
+		partnerBoosters: '礼物加购（伙伴）',
+		partnerBoostersHint: '在 WhatsApp 订单里加一行（礼宾）。',
+		occasion: '场合 (一键)',
+		occasionHint: '自动选卡片文案（可编辑）。',
+		occasionNone: '无',
+		cardText: '💌 卡片文案',
+		cardTextHint: '一键模板 → 少来回聊。',
+		shipOther: '寄到其他地址',
+		shipOtherHint: '送礼用',
+		recipientName: '收件人姓名',
+		recipientAddress: '地址',
+		recipientPhone: '电话（可选）',
+		localOnlyHint: '仅本地保存 — 会写进 WhatsApp 订单信息。',
+		previewHint: '先在这里确认，再去 WhatsApp。',
+		discoverTitle: '蜂后秘密 👑🐝',
+		discoverIntroTitle: '20 个蜂后冷知识',
+		discoverIntroHint: '点一下查看详情；长按（约 1 秒）保存到收藏。',
+		favTitle: '你的收藏',
+		favSub: '“我以前真不知道蜂蜜还能这么酷”——仅本地保存。',
+		shareFavs: '📤 发给朋友',
+		reset: '重置',
+		favHint: '长按添加收藏（也可以玩滑动游戏）。',
+		swipeTitle: '滑动小游戏',
+		swipeHint: '左滑 = “我知道” • 右滑 = “震撼”',
+		unknownTitle: '最“震撼”的是什么？',
+		unknownHint: '没有后端就无法做全局排行。但每个用户都能在本地建立“最震撼”列表并分享。',
+		factOverlayHint: '提示：在网格里长按（650ms）→ 自动收藏。',
+		btnKnew: '我知道了（我很懂蜂）',
+		btnWow: '哇…脑子嗡嗡的',
+		btnFav: '加入收藏',
+		btnAdded: '✓ 已收藏',
+		toastAddedFav: '★ 已加入收藏',
+		statKnew: '我知道',
+		statMind: '震撼',
+		statSeen: '已看',
+		doneTitle: '通关啦！🐝',
+		doneHint: 'Reset = 重新加载页面或清空 LocalStorage。',
+		shareEmpty: '还没有收藏',
+		shareHello: '嘿！你知道这个吗？🐝',
+		shareSaved: '我收藏了这些蜂后冷知识：',
+		shareQuestion: '哪条最让你震撼？💥🍯',
+	},
+};	},
+};
+
+function t(key){
+	const l = I18N[LANG.current] || I18N.de;
+	return (l && l[key]) || (I18N.de && I18N.de[key]) || key;
+}
+
+function setLang(code){
+	const c = String(code||'de').toLowerCase().trim();
+	LANG.current = (I18N[c] ? c : 'de');
+	localStorage.setItem(LANG.key, LANG.current);
+	applyLangToUI();
+	// re-render visible UI
+	renderAll();
+	renderPerks();
+	if(document.getElementById('sheet')?.classList.contains('open')) renderSheet();
+	if(document.body.dataset.mode==='discover'){
+		renderFavs();
+		renderFacts();
+		renderSwipeDeck();
+	}
+	if(document.body.dataset.mode==='admin') renderAdmin();
+}
+
+function applyLangToUI(){
+	// RTL support (basic + safe)
+	const rtl = LANG.rtl.has(LANG.current);
+	document.documentElement.dir = rtl ? 'rtl' : 'ltr';
+	document.documentElement.lang = LANG.current;
+
+	// Header
+	const setTxt = (id, txt)=>{ const el=document.getElementById(id); if(el) el.textContent = txt; };
+	setTxt('brandTxt', t('brand'));
+	setTxt('navOrder', t('navOrder'));
+	setTxt('navDiscover', t('navDiscover'));
+	setTxt('navPerks', t('navPerks'));
+	setTxt('navContact', t('navContact'));
+	setTxt('navAdmin', t('navAdmin'));
+
+	// Hero
+	setTxt('heroTitle', t('hero'));
+
+	// Discover section (static headings/hints)
+	setTxt('discoverTitle', t('discoverTitle'));
+	setTxt('discoverIntroTitle', t('discoverIntroTitle'));
+	setTxt('discoverIntroHint', t('discoverIntroHint'));
+	setTxt('favTitle', t('favTitle'));
+	setTxt('favSub', t('favSub'));
+	setTxt('shareBeeFavs', t('shareFavs'));
+	setTxt('clearBeeFavs', t('reset'));
+	setTxt('favHint', t('favHint'));
+	setTxt('swipeTitle', t('swipeTitle'));
+	setTxt('swipeHint', t('swipeHint'));
+	setTxt('unknownTitle', t('unknownTitle'));
+	setTxt('unknownHint', t('unknownHint'));
+	setTxt('factOverlayHint', t('factOverlayHint'));
+
+	// Sheet / CTAs
+	setTxt('sheetTitle', t('sheetTitle'));
+	setTxt('clearCart', t('clear'));
+	setTxt('sumLabel', t('sum'));
+	setTxt('sendBtn', t('waOpen'));
+	setTxt('reorderBtn', t('reorder'));
+	setTxt('previewHint', t('previewHint'));
+
+	// Language bar active state
+	const bar = document.getElementById('langBar');
+	bar?.querySelectorAll('[data-lang]')?.forEach(b=>{
+		b.setAttribute('aria-pressed', (b.dataset.lang===LANG.current) ? 'true' : 'false');
+	});
+}
+
+function initLang(){
+	const saved = (localStorage.getItem(LANG.key) || '').toLowerCase().trim();
+	LANG.current = (saved && I18N[saved]) ? saved : 'de';
+	applyLangToUI();
+	// click handlers
+	document.getElementById('langBar')?.addEventListener('click', (e)=>{
+		const b = e.target.closest('[data-lang]');
+		if(!b) return;
+		setLang(b.dataset.lang);
+	});
+}
+
+
+// ===== Gift / occasions (no backend) =====
+const GIFT = {
+	wrapFee: 2,
+	storageKey: 'BZZZ_GIFT_STATE',
+	state: {
+		wrap: false,
+		shipToOther: false,
+		occasion: 'none',
+		card: '',
+		recipientName: '',
+		recipientAddress: '',
+		recipientPhone: '',
+		partnerAdds: [],
+	},
+};
+
+const OCCASIONS = [
+	{ id:'birthday', label:'Geburtstag' },
+	{ id:'thanks', label:'Danke' },
+	{ id:'getwell', label:'Gute Besserung' },
+	{ id:'newhome', label:'Neues Zuhause' },
+	{ id:'corporate', label:'Business' },
+];
+
+// Bee-themed card templates per occasion + style
+function cardTemplates(occId){
+	const O = String(occId||'none');
+	const base = {
+		short: 'Bzzzt! 🐝 Süße Grüße aus dem Bienenstock. 🍯',
+		warm: 'Für dich, mit ganz viel Bzzz-Liebe 🐝🍯 Möge es dir den Tag versüßen.',
+		funny: 'Bee careful: Dieses Geschenk macht süchtig. 🐝🍯',
+	};
+	if(O==='birthday') return {
+		short: 'Happy Bee-day! 🐝🎂🍯',
+		warm: 'Alles Liebe zum Geburtstag! 🐝🎂🍯 Möge dein neues Jahr goldig, leicht und voller Bzzz-Momente sein.',
+		funny: 'Heute wird gebuzzt! 🐝🎉 Du bist offiziell Queen/King for a day. 🍯',
+	};
+	if(O==='thanks') return {
+		short: 'Danke! 🐝🍯',
+		warm: 'Danke, dass du in meinem Leben rumsummst. 🐝💛 Dieses kleine Honig-Geschenk ist von Herzen.',
+		funny: 'Dankeschön aus dem Bienenstock: 1× Umarmung (virtuell) + 1× Honig (real). 🐝🍯',
+	};
+	if(O==='getwell') return {
+		short: 'Gute Besserung! 🐝🍯',
+		warm: 'Gute Besserung! 🐝💛 Ein bisschen Honig-Wärme für dich – damit’s schneller wieder bzzzt.',
+		funny: 'Rezept: 1 Löffel Honig, 2x tief atmen, 3x bzzzt sagen. 🐝🍯 Gute Besserung!',
+	};
+	if(O==='newhome') return {
+		short: 'Willkommen im neuen Zuhause! 🐝🏡🍯',
+		warm: 'Neues Zuhause, neue süße Momente. 🐝🏡🍯 Ich wünsch dir ganz viel Wärme, Ruhe und Bzzz-Gefühl.',
+		funny: 'Home is where the honey is. 🐝🏡🍯 Viel Spaß beim Einbuzzzen!',
+	};
+	if(O==='corporate') return {
+		short: 'Danke für die Zusammenarbeit. 🐝',
+		warm: 'Vielen Dank für die Zusammenarbeit. 🐝🍯 Ein kleiner Gruß aus dem Bienenstock – auf weiterhin gute Ergebnisse.',
+		funny: 'Business, but make it honey. 🐝🍯 Auf starke Partnerschaft & süße Deals!',
+	};
+	return base;
+}
+
+function applyCardTemplate(style){
+	const t = cardTemplates(GIFT.state.occasion);
+	const s = (style==='short'||style==='warm'||style==='funny') ? style : 'warm';
+	GIFT.state.card = t[s];
+	saveGiftState();
+	renderSheet();
+	toast('Kartentext: ' + (s==='short'?'Kurz':s==='warm'?'Warm':'Funny'));
+}
+
+function applyOccasionDefaultCard(occId){
+	// On choosing an occasion, default to Warm text (fast + safe)
+	const t = cardTemplates(occId);
+	GIFT.state.card = t.warm;
+}
+
+function loadGiftState(){
+	try{
+		const raw = JSON.parse(localStorage.getItem(GIFT.storageKey) || '{}');
+		GIFT.state = { ...GIFT.state, ...raw };
+	}catch(e){}
+}
+function saveGiftState(){
+	localStorage.setItem(GIFT.storageKey, JSON.stringify(GIFT.state));
+}
+function sanitizeLine(s){
+	return String(s||'').replace(/\s+/g,' ').trim();
+}
+function giftTotal(){
+	// promo can optionally waive gift wrap fee (local only)
+	const p = activePromo();
+	if(p?.freeGiftWrap) return 0;
+	return GIFT.state.wrap ? GIFT.wrapFee : 0;
+} 
+
+// ===== Discover facts data (Queen-only) =====
+const QUEEN_FACTS_I18N = {
+	de: [
+		"Die Königin sieht oft nur an einem einzigen Tag wirklich die Sonne: beim Hochzeitsflug.",
+		"Sie wird nicht zur Königin geboren – sie wird durch Gelee Royale zur Königin gemacht.",
+		"Sie kann Spermien in der Spermatheka jahrelang speichern – ein biologischer Tresor.",
+		"Sie entscheidet aktiv, ob ein Ei befruchtet wird: befruchtet = Arbeiterin/Königin, unbefruchtet = Drohne.",
+		"Königinnenwechsel kann völlig still passieren (stille Umweiselung) – ohne Drama, fast unsichtbar.",
+		"Ihre Pheromone wirken wie ein Betriebssystem: Sie halten den Stock sozial stabil.",
+		"Sie wird 24/7 vom Hofstaat gefüttert und geputzt – Royal Service nonstop.",
+		"Ihr Stachel ist glatter als der der Arbeiterinnen und wird v.a. gegen Rivalinnen eingesetzt.",
+		"Wenn mehrere Königinnen schlüpfen, kommt es oft zu einem echten Duell um den Thron.",
+		"Ein kleiner Kreis Arbeiterinnen verteilt ihren Duft im ganzen Stock – wie ein Netzwerk.",
+		"In Spitzenzeiten legt sie extrem viele Eier pro Tag – wie ein lebendiger Produktionsmotor.",
+		"Königinnen können durch Vibrationen/Laute (Piping) kommunizieren – besonders bei Umweiselung.",
+		"Beim Schwärmen nimmt das Volk die Königin mit – wie ein Umzug mit der Gründerin.",
+		"Genetisch ist sie fast wie eine Arbeiterin – der Unterschied ist Entwicklungsprogramm + Ernährung.",
+		"Ihre Körperform ist fürs Eierlegen optimiert, nicht fürs Sammeln.",
+		"Sie fliegt selten – wenn, dann ist es ein Schlüsselmoment (Hochzeit, Schwarm, Notfall).",
+		"Arbeiterinnen erkennen sie nicht am Gesicht, sondern an Duftsignaturen und Kontaktchemie.",
+		"Ohne Königin versuchen Arbeiterinnen Notlösungen – legen Eier, aber es entstehen nur Drohnen.",
+		"Eine gute Königin ist für den Stock eher Ressource als Chefin: Der Schwarm ist die Intelligenz.",
+		"Wenn die Königin schwächelt, verändert sich die Stimmung im Stock, bevor Menschen es merken.",
+	],
+	en: [
+		"The queen often sees the sun for real on just one day: her mating flight.",
+		"She isn’t born a queen — royal jelly turns her into one.",
+		"She can store sperm in the spermatheca for years — a living biological vault.",
+		"She actively decides whether an egg is fertilized: fertilized = worker/queen, unfertilized = drone.",
+		"A queen replacement can happen completely silently (quiet supersedure) — no drama, almost invisible.",
+		"Her pheromones work like an operating system: they keep the colony socially stable.",
+		"She’s fed and groomed 24/7 by her court — nonstop royal service.",
+		"Her stinger is smoother than workers’ and is used mainly against rival queens.",
+		"If multiple queens emerge, it often becomes a real duel for the throne.",
+		"A small circle of workers spreads her scent through the hive — like a network.",
+		"In peak season she lays an extreme number of eggs per day — like a living production engine.",
+		"Queens can communicate via vibrations/sounds (piping), especially during replacement.",
+		"When swarming, the colony takes the queen along — like moving house with the founder.",
+		"Genetically she’s almost like a worker — the difference is development program + nutrition.",
+		"Her body shape is optimized for egg-laying, not for foraging.",
+		"She flies rarely — and when she does, it’s a key moment (mating, swarm, emergency).",
+		"Workers don’t recognize her by her face, but by scent signatures and contact chemistry.",
+		"Without a queen, workers try emergency solutions — they lay eggs, but only drones result.",
+		"A good queen is more a resource than a boss: the swarm is the intelligence.",
+		"When the queen weakens, the colony mood changes before humans notice.",
+	],
+	es: [
+		"La reina a menudo ve el sol de verdad solo un día: en el vuelo nupcial.",
+		"No nace reina: la jalea real la convierte en reina.",
+		"Puede almacenar esperma en la espermateca durante años: una caja fuerte biológica.",
+		"Decide activamente si un huevo se fecunda: fecundado = obrera/reina, no fecundado = zángano.",
+		"El reemplazo de reina puede ocurrir en silencio (sustitución silenciosa): sin drama, casi invisible.",
+		"Sus feromonas funcionan como un sistema operativo: mantienen estable la colonia.",
+		"La alimentan y acicalan 24/7: servicio real sin pausa.",
+		"Su aguijón es más liso que el de las obreras y se usa sobre todo contra reinas rivales.",
+		"Si nacen varias reinas, a menudo hay un duelo real por el trono.",
+		"Un pequeño grupo de obreras reparte su olor por la colmena: como una red.",
+		"En temporada alta pone muchísimos huevos al día: como un motor de producción vivo.",
+		"Las reinas pueden comunicarse con vibraciones/sonidos (piping), sobre todo durante el recambio.",
+		"Al enjambrar, la colonia se lleva a la reina: como mudarse con la fundadora.",
+		"Genéticamente es casi como una obrera: la diferencia es el programa de desarrollo + la alimentación.",
+		"Su cuerpo está optimizado para poner huevos, no para recolectar.",
+		"Vuela pocas veces, y cuando lo hace es un momento clave (vuelo nupcial, enjambre, emergencia).",
+		"Las obreras no la reconocen por la cara, sino por firmas de olor y química de contacto.",
+		"Sin reina, las obreras intentan soluciones de emergencia: ponen huevos, pero solo salen zánganos.",
+		"Una buena reina es más un recurso que una jefa: la inteligencia es el enjambre.",
+		"Cuando la reina se debilita, el ánimo de la colonia cambia antes de que las personas lo noten.",
+	],
+	fr: [
+		"La reine ne voit souvent vraiment le soleil qu’un seul jour : lors du vol nuptial.",
+		"On ne naît pas reine — la gelée royale la transforme en reine.",
+		"Elle peut stocker le sperme dans la spermathèque pendant des années — un coffre-fort biologique.",
+		"Elle décide si un œuf est fécondé : fécondé = ouvrière/reine, non fécondé = faux-bourdon.",
+		"Le remplacement de la reine peut se faire en silence (supersédure) — sans drame, presque invisible.",
+		"Ses phéromones agissent comme un système d’exploitation : elles stabilisent la colonie.",
+		"Elle est nourrie et toilettée 24/7 par sa cour — service royal non-stop.",
+		"Son dard est plus lisse que celui des ouvrières et sert surtout contre les reines rivales.",
+		"Si plusieurs reines émergent, c’est souvent un vrai duel pour le trône.",
+		"Un petit cercle d’ouvrières diffuse son odeur dans toute la ruche — comme un réseau.",
+		"En pleine saison, elle pond un nombre énorme d’œufs par jour — comme un moteur vivant.",
+		"Les reines peuvent communiquer par vibrations/sons (piping), surtout lors d’un remplacement.",
+		"Lors de l’essaimage, la colonie emporte la reine — comme un déménagement avec la fondatrice.",
+		"Génétiquement, elle est presque comme une ouvrière — la différence vient du programme + de la nutrition.",
+		"Sa morphologie est optimisée pour pondre, pas pour butiner.",
+		"Elle vole rarement — et quand elle vole, c’est un moment clé (nuptial, essaim, urgence).",
+		"Les ouvrières ne la reconnaissent pas au visage, mais à des signatures d’odeur et la chimie de contact.",
+		"Sans reine, les ouvrières tentent des solutions d’urgence : elles pondent, mais seuls des mâles naissent.",
+		"Une bonne reine est plutôt une ressource qu’une cheffe : l’intelligence, c’est l’essaim.",
+		"Quand la reine faiblit, l’ambiance de la colonie change avant que l’humain ne s’en rende compte.",
+	],
+	ja: [
+		"蜂后が本当に太陽を見ることが多いのは、たった一度——婚飛（交尾飛行）の日。",
+		"蜂后は生まれつき“蜂后”ではない。ローヤルゼリーが蜂后に育てる。",
+		"受精嚢（貯精嚢）に精子を何年も保存できる——生きた“生物金庫”。",
+		"卵を受精させるかどうかを自分で決める：受精＝働き蜂/蜂后、未受精＝雄蜂。",
+		"蜂后の交代は、驚くほど静かに起こることがある（静かな更新/静かな交代）：ほぼ気づかれない。",
+		"フェロモンは“OS”のように働き、群れの社会を安定させる。",
+		"蜂后は侍従蜂に24時間ずっと給餌・清掃される——ロイヤルサービス。",
+		"蜂后の針は働き蜂より滑らかで、主にライバルの蜂后に使われる。",
+		"複数の蜂后が羽化すると、“王位”をめぐる本気の決闘になることも。",
+		"少数の働き蜂が蜂后の匂いを巣全体に広げる——ネットワークのように。",
+		"最盛期には、1日に膨大な数の卵を産む——生きた生産エンジン。",
+		"蜂后は振動や音（パイピング）で合図することがある。特に交代期に多い。",
+		"分蜂のとき、群れは蜂后を連れて移動する——“創業者”と一緒に引っ越すように。",
+		"遺伝子的には働き蜂とほぼ同じ。違いは発生プログラムと栄養。",
+		"体は採蜜ではなく産卵に最適化されている。",
+		"蜂后はめったに飛ばない。飛ぶのは重要な場面（婚飛・分蜂・緊急時）。",
+		"働き蜂は顔で見分けるのではなく、匂いの“署名”と接触化学で蜂后を認識する。",
+		"蜂后がいないと、働き蜂は非常手段として産卵するが、育つのは雄蜂だけ。",
+		"優れた蜂后は“ボス”というより資源。知性は群れにある。",
+		"蜂后が弱ると、人が気づく前に群れの空気（ムード）が変わる。",
+	],
+	ar: [
+		"غالبًا ما ترى الملكة الشمس حقًا في يوم واحد فقط: يوم رحلة التزاوج.",
+		"لا تولد ملكة — غذاء الملكات هو الذي يحولها إلى ملكة.",
+		"يمكنها تخزين الحيوانات المنوية في الحافظة المنوية لسنوات — خزنة بيولوجية حيّة.",
+		"تقرر بنفسها إن كانت البيضة ستُخصّب: مُخصّبة = عاملة/ملكة، غير مُخصّبة = ذكر.",
+		"قد يحدث استبدال الملكة بصمت تام (استبدال هادئ) — بلا دراما، شبه غير مرئي.",
+		"فيرموناتها تعمل كنظام تشغيل: تُبقي الخلية مستقرة اجتماعيًا.",
+		"يتم إطعامها وتنظيفها 24/7 من حاشيتها — خدمة ملكية بلا توقف.",
+		"لدغتها أنعم من لدغة العاملات وتُستخدم غالبًا ضد الملكات المنافسات.",
+		"إذا خرجت عدة ملكات، غالبًا يحدث صراع حقيقي على العرش.",
+		"مجموعة صغيرة من العاملات تنشر رائحتها في الخلية — مثل شبكة.",
+		"في موسم الذروة تضع عددًا هائلًا من البيض يوميًا — كأنه محرك إنتاج حي.",
+		"يمكن للملكات التواصل عبر الاهتزازات/الأصوات (piping)، خصوصًا أثناء الاستبدال.",
+		"عند التطريد، تأخذ المستعمرة الملكة معها — كأنها انتقال مع المؤسِّسة.",
+		"وراثيًا هي شبه عاملة — الاختلاف في برنامج التطور + التغذية.",
+		"شكل جسمها مُحسّن لوضع البيض، لا لجمع الرحيق.",
+		"نادرًا ما تطير — وإذا طارت فهو حدث مهم (تزاوج، تطريد، طوارئ).",
+		"العاملات لا يميزنها من الوجه بل من بصمات الرائحة وكيمياء التلامس.",
+		"بدون ملكة تحاول العاملات حلولًا طارئة: يضعن بيضًا لكن الناتج ذكور فقط.",
+		"الملكة الجيدة ليست “مديرة” بقدر ما هي مورد: ذكاء الخلية هو السرب.",
+		"عندما تضعف الملكة يتغير مزاج الخلية قبل أن يلاحظ البشر ذلك.",
+	],
+	zh: [
+		"蜂后真正“见到太阳”的机会，常常只有一次：婚飞（交尾飞行）那天。",
+		"蜂后不是天生的——蜂王浆把幼虫“养成”蜂后。",
+		"它能把精子储存在受精囊里很多年——像一个生物保险库。",
+		"它会主动决定卵是否受精：受精＝工蜂/蜂后；不受精＝雄蜂。",
+		"换王有时会悄无声息地发生（静默换王）：几乎看不出来。",
+		"蜂后的信息素像“操作系统”，维持蜂群的社会稳定。",
+		"它被侍从蜂24小时喂食、清洁——皇家服务不停歇。",
+		"它的螫针比工蜂更光滑，主要用来对付竞争蜂后。",
+		"如果同时羽化多只蜂后，常常会出现真正的“王位决斗”。",
+		"少数工蜂会把蜂后的气味传遍全巢——像网络在分发信号。",
+		"旺季时它一天能产下惊人的卵量——像一台活体生产引擎。",
+		"蜂后会用振动/声音（piping）发出信号，尤其在换王时期。",
+		"分蜂时，蜂群会把蜂后一起带走——像带着“创始人”搬家。",
+		"从基因上看它几乎和工蜂一样：差别在发育程序与营养。",
+		"它的体型为产卵而优化，而不是采集。",
+		"它很少飞行——但一飞就是关键时刻（婚飞、分蜂、紧急）。",
+		"工蜂不是靠“长相”认蜂后，而是靠气味“签名”和接触化学。",
+		"没有蜂后时，工蜂会尝试应急：也会产卵，但只能发育成雄蜂。",
+		"优秀的蜂后更像资源而不是老板：真正的“智慧”在蜂群。",
+		"蜂后变弱时，蜂群的情绪/状态往往先变化，人类后知后觉。",
+	],
+};
+
+function queenFacts(){
+	return QUEEN_FACTS_I18N[LANG.current] || QUEEN_FACTS_I18N.de;
+}
+
+const DISCOVER = {
+	favLimit: 3,
+	storageKey: 'BZZZ_QUEEN_FACTS_STATE',
+	state: { favIds: [], clicks: {}, swipe: { knew:0, mindblown:0, seen:[] } },
+};
+
+function loadDiscoverState(){
+	try{
+		const raw = JSON.parse(localStorage.getItem(DISCOVER.storageKey) || '{}');
+		DISCOVER.state.favIds = Array.isArray(raw.favIds) ? raw.favIds : [];
+		DISCOVER.state.clicks = raw.clicks && typeof raw.clicks === 'object' ? raw.clicks : {};
+		DISCOVER.state.swipe = raw.swipe && typeof raw.swipe === 'object' ? { knew:0, mindblown:0, seen:[], ...raw.swipe } : { knew:0, mindblown:0, seen:[] };
+	}catch(e){}
+}
+function saveDiscoverState(){
+	localStorage.setItem(DISCOVER.storageKey, JSON.stringify(DISCOVER.state));
+}
+function factId(i){ return 'qf_' + i; }
+function isFav(id){ return DISCOVER.state.favIds.includes(id); }
+function bubbleInFavZone(msg){
+	const z = document.getElementById('favZone');
+	if(!z) return;
+	const b = document.createElement('div');
+	b.className = 'bubble';
+	b.textContent = msg;
+	z.appendChild(b);
+	setTimeout(()=>b.remove(), 1700);
+}
+
+function addFav(id){
+	if(isFav(id)) return;
+	DISCOVER.state.favIds = [id, ...DISCOVER.state.favIds].slice(0, DISCOVER.favLimit);
+	saveDiscoverState();
+	renderFavs();
+	renderFacts();
+	const i = Number(String(id).replace('qf_',''));
+	const facts = queenFacts();
+	const short = sanitizeLine(facts[i] || '').slice(0, 60);
+	bubbleInFavZone(t('toastAddedFav') + ': ' + short + (short.length>=60?'…':''));
+	toast(t('toastAddedFav'));
+}
+function removeFav(id){
+	DISCOVER.state.favIds = DISCOVER.state.favIds.filter(x=>x!==id);
+	saveDiscoverState();
+	renderFavs();
+	renderFacts();
+}
+function bumpClick(id){
+	DISCOVER.state.clicks[id] = (DISCOVER.state.clicks[id]||0)+1;
+	saveDiscoverState();
+}
+
+function topUnknownLocal(limit=5){
+	const pairs = Object.entries(DISCOVER.state.clicks);
+	pairs.sort((a,b)=> (b[1]||0) - (a[1]||0));
+	return pairs.slice(0, limit);
+}
+
+function renderFavs(){
+	const row = document.getElementById('favRow');
+	if(!row) return;
+	const facts = queenFacts();
+	row.innerHTML = DISCOVER.state.favIds.length ? DISCOVER.state.favIds.map(id=>{
+		const i = Number(id.replace('qf_',''));
+		const txt = facts[i] || '';
+		return `<div class="favChip" data-unfav="${id}"><strong>★</strong> <span>${txt}</span></div>`;
+	}).join('') : `<div class="muted" style="margin-top:10px">${t('shareEmpty')}</div>`;
+}
+
+function renderFacts(){
+	const grid = document.getElementById('factsGrid');
+	if(!grid) return;
+	const facts = queenFacts();
+	grid.innerHTML = facts.map((t, i)=>{
+		const id = factId(i);
+		const pinned = isFav(id);
+		return `
+			<div class="factTile ${pinned?'factPinned':''}" data-fact="${id}" draggable="false">
+				<div class="factTxt">${t}</div>
+				<div class="factMeta">
+					<div class="factTag">Queen fact</div>
+					<div class="factDot" aria-hidden="true"></div>
+				</div>
+			</div>
+		`;
+	}).join('');
+}
+
+function renderSwipeStats(){
+	const el = document.getElementById('swipeStats');
+	if(!el) return;
+	const s = DISCOVER.state.swipe || {knew:0,mindblown:0,seen:[]};
+	el.innerHTML = `
+		<div class="statChip">${t('statKnew')}: ${s.knew||0}</div>
+		<div class="statChip">${t('statMind')}: ${s.mindblown||0}</div>
+		<div class="statChip">${t('statSeen')}: ${(s.seen||[]).length}/${queenFacts().length}</div>
+	`;
+}
+
+function nextUnseenFactIndex(){
+	const seen = new Set((DISCOVER.state.swipe?.seen)||[]);
+	const facts = queenFacts();
+	for(let i=0;i<facts.length;i++){
+		const id = factId(i);
+		if(!seen.has(id)) return i;
+	}
+	return -1;
+}
+
+function renderSwipeDeck(){
+	const stage = document.getElementById('swipeStage');
+	if(!stage) return;
+	const i = nextUnseenFactIndex();
+	if(i<0){
+		stage.innerHTML = `<div class="swipeCard" style="justify-content:center;align-items:center;text-align:center">
+			<div style="font-weight:950;font-size:18px">${t('doneTitle')}</div>
+			<div class="muted" style="margin-top:6px">${t('doneHint')}</div>
+		</div>`;
+		renderSwipeStats();
+		return;
+	}
+	const id = factId(i);
+	const facts = queenFacts();
+	const text = facts[i];
+	stage.innerHTML = `
+		<div class="swipeCard" id="swipeCard" data-fact="${id}">
+			<div class="swipeBig">${text}</div>
+			<div>
+				<div class="swipeHintRow">
+					<div class="swipePill left">← ${t('navDiscover')}</div>
+					<div class="swipePill right">${t('swipeTitle')} →</div>
+				</div>
+				<div class="swipeBtns" style="margin-top:12px">
+					<button class="copyBtn" type="button" id="btnKnew">${t('btnKnew')}</button>
+					<button class="midBtn" type="button" id="btnFavShare" aria-label="${t('btnFav')}">${t('btnFav')}</button>
+					<button type="button" id="btnMind">${t('btnWow')}</button>
+				</div>
+			</div>
+		</div>
+	`;
+	bindSwipeCard();
+	bindSwipeButtons();
+	renderSwipeStats();
+}
+
+function commitSwipe(id, dir){
+	DISCOVER.state.swipe = DISCOVER.state.swipe || {knew:0,mindblown:0,seen:[]};
+	const s = DISCOVER.state.swipe;
+	if(!(s.seen||[]).includes(id)) s.seen = [...(s.seen||[]), id];
+	if(dir==='left') s.knew = (s.knew||0)+1;
+	if(dir==='right') s.mindblown = (s.mindblown||0)+1;
+	saveDiscoverState();
+	renderSwipeDeck();
+}
+
+function spawnBeeBurst(btn, count, dir){
+	try{
+		if(!btn) return;
+		const wrap = document.createElement('div');
+		wrap.className = 'beeBurst';
+		wrap.style.width = btn.offsetWidth + 'px';
+		wrap.style.height = btn.offsetHeight + 'px';
+		btn.appendChild(wrap);
+
+		const baseX = (dir==='right') ? (btn.offsetWidth-24) : 14;
+		const baseY = Math.max(18, Math.min(btn.offsetHeight-18, btn.offsetHeight*0.55));
+
+		for(let i=0;i<count;i++){
+			const b = document.createElement('div');
+			b.className = 'bee';
+			b.textContent = '🐝';
+			const spread = (dir==='right') ? 160 : 110;
+			const up = 140;
+			const dx = (dir==='right' ? 1 : -1) * (30 + Math.random()*spread);
+			const dy = -(30 + Math.random()*up);
+			const r = (Math.random()*70 - 35) + 'deg';
+			b.style.setProperty('--x0', baseX+'px');
+			b.style.setProperty('--y0', baseY+'px');
+			b.style.setProperty('--x1', (baseX+dx)+'px');
+			b.style.setProperty('--y1', (baseY+dy)+'px');
+			b.style.setProperty('--r', r);
+			b.style.animationDelay = (i*8)+'ms';
+			wrap.appendChild(b);
+		}
+		setTimeout(()=>wrap.remove(), 1100);
+	}catch(e){}
+}
+
+function bindSwipeButtons(){
+	const card = document.getElementById('swipeCard');
+	if(!card) return;
+	const btnK = document.getElementById('btnKnew');
+	const btnM = document.getElementById('btnMind');
+	const btnMid = document.getElementById('btnFavShare');
+
+	// Avoid touch devices triggering click-through + make gesture feel "sticky"
+	btnK?.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
+	btnM?.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
+	btnMid?.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
+
+	// Buttons behave exactly like a swipe (persisted via commitSwipe -> saveDiscoverState)
+	btnK?.addEventListener('click', (e)=>{
+		e.preventDefault(); e.stopPropagation();
+		spawnBeeBurst(btnK, 1, 'left');
+		commitSwipe(card.dataset.fact, 'left');
+	});
+	btnM?.addEventListener('click', (e)=>{
+		e.preventDefault(); e.stopPropagation();
+		spawnBeeBurst(btnM, 12, 'right');
+		commitSwipe(card.dataset.fact, 'right');
+	});
+
+	// Mid button: quick pin (no share)
+	btnMid?.addEventListener('click', (e)=>{
+		e.preventDefault(); e.stopPropagation();
+		const id = card.dataset.fact;
+		if(!id) return;
+		addFav(id);
+
+		// Inline visual confirmation on the button
+		try{
+			const prev = btnMid.textContent;
+			btnMid.textContent = t('btnAdded');
+			btnMid.disabled = true;
+			setTimeout(()=>{ btnMid.disabled = false; btnMid.textContent = prev; }, 900);
+		}catch(err){}
+	});
+}
+
+let swipeKeyBound = false;
+function bindSwipeKeyboard(){
+	if(swipeKeyBound) return;
+	swipeKeyBound = true;
+	window.addEventListener('keydown', (e)=>{
+		// only when discover view is open
+		const disc = document.getElementById('discover');
+		if(!disc || disc.classList.contains('hidden')) return;
+		const card = document.getElementById('swipeCard');
+		if(!card) return;
+		if(e.key === 'ArrowLeft'){ e.preventDefault(); commitSwipe(card.dataset.fact, 'left'); }
+		if(e.key === 'ArrowRight'){ e.preventDefault(); commitSwipe(card.dataset.fact, 'right'); }
+		if(e.key === ' '){ e.preventDefault(); openFact(card.dataset.fact); }
+	});
+}
+
+function shareFavouritesToWhatsApp(){
+	const ids = DISCOVER.state.favIds || [];
+	if(!ids.length){ toast(t('shareEmpty')); return; }
+	let text = t('shareHello') + "\n\n" + t('shareSaved') + "\n\n";
+	const facts = queenFacts();
+	ids.forEach((id, idx)=>{
+		const i = Number(String(id).replace('qf_',''));
+		const line = facts[i] || '';
+		text += `${idx+1}) ${sanitizeLine(line)}\n`;
+	});
+	text += "\n" + t('shareQuestion');
+	window.open("https://wa.me/?text="+encodeURIComponent(text));
+}
+
+function bindSwipeCard(){
+	const card = document.getElementById('swipeCard');
+	if(!card) return;
+	let startX=0, startY=0, dx=0, dy=0, active=false;
+	const leftBadge = document.getElementById('badgeLeft');
+	const rightBadge = document.getElementById('badgeRight');
+
+	function setStyle(){
+		const rot = Math.max(-14, Math.min(14, dx/18));
+		card.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotate(${rot}deg)`;
+		const a = Math.min(1, Math.abs(dx)/90);
+		if(dx<0){ if(leftBadge) leftBadge.style.opacity = a; if(rightBadge) rightBadge.style.opacity = 0; }
+		else{ if(rightBadge) rightBadge.style.opacity = a; if(leftBadge) leftBadge.style.opacity = 0; }
+	}
+	function reset(){
+		dx=0; dy=0;
+		card.style.transition='transform .18s ease';
+		setStyle();
+		setTimeout(()=>card.style.transition='', 180);
+		if(leftBadge) leftBadge.style.opacity=0;
+		if(rightBadge) rightBadge.style.opacity=0;
+	}
+	function finish(dir){
+		card.style.transition='transform .22s ease';
+		const offX = dir==='right' ? window.innerWidth : -window.innerWidth;
+		card.style.transform = `translate3d(${offX}px, ${dy}px, 0) rotate(${dir==='right'?12:-12}deg)`;
+		setTimeout(()=>commitSwipe(card.dataset.fact, dir), 180);
+	}
+
+	card.addEventListener('pointerdown', (e)=>{
+		active=true;
+		startX=e.clientX; startY=e.clientY;
+		card.setPointerCapture?.(e.pointerId);
+	});
+	card.addEventListener('pointermove', (e)=>{
+		if(!active) return;
+		dx = e.clientX - startX;
+		dy = (e.clientY - startY) * 0.25;
+		setStyle();
+	});
+	card.addEventListener('pointerup', ()=>{
+		if(!active) return;
+		active=false;
+		if(dx > 110) return finish('right');
+		if(dx < -110) return finish('left');
+		reset();
+	});
+	card.addEventListener('pointercancel', ()=>{ active=false; reset(); });
+
+	// Tap = open zoom (same as grid)
+	card.addEventListener('click', ()=>openFact(card.dataset.fact));
+}
+
+function bindOverlayButtons(factId){
+	const k = document.getElementById('ovKnew');
+	const w = document.getElementById('ovWow');
+	if(!k || !w) return;
+	// prevent overlay click-through
+	k.addEventListener('pointerdown', (e)=>e.stopPropagation());
+	w.addEventListener('pointerdown', (e)=>e.stopPropagation());
+	k.addEventListener('click', (e)=>{
+		e.preventDefault(); e.stopPropagation();
+		spawnBeeBurst(k, 1, 'left');
+		commitSwipe(factId, 'left');
+		closeFact();
+	});
+	w.addEventListener('click', (e)=>{
+		e.preventDefault(); e.stopPropagation();
+		spawnBeeBurst(w, 12, 'right');
+		commitSwipe(factId, 'right');
+		closeFact();
+	});
+}
+
+function openFact(id){
+	const i = Number(String(id).replace('qf_',''));
+	const facts = queenFacts();
+	const t = facts[i];
+	if(!t) return;
+	bumpClick(id);
+	const overlay = document.getElementById('factOverlay');
+	if(!overlay) return;
+	document.getElementById('factKicker').textContent = isFav(id) ? '★' : 'Fact';
+	// (Optional) keep kicker minimal across languages
+	document.getElementById('factText').textContent = t;
+	overlay.classList.add('open');
+	overlay.setAttribute('aria-hidden','false');
+	bindOverlayButtons(id);
+}
+function closeFact(){
+	const overlay = document.getElementById('factOverlay');
+	if(!overlay) return;
+	overlay.classList.remove('open');
+	overlay.setAttribute('aria-hidden','true');
+}
+
+let toastTimer = null;
+function toast(msg){
+	let el = document.getElementById('toast');
+	if(!el){
+		el = document.createElement('div');
+		el.className = 'toast';
+		el.id = 'toast';
+		document.body.appendChild(el);
+	}
+	el.textContent = msg;
+	el.classList.add('show');
+	clearTimeout(toastTimer);
+	toastTimer = setTimeout(()=>el.classList.remove('show'), 1600);
+}
+
+// ===== City Perks (partner marketplace, no backend) =====
+const PERKS = [
+	{ id:'flowers', icon:'💐', name:'Flowers', cat:'Gift add-on', desc:'Bouquet zum Honig – wir koordinieren per WhatsApp.', voucher:'BEEFLOWER', waPreset:'Hi! I want to add Flowers (Bouquet) to my honey order. My preferred style: ___ . Delivery time: ___ .' },
+	{ id:'delivery', icon:'🚚', name:'Delivery Upgrade', cat:'Same-day / time slot', desc:'Schnelle Lieferung oder Wunschzeitfenster (Concierge).', voucher:'FASTBEE', waPreset:'Hi! I want a delivery upgrade (same-day / time slot). Address & time: ___ .' },
+	{ id:'cafes', icon:'☕', name:'Cafés', cat:'City perks', desc:'Empfehlungen + Gutscheine von Partner-Cafés.', voucher:'HONEYCOFFEE', waPreset:'Hi! I want a café voucher / recommendation near: ___ .' },
+	{ id:'tcm', icon:'🧖', name:'TCM Massage', cat:'Wellness', desc:'TCM / Massage Voucher – als Geschenk dazu.', voucher:'ZENBEE', waPreset:'Hi! I want a TCM massage / wellness voucher. Occasion: ___ .' },
+	{ id:'wellness', icon:'🌿', name:'Wellness', cat:'Self-care', desc:'Sauna / Spa / Ritual – wir schicken Optionen.', voucher:'CALMBEE', waPreset:'Hi! I want a wellness perk. Budget: ___ . Date: ___ .' },
+];
+
+function renderPerks(){
+	const root = document.getElementById('perksGrid');
+	if(!root) return;
+	root.innerHTML = PERKS.map(p=>{
+		return `
+			<div class="perkTile" data-perk="${p.id}">
+				<div class="perkTop">
+					<div>
+						<div class="perkName">${p.icon} ${p.name}</div>
+						<div class="perkCat">${p.cat}</div>
+					</div>
+					<div style="font-weight:900;color:var(--accent)">${p.voucher ? p.voucher : ''}</div>
+				</div>
+				<div class="perkDesc">${p.desc}</div>
+				<div class="perkActions">
+					<button class="copyBtn" type="button" data-copy="${p.voucher||''}">Code kopieren</button>
+					<button type="button" data-perkwa="${p.id}">WhatsApp</button>
+				</div>
+			</div>
+		`;
+	}).join('');
+}
+
+function openPerkWhatsApp(id){
+	const p = PERKS.find(x=>x.id===id);
+	if(!p) return;
+	let text = "✨ City Perks Anfrage\n\n";
+	text += "• Perk: " + p.name + "\n";
+	if(p.voucher) text += "• Voucher: " + p.voucher + "\n";
+	text += "\n" + p.waPreset;
+	window.open("https://wa.me/?text="+encodeURIComponent(text));
+}
+
+function togglePartnerAdd(label){
+	let arr = Array.isArray(GIFT.state.partnerAdds) ? GIFT.state.partnerAdds : [];
+	if(arr.includes(label)) arr = arr.filter(x=>x!==label); else arr = [...arr, label];
+	GIFT.state.partnerAdds = arr;
+	saveGiftState();
+	renderSheet();
+}
+
+function bindDiscover(){
+	loadDiscoverState();
+	renderFavs();
+	renderFacts();
+	renderSwipeDeck();
+	bindSwipeKeyboard();
+
+	// Tap to zoom
+	document.getElementById('factsGrid')?.addEventListener('click', (e)=>{
+		const tile = e.target.closest('[data-fact]');
+		if(!tile) return;
+		openFact(tile.dataset.fact);
+	});
+	document.getElementById('closeFact')?.addEventListener('click', closeFact);
+	document.getElementById('factOverlay')?.addEventListener('click', (e)=>{
+		if(e.target.id === 'factOverlay') closeFact();
+	});
+
+	// Un-fav
+	document.getElementById('favRow')?.addEventListener('click', (e)=>{
+		const chip = e.target.closest('[data-unfav]');
+		if(!chip) return;
+		removeFav(chip.dataset.unfav);
+	});
+	document.getElementById('shareBeeFavs')?.addEventListener('click', ()=>{ shareFavouritesToWhatsApp(); });
+	document.getElementById('clearBeeFavs')?.addEventListener('click', ()=>{
+		DISCOVER.state.favIds = [];
+		saveDiscoverState();
+		renderFavs();
+		renderFacts();
+	});
+
+	// Long-hold to add to favourites (no drag needed)
+	let holdTimer = null;
+	let holdId = null;
+	const grid = document.getElementById('factsGrid');
+	grid?.addEventListener('pointerdown', (e)=>{
+		const tile = e.target.closest('[data-fact]');
+		if(!tile) return;
+		holdId = tile.dataset.fact;
+		holdTimer = setTimeout(()=>{
+			// Add directly (more intuitive than drag)
+			tile.classList.add('haptic');
+			setTimeout(()=>tile.classList.remove('haptic'), 180);
+			addFav(holdId);
+		}, 650);
+	});
+	grid?.addEventListener('pointerup', ()=>{ clearTimeout(holdTimer); holdTimer=null; holdId=null; });
+	grid?.addEventListener('pointercancel', ()=>{ clearTimeout(holdTimer); holdTimer=null; holdId=null; });
+
+	const favZone = document.getElementById('favZone');
+	favZone?.addEventListener('dragover', (e)=>{ e.preventDefault(); });
+	favZone?.addEventListener('drop', (e)=>{
+		e.preventDefault();
+		const id = e.dataTransfer?.getData('text/plain');
+		if(id) addFav(id);
+	});
+}
+
+// Items now have categories
+const ITEMS = [
+	{ name:'Blütenhonig', price:6, cat:'Honig', note:'mild & floral', img:'honigjar.jpg' },
+	{ name:'Waldhonig', price:9, cat:'Honig', note:'kräftig & dunkel', img:'sorten.jpg' },
+	{ name:'Honig-Duo Set', price:14, cat:'Sets', note:'2 Gläser zum Vorteil', img:'ikeav.jpg' },
+	{ name:'Propolis', price:12, cat:'Extras', note:'natürliches Antibiotikum', img:'sace.jpg' },
+	{ name:'Holzlöffel', price:2, cat:'Extras', note:'perfekt für Tee', img:'honigjar.jpg' },
+];
+
+// ===== Upsell mechanics (local-only) =====
+const UPSELL = {
+	lastOrderKey: 'BZZZ_LAST_ORDER',
+	// thresholds (tuned for queue upsell)
+	freeWrapThreshold: 20, // €
+	freeDeliveryThreshold: 28, // €
+	// micro upsell map: after adding X, suggest Y
+	suggest: {
+		'Blütenhonig': 'Holzlöffel',
+		'Waldhonig': 'Holzlöffel',
+		'Honig-Duo Set': 'Propolis',
+		'Propolis': 'Blütenhonig',
+	},
+	bundles: [
+		{ id:'b_duo_propolis', title:'Bundle: Duo + Propolis', subtitle:'Bestseller Stack – fühlt sich nach Upgrade an', items:[{name:'Honig-Duo Set', qty:1},{name:'Propolis', qty:1}], badge:'Top', note:'1 Tap Add' },
+		{ id:'b_gift', title:'Geschenk-Set', subtitle:'Duo + Karte + Wrap', items:[{name:'Honig-Duo Set', qty:1}], gift:{ wrap:true, occasion:'birthday' }, badge:'Gift', note:'1 Tap Add' },
+		{ id:'b_dark', title:'Wald Lover', subtitle:'Waldhonig + Propolis', items:[{name:'Waldhonig', qty:1},{name:'Propolis', qty:1}], badge:'Bold', note:'1 Tap Add' },
+	]
+};
+
+const UI = { cat:'Alle' };
+
+function setMode(mode){
+	document.body.dataset.mode=mode;
+	document.getElementById('menu').classList.toggle('hidden',mode!=='order');
+	document.getElementById('discover').classList.toggle('hidden',mode!=='discover');
+	document.getElementById('perks').classList.toggle('hidden',mode!=='perks');
+	document.getElementById('contact').classList.toggle('hidden',mode!=='contact');
+	document.getElementById('admin').classList.toggle('hidden',mode!=='admin');
+	if(mode==='admin') renderAdmin();
+}
+
+function fmtEuro(n){
+	return String(n).replace('.', ',') + '€';
+}
+
+function renderCats(){
+	const cats = ['Alle', ...Array.from(new Set(ITEMS.map(x=>x.cat)))];
+	const root = document.getElementById('catPills');
+	root.innerHTML = cats.map(c=>{
+		const pressed = (UI.cat === c);
+		return `<button class="pill" type="button" data-cat="${c}" aria-pressed="${pressed}">${c}</button>`;
+	}).join('');
+}
+
+function filterItems(){
+	if(UI.cat === 'Alle') return ITEMS;
+	return ITEMS.filter(x=>x.cat === UI.cat);
+}
+
+function renderItems(){
+	const root = document.getElementById('items');
+	const banner = promoBannerHTML();
+	root.innerHTML = banner + filterItems().map(x=>{
+		const p = activePromo();
+		const newPrice = effectivePrice(x);
+		const isDiscount = (newPrice !== x.price);
+		const priceHTML = isDiscount
+			? `<span style="opacity:.65;text-decoration:line-through;margin-right:8px">${fmtEuro(x.price)}</span><span>${fmtEuro(newPrice)}</span>`
+			: `${fmtEuro(x.price)}`;
+		return `
+			<div class="card" data-item="${x.name}">
+				<div class="card-content">
+					<img src="${x.img}" alt="">
+					<div style="min-width:0">
+						<div>${x.name}</div>
+						<div class="muted">${x.note}</div>
+					</div>
+				</div>
+				<div class="price">${priceHTML}</div>
+			</div>
+		`;
+	}).join('');
+}
+
+function hapticIllusion(el){
+	if(!el) return;
+	el.classList.add('haptic');
+	setTimeout(()=>el.classList.remove('haptic'), 110);
+}
+
+function flyToCart(fromEl){
+	try{
+		const bar = document.getElementById('orderBar');
+		if(!fromEl || !bar) return;
+		const img = fromEl.querySelector('img');
+		if(!img) return;
+
+		const r1 = img.getBoundingClientRect();
+		const r2 = bar.getBoundingClientRect();
+
+		const x1 = (r1.left + r1.width/2 - 28);
+		const y1 = (r1.top + r1.height/2 - 28);
+		const x2 = (r2.left + r2.width/2 - 28);
+		const y2 = (r2.top + 18);
+
+		const node = document.createElement('div');
+		node.className = 'fly';
+		node.style.setProperty('--x1', `${x1}px`);
+		node.style.setProperty('--y1', `${y1}px`);
+		node.style.setProperty('--x2', `${x2}px`);
+		node.style.setProperty('--y2', `${y2}px`);
+		node.innerHTML = `<img src="${img.src}" alt="">`;
+		document.body.appendChild(node);
+		bar.classList.add('pulse');
+		setTimeout(()=>bar.classList.remove('pulse'), 380);
+		setTimeout(()=>node.remove(), 700);
+	}catch(e){}
+}
+
+function addFlash(el){
+	if(!el) return;
+	el.classList.add('addedFlash');
+	setTimeout(()=>el.classList.remove('addedFlash'), 520);
+}
+
+function addItem(name,price,fromEl){
+	const item=cart.find(i=>i.name===name);
+	if(item)item.qty++; else cart.push({name,price,qty:1});
+	updateBar();
+	renderSheet();
+	hapticIllusion(fromEl);
+	flyToCart(fromEl);
+	addFlash(fromEl);
+	microUpsellAfterAdd(name);
+}
+
+// Micro-upsell hook (local-only). Safe no-op fallback so add-to-cart never breaks.
+function microUpsellAfterAdd(name){
+	try{
+		const next = UPSELL?.suggest?.[name];
+		if(!next) return;
+		// Soft hint only (no modal, queue-friendly)
+		toast('Tip: + ' + next);
+	}catch(e){}
+}
+
+function setQty(name, delta){
+	const item = cart.find(i=>i.name===name);
+	if(!item) return;
+	item.qty = Math.max(0, item.qty + delta);
+	if(item.qty===0) cart = cart.filter(x=>x.name!==name);
+	updateBar();
+	renderSheet();
+}
+
+function calcCount(){
+	return cart.reduce((s,i)=>s+i.qty,0);
+}
+function calcTotal(){
+	return cart.reduce((s,i)=>s+i.qty*i.price,0) + giftTotal();
+}
+
+function updateBar(){
+	const count=calcCount();
+	const total=calcTotal();
+	document.getElementById('orderBar').innerText=`🧾 ${count} ${t('itemsLabel')} • ${total}€`;
+}
+
+function buildOrderText(){
+	let text="🧾 Stadthonig Bestellung\n\n";
+	cart.forEach(i=>text+=`• ${i.qty}x ${i.name}\n`);
+	const p = activePromo();
+	if(p && p.voucher){
+		text += `\n✨ Special: ${sanitizeLine(p.text||'')}`;
+		text += `\n🏷️ Code: ${sanitizeLine(p.voucher)}`;
+	}
+
+	// Gift options
+	if(GIFT.state.wrap){
+		text += `\n🎁 Geschenkverpackung: Ja (+${GIFT.wrapFee}€)`;
+	}
+	if(GIFT.state.occasion && GIFT.state.occasion !== 'none'){
+		const occ = OCCASIONS.find(o=>o.id===GIFT.state.occasion);
+		if(occ) text += `\n🎉 Anlass: ${occ.label}`;
+	}
+	if(String(GIFT.state.card||'').trim()){
+		text += "\n💌 Karte: \"" + sanitizeLine(GIFT.state.card) + "\"";
+	}
+	if(GIFT.state.shipToOther){
+		text += "\n\n📦 Lieferung an:";
+		if(String(GIFT.state.recipientName||'').trim()) text += "\n• " + sanitizeLine(GIFT.state.recipientName);
+		if(String(GIFT.state.recipientAddress||'').trim()) text += "\n• " + sanitizeLine(GIFT.state.recipientAddress);
+		if(String(GIFT.state.recipientPhone||'').trim()) text += "\n• Tel: " + sanitizeLine(GIFT.state.recipientPhone);
+	}
+	if(Array.isArray(GIFT.state.partnerAdds) && GIFT.state.partnerAdds.length){
+		text += "\n\n🤝 Partner Add-ons:";
+		GIFT.state.partnerAdds.forEach(x=> text += "\n• " + sanitizeLine(x));
+	}
+
+	const total=calcTotal();
+	text+="\n\n💰 Gesamt: "+total+"€";
+	return text;
+}
+
+function saveLastOrderDraft(){
+	try{
+		const payload = {
+			at: new Date().toISOString(),
+			cart,
+			gift: GIFT.state,
+			promo: loadPromo(),
+			text: buildOrderText(),
+			total: calcTotal(),
+		};
+		localStorage.setItem(UPSELL.lastOrderKey, JSON.stringify(payload));
+	}catch(e){}
+}
+function loadLastOrderDraft(){
+	try{ return JSON.parse(localStorage.getItem(UPSELL.lastOrderKey) || 'null'); }catch(e){ return null; }
+}
+function canReorder(){
+	const d = loadLastOrderDraft();
+	return !!(d && Array.isArray(d.cart) && d.cart.length);
+}
+function applyLastOrder(){
+	const d = loadLastOrderDraft();
+	if(!d || !Array.isArray(d.cart)) return false;
+	cart = d.cart.map(x=>({ name:x.name, price:x.price, qty:x.qty }));
+	// Keep current promo but restore gift (this is a choice; feels like "repeat")
+	if(d.gift && typeof d.gift==='object'){
+		GIFT.state = { ...GIFT.state, ...d.gift };
+		saveGiftState();
+	}
+	updateBar();
+	renderSheet();
+	toast('Reorder loaded');
+	return true;
+}
+
+function sendOrder(){
+	if(!calcCount()) return;
+	saveLastOrderDraft();
+	window.open("https://wa.me/?text="+encodeURIComponent(buildOrderText()));
+}
+
+function openSheet(){
+	const s = document.getElementById('sheet');
+	s?.classList.add('open');
+	s?.setAttribute('aria-hidden','false');
+	// prevent background scroll when modal open
+	document.body.style.overflow = 'hidden';
+	renderSheet();
+}
+function closeSheet(){
+	const s = document.getElementById('sheet');
+	s?.classList.remove('open');
+	s?.setAttribute('aria-hidden','true');
+	document.body.style.overflow = '';
+}
+
+function clearCart(){
+	cart = [];
+	updateBar();
+	renderSheet();
+}
+
+function inCart(name){
+	return cart.some(i=>i.name===name);
+}
+
+function pickUpsells(){
+	// Simple rules tuned for honey products
+	if(!calcCount()) return [];
+	const list = [];
+
+	// 1) Push sets early
+	if((inCart('Blütenhonig') || inCart('Waldhonig')) && !inCart('Honig-Duo Set')){
+		list.push({ name:'Honig-Duo Set', hint:'Bestseller Bundle – perfekt als Geschenk.' });
+	}
+	// 2) Wellness add-on
+	if((inCart('Blütenhonig') || inCart('Waldhonig') || inCart('Honig-Duo Set')) && !inCart('Propolis')){
+		list.push({ name:'Propolis', hint:'Viele nehmen Propolis dazu (Wellness).' });
+	}
+	// 3) Add a honey if they started with propolis
+	if(inCart('Propolis') && !inCart('Blütenhonig')){
+		list.push({ name:'Blütenhonig', hint:'Mild & floral – super zu Tee.' });
+	}
+
+	// Ensure max 2 tiles (clean UI)
+	return list.slice(0,2);
+}
+
+function renderGiftBox(){
+	const box = document.getElementById('giftBox');
+	if(!box) return;
+	const p = Array.isArray(GIFT.state.partnerAdds) ? GIFT.state.partnerAdds : [];
+	const hasFlowers = p.includes('Flowers (Bouquet)');
+	const hasDelivery = p.includes('Delivery Upgrade (Same-day / time slot)');
+	const hasWellness = p.includes('Wellness Voucher (TCM/Massage)');
+	box.innerHTML = `
+		<div class="giftTitle">${t('giftOptional')}</div>
+		<div class="giftRow">
+			<label class="switch">
+				<input id="giftWrap" type="checkbox" ${GIFT.state.wrap?'checked':''}>
+				<div>
+					<strong>${t('giftWrapTitle')}</strong><br><span class="muted">${t('giftWrapHint')}</span>
+				</div>
+			</label>
+			<div class="badgePrice">+${GIFT.wrapFee}€</div>
+		</div>
+
+		<div class="field">
+			<label>${t('partnerBoosters')}</label>
+			<div class="occasions">
+				<button class="ocBtn" type="button" data-partneradd="Flowers (Bouquet)" aria-pressed="${hasFlowers}">💐 Flowers</button>
+				<button class="ocBtn" type="button" data-partneradd="Delivery Upgrade (Same-day / time slot)" aria-pressed="${hasDelivery}">🚚 Delivery</button>
+				<button class="ocBtn" type="button" data-partneradd="Wellness Voucher (TCM/Massage)" aria-pressed="${hasWellness}">🧖 Wellness</button>
+			</div>
+			<div class="helpTiny">${t('partnerBoostersHint')}</div>
+		</div>
+
+		<div class="field">
+			<label>${t('occasion')}</label>
+			<div class="occasions">
+				<button class="ocBtn" type="button" data-occ="none" aria-pressed="${GIFT.state.occasion==='none'}">${t('occasionNone')}</button>
+				${OCCASIONS.map(o=>`<button class="ocBtn" type="button" data-occ="${o.id}" aria-pressed="${GIFT.state.occasion===o.id}">${o.label}</button>`).join('')}
+			</div>
+			<div class="helpTiny">${t('occasionHint')}</div>
+		</div>
+
+		<div class="field">
+			<label>${t('cardText')}</label>
+			<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+				<button class="smallBtn" type="button" id="giftMsgShort">Kurz</button>
+				<button class="smallBtn" type="button" id="giftMsgWarm">Warm</button>
+				<button class="smallBtn" type="button" id="giftMsgFunny">Funny</button>
+			</div>
+			<textarea id="cardMsg" maxlength="160" placeholder="Kurze Nachricht…">${GIFT.state.card||''}</textarea>
+			<div class="helpTiny">${t('cardTextHint')}</div>
+		</div>
+
+		<div class="giftRow">
+			<label class="switch">
+				<input id="shipOther" type="checkbox" ${GIFT.state.shipToOther?'checked':''}>
+				<div>
+					<strong>${t('shipOther')}</strong><br><span class="muted">${t('shipOtherHint')}</span>
+				</div>
+			</label>
+		</div>
+
+		<div id="recipientFields" style="display:${GIFT.state.shipToOther?'block':'none'}">
+			<div class="field"><label>${t('recipientName')}</label><input id="recName" value="${GIFT.state.recipientName||''}" placeholder="${t('recipientName')}"></div>
+			<div class="field"><label>${t('recipientAddress')}</label><input id="recAddr" value="${GIFT.state.recipientAddress||''}" placeholder="${t('recipientAddress')}"></div>
+			<div class="field"><label>${t('recipientPhone')}</label><input id="recPhone" value="${GIFT.state.recipientPhone||''}" placeholder="${t('recipientPhone')}"></div>
+			<div class="helpTiny">${t('localOnlyHint')}</div>
+		</div>
+	`;
+}
+
+function renderThresholdHint(){
+	const el = document.getElementById('upsellHint');
+	if(!el) return;
+	const subtotal = cart.reduce((s,i)=>s+i.qty*i.price,0);
+	const total = calcTotal();
+	let msg = '';
+	let cta = '';
+	let needed = 0;
+	let quickName = '';
+	if(total>0 && total < UPSELL.freeWrapThreshold){
+		needed = UPSELL.freeWrapThreshold - total;
+		msg = `Noch ${needed}€ bis <strong>Free Gift Wrap</strong>`;
+		quickName = 'Holzlöffel';
+	}else if(total >= UPSELL.freeWrapThreshold && total < UPSELL.freeDeliveryThreshold){
+		needed = UPSELL.freeDeliveryThreshold - total;
+		msg = `Nice! Wrap ist free. Noch ${needed}€ bis <strong>Free Delivery</strong>`;
+		quickName = 'Propolis';
+	}else if(total >= UPSELL.freeDeliveryThreshold){
+		msg = '🔥 Du hast Free Wrap + Free Delivery unlocked.';
+		quickName = '';
+	}
+	if(!msg){ el.style.display='none'; el.innerHTML=''; return; }
+	el.style.display='flex';
+	const item = quickName ? ITEMS.find(x=>x.name===quickName) : null;
+	const img = item?.img || 'honigjar.jpg';
+	const price = item ? fmtEuro(effectivePrice(item)) : '';
+	el.innerHTML = `
+		<div style="flex:1">
+			<div style="font-weight:950">${msg}</div>
+			<div class="muted" style="margin-top:4px">1 Tap Upsell – perfekt in der Schlange.</div>
+		</div>
+		${quickName?`
+			<div class="upsellTile" data-quickupsell="${quickName}" style="cursor:pointer;min-width:220px;max-width:320px">
+				<img class="upsellTileImg" src="${img}" alt="">
+				<div>
+					<div class="upsellName">+ ${quickName}</div>
+					<div class="upsellHint">Tap to add • ${price}</div>
+				</div>
+				<div class="upsellRight"><button class="addMini" type="button" data-quickupsell="${quickName}" aria-label="Hinzufügen">+</button></div>
+			</div>
+		`:''}
+	`;
+}
+
+function bundlePrice(bundle){
+	try{
+		if(!bundle || !Array.isArray(bundle.items)) return 0;
+		let sum = 0;
+		bundle.items.forEach(x=>{
+			const item = ITEMS.find(i=>i.name===x.name);
+			if(!item) return;
+			const qty = Math.max(1, Number(x.qty||1));
+			sum += qty * effectivePrice(item);
+		});
+		// If bundle defines gift wrap, include wrap fee (unless promo waives it)
+		if(bundle.gift?.wrap){
+			const p = activePromo();
+			if(!(p?.freeGiftWrap)) sum += (GIFT.wrapFee||0);
+		}
+		return sum;
+	}catch(e){
+		return 0;
+	}
+}
+
+function addBundleToCart(bundleId, fromEl){
+	const b = UPSELL.bundles.find(x=>x.id===bundleId);
+	if(!b) return;
+	// add items
+	(b.items||[]).forEach(x=>{
+		const item = ITEMS.find(i=>i.name===x.name);
+		if(!item) return;
+		const qty = Math.max(1, Number(x.qty||1));
+		for(let k=0;k<qty;k++) addItem(item.name, effectivePrice(item), null);
+	});
+	// apply gift settings (local)
+	if(b.gift && typeof b.gift==='object'){
+		if(typeof b.gift.wrap === 'boolean') GIFT.state.wrap = b.gift.wrap;
+		if(typeof b.gift.occasion === 'string'){
+			GIFT.state.occasion = b.gift.occasion;
+			if(b.gift.occasion !== 'none') applyOccasionDefaultCard(b.gift.occasion);
+		}
+		saveGiftState();
+	}
+	// tiny feedback
+	try{ hapticIllusion(fromEl); addFlash(fromEl); }catch(e){}
+	toast('Bundle added');
+	renderSheet();
+}
+
+function renderBundles(){
+	// show bundles when sheet is open; clean + high impact
+	const host = document.getElementById('lines');
+	if(!host) return;
+	const html = `
+		<div class="giftBox" style="margin-bottom:12px">
+			<div class="giftTitle">${t('bundles')}</div>
+			<div style="display:grid;gap:10px;margin-top:10px">
+				${UPSELL.bundles.map(b=>{
+					const price = bundlePrice(b);
+					return `
+						<div class="card" style="display:block" data-bundle="${b.id}">
+							<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+								<div style="font-weight:950">${b.title}</div>
+								<div class="price" style="font-size:13px">${fmtEuro(price)}</div>
+							</div>
+							<div class="muted" style="margin-top:4px">${b.subtitle}</div>
+							<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+								<div class="muted" style="font-size:12px">${b.items.map(x=>`${x.qty}× ${x.name}`).join(' • ')}</div>
+								<button class="smallBtn" type="button" data-bundleadd="${b.id}">+ Bundle</button>
+							</div>
+						</div>
+					`;
+				}).join('')}
+			</div>
+			<div class="helpTiny" style="margin-top:10px">Tipp: Du kannst das ganze Bundle-Tile antippen (nicht nur den Button).</div>
+		</div>
+	`;
+	return html;
+}
+
+function renderSheet(){
+	const lines = document.getElementById('lines');
+	const totalEl = document.getElementById('sheetTotal');
+	const sendBtn = document.getElementById('sendBtn');
+	const reorderBtn = document.getElementById('reorderBtn');
+	if(!lines || !totalEl || !sendBtn) return;
+
+	renderGiftBox();
+	renderThresholdHint();
+	if(reorderBtn) reorderBtn.style.display = canReorder() ? 'block' : 'none';
+
+	const total = calcTotal();
+	totalEl.textContent = total + '€';
+	sendBtn.disabled = calcCount()===0;
+
+	const bundlesHTML = renderBundles() || '';
+	lines.innerHTML = bundlesHTML + (cart.length ? cart.map(i=>{
+		return `
+			<div class="line">
+				<div>
+					<div class="lineTitle">${i.name}</div>
+					<div class="lineMeta">${i.price}€ ${t('perPiece')}</div>
+				</div>
+				<div class="qty">
+					<button type="button" data-dec="${i.name}">−</button>
+					<div class="n">${i.qty}</div>
+					<button type="button" data-inc="${i.name}">+</button>
+				</div>
+			</div>
+		`;
+	}).join('') : `<div style="color:var(--muted);font-size:13px">${t('emptyCart')}</div>`);
+
+	const upsells = pickUpsells();
+	const box = document.getElementById('upsellBox');
+	if(box){
+		if(upsells.length){
+			box.style.display = 'block';
+			box.innerHTML = `
+				<div class="upsellTitle">${t('upsellTitle')}</div>
+				<div class="upsellTiles">
+					${upsells.map(u=>{
+						const item = ITEMS.find(x=>x.name===u.name);
+						const img = item?.img || 'honigjar.jpg';
+						const added = inCart(u.name);
+						return `
+							<div class="upsellTile" data-upsell="${u.name}">
+								<img class="upsellTileImg" src="${img}" alt="">
+								<div>
+									<div class="upsellName">${u.name}</div>
+									<div class="upsellHint">${u.hint}</div>
+								</div>
+								<div class="upsellRight">
+									${added ? `<span class="checkBadge">✓</span>` : ''}
+									<button class="addMini ${added?'added':''}" type="button" data-upsell-btn="${u.name}" aria-label="Hinzufügen">+</button>
+								</div>
+							</div>
+						`;
+					}).join('')}
+				</div>
+			`;
+		}else{
+			box.style.display = 'none';
+			box.innerHTML = '';
+		}
+	}
+}
+
+// (Virtual assistant removed)
+
+// Events for pills + cards + sheet
+function bind(){
+	// Gift box events
+	document.getElementById('sheet')?.addEventListener('change', (e)=>{
+		if(e.target?.id === 'giftWrap'){
+			GIFT.state.wrap = !!e.target.checked;
+			saveGiftState();
+			renderSheet();
+		}
+		if(e.target?.id === 'shipOther'){
+			GIFT.state.shipToOther = !!e.target.checked;
+			saveGiftState();
+			renderSheet();
+		}
+		if(e.target?.id === 'recName'){
+			GIFT.state.recipientName = e.target.value;
+			saveGiftState();
+		}
+		if(e.target?.id === 'recAddr'){
+			GIFT.state.recipientAddress = e.target.value;
+			saveGiftState();
+		}
+		if(e.target?.id === 'recPhone'){
+			GIFT.state.recipientPhone = e.target.value;
+			saveGiftState();
+		}
+	});
+
+	document.getElementById('sheet')?.addEventListener('input', (e)=>{
+		if(e.target?.id === 'cardMsg'){
+			GIFT.state.card = e.target.value;
+			saveGiftState();
+		}
+	});
+
+	document.getElementById('sheet')?.addEventListener('click', (e)=>{
+		const b = e.target.closest('[data-occ]');
+		if(b){
+			const id = b.dataset.occ;
+			GIFT.state.occasion = id;
+			if(id === 'none'){
+				// keep existing card
+			}else{
+				applyOccasionDefaultCard(id);
+			}
+			saveGiftState();
+			renderSheet();
+			return;
+		}
+
+		// Card templates
+		if(e.target?.id === 'giftMsgShort'){ applyCardTemplate('short'); return; }
+		if(e.target?.id === 'giftMsgWarm'){ applyCardTemplate('warm'); return; }
+		if(e.target?.id === 'giftMsgFunny'){ applyCardTemplate('funny'); return; }
+
+		const pa = e.target.closest('[data-partneradd]');
+		if(pa){
+			togglePartnerAdd(pa.dataset.partneradd);
+			return;
+		}
+	});
+
+	// City perks actions
+	document.getElementById('perksGrid')?.addEventListener('click', async (e)=>{
+		const copy = e.target.closest('[data-copy]');
+		if(copy){
+			const code = copy.dataset.copy;
+			if(code){
+				try{ await navigator.clipboard.writeText(code); toast('Voucher kopiert: '+code); }
+				catch(err){ toast('Copy nicht verfügbar'); }
+			}else{
+				toast('Kein Code');
+			}
+			return;
+		}
+		const wa = e.target.closest('[data-perkwa]');
+		if(wa){
+			openPerkWhatsApp(wa.dataset.perkwa);
+		}
+	});
+
+	document.getElementById('catPills').addEventListener('click', (e)=>{
+		const btn = e.target.closest('[data-cat]');
+		if(!btn) return;
+		UI.cat = btn.dataset.cat;
+		renderAll();
+	});
+
+	document.getElementById('items').addEventListener('pointerdown', (e)=>{
+		const card = e.target.closest('.card');
+		if(card) hapticIllusion(card);
+	});
+
+	function openQuickView(item){
+	const ov = document.getElementById('qvOverlay');
+	if(!ov || !item) return;
+	document.getElementById('qvImg').src = item.img;
+	document.getElementById('qvImg').alt = item.name;
+	document.getElementById('qvName').textContent = item.name;
+	document.getElementById('qvNote').textContent = item.note || '';
+	document.getElementById('qvPrice').textContent = fmtEuro(effectivePrice(item));
+	ov.classList.add('open');
+	ov.setAttribute('aria-hidden','false');
+	ov.dataset.item = item.name;
+}
+function closeQuickView(){
+	const ov = document.getElementById('qvOverlay');
+	if(!ov) return;
+	ov.classList.remove('open');
+	ov.setAttribute('aria-hidden','true');
+	ov.dataset.item = '';
+}
+
+// Product tiles:
+// - tap/click => add to cart (+ checkmark flash)
+// - long-hold (~450ms) => zoom (quick view)
+let holdTimer2 = null;
+let holdOpened = false;
+let holdCardEl = null;
+let holdItemName = null;
+
+document.getElementById('items').addEventListener('pointerdown', (e)=>{
+	const card = e.target.closest('.card');
+	if(!card) return;
+	const name = card.dataset.item;
+	const item = ITEMS.find(x=>x.name===name);
+	if(!item) return;
+	clearTimeout(holdTimer2);
+	holdOpened = false;
+	holdCardEl = card;
+	holdItemName = name;
+	holdTimer2 = setTimeout(()=>{
+		holdOpened = true;
+		openQuickView(item);
+	}, 450);
+});
+
+document.getElementById('items').addEventListener('pointerup', ()=>{ clearTimeout(holdTimer2); });
+document.getElementById('items').addEventListener('pointercancel', ()=>{ clearTimeout(holdTimer2); });
+document.getElementById('items').addEventListener('pointermove', (e)=>{
+	// If user starts scrolling, cancel hold
+	if(!holdTimer2) return;
+	const dy = Math.abs((e.movementY||0));
+	if(dy>6){ clearTimeout(holdTimer2); holdTimer2=null; }
+});
+
+document.getElementById('items').addEventListener('click', (e)=>{
+	const card = e.target.closest('.card');
+	if(!card) return;
+	// If long-hold already opened quick view, ignore click
+	if(holdOpened) return;
+	const name = card.dataset.item;
+	const item = ITEMS.find(x=>x.name===name);
+	if(!item) return;
+	addItem(item.name, effectivePrice(item), card);
+});
+
+document.getElementById('qvClose')?.addEventListener('click', closeQuickView);
+document.getElementById('qvBack')?.addEventListener('click', closeQuickView);
+document.getElementById('qvOverlay')?.addEventListener('click', (e)=>{ if(e.target?.id==='qvOverlay') closeQuickView(); });
+document.getElementById('qvAdd')?.addEventListener('click', ()=>{
+	const ov = document.getElementById('qvOverlay');
+	const name = ov?.dataset?.item;
+	const item = ITEMS.find(x=>x.name===name);
+	if(!item) return;
+	addItem(item.name, effectivePrice(item), holdCardEl);
+	closeQuickView();
+});
+
+	document.getElementById('closeSheet')?.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); closeSheet(); });
+	// extra safety for desktop pointer events
+	document.getElementById('closeSheet')?.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
+	document.getElementById('clearCart')?.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); clearCart(); });
+	document.getElementById('sendBtn')?.addEventListener('click', ()=>{ sendOrder(); });
+
+	// Close when clicking the dark backdrop
+	document.getElementById('sheet')?.addEventListener('click', (e)=>{
+		if(e.target?.id === 'sheet') closeSheet();
+	});
+	// (No inner stopPropagation) Gift controls rely on event delegation on #sheet.
+	// Backdrop-close is already guarded by (e.target.id === 'sheet').
+
+	// Swipe/drag down to close sheet (works on desktop trackpad + touch)
+	let sheetStartY = 0;
+	let sheetDy = 0;
+	let sheetActive = false;
+	const sheetEl = document.getElementById('sheet');
+	const innerEl = document.querySelector('#sheet .inner');
+	const headerEl = document.querySelector('#sheet .sheetHeader');
+	const dragTarget = headerEl || innerEl;
+
+	function setSheetDragStyle(){
+		if(!innerEl) return;
+		innerEl.style.transform = sheetDy>0 ? `translate3d(0, ${sheetDy}px, 0)` : '';
+		innerEl.style.opacity = sheetDy>0 ? String(Math.max(0.65, 1 - sheetDy/520)) : '';
+	}
+	function resetSheetDrag(){
+		if(!innerEl) return;
+		innerEl.style.transition = 'transform .18s ease, opacity .18s ease';
+		sheetDy = 0;
+		setSheetDragStyle();
+		setTimeout(()=>{ innerEl.style.transition=''; innerEl.style.opacity=''; }, 180);
+	}
+	function finishSheetDrag(){
+		if(sheetDy > 140){
+			resetSheetDrag();
+			closeSheet();
+			return;
+		}
+		resetSheetDrag();
+	}
+
+	dragTarget?.addEventListener('pointerdown', (e)=>{
+		// Only when sheet is open
+		if(!sheetEl?.classList.contains('open')) return;
+		sheetActive = true;
+		sheetStartY = e.clientY;
+		sheetDy = 0;
+		dragTarget.setPointerCapture?.(e.pointerId);
+	});
+	dragTarget?.addEventListener('pointermove', (e)=>{
+		if(!sheetActive) return;
+		const dy = e.clientY - sheetStartY;
+		sheetDy = Math.max(0, dy);
+		setSheetDragStyle();
+	});
+	dragTarget?.addEventListener('pointerup', ()=>{ if(!sheetActive) return; sheetActive=false; finishSheetDrag(); });
+	dragTarget?.addEventListener('pointercancel', ()=>{ if(!sheetActive) return; sheetActive=false; resetSheetDrag(); });
+
+	document.getElementById('lines')?.addEventListener('click', (e)=>{
+		const inc = e.target.closest('[data-inc]');
+		const dec = e.target.closest('[data-dec]');
+		if(inc) setQty(inc.dataset.inc, +1);
+		if(dec) setQty(dec.dataset.dec, -1);
+
+		// Bundles: tap anywhere on the bundle card OR on + Bundle
+		const bBtn = e.target.closest('[data-bundleadd]');
+		if(bBtn){
+			e.preventDefault();
+			e.stopPropagation();
+			addBundleToCart(bBtn.dataset.bundleadd, bBtn.closest('[data-bundle]') || bBtn);
+			return;
+		}
+		const bCard = e.target.closest('[data-bundle]');
+		if(bCard && !e.target.closest('button')){
+			e.preventDefault();
+			e.stopPropagation();
+			addBundleToCart(bCard.dataset.bundle, bCard);
+			return;
+		}
+	});
+	// Upsell add (tap tile or + button) — delegate from #sheet (more robust when HTML rerenders)
+	document.getElementById('sheet')?.addEventListener('click', (e)=>{
+		// quick threshold tile
+		const quick = e.target.closest('[data-quickupsell]');
+		if(quick){
+			e.preventDefault();
+			e.stopPropagation();
+			const name = quick.dataset.quickupsell;
+			const item = ITEMS.find(x=>x.name===name);
+			if(!item) return;
+			addItem(item.name, effectivePrice(item), null);
+			return;
+		}
+
+		const inUpsell = e.target.closest('#upsellBox');
+		if(!inUpsell) return;
+		const el = e.target.closest('[data-upsell-btn],[data-upsell]');
+		if(!el) return;
+		e.preventDefault();
+		e.stopPropagation();
+		const name = el.dataset.upsellBtn || el.dataset.upsell;
+		const item = ITEMS.find(x=>x.name===name);
+		if(!item) return;
+		addItem(item.name, effectivePrice(item), null);
+	});
+}
+
+function renderAll(){
+	renderCats();
+	renderItems();
+}
+
+function applyTheme(mode){
+	const light = (mode === 'light');
+	document.body.classList.toggle('light', light);
+	const btn = document.getElementById('themeToggle');
+	if(btn){
+		btn.textContent = light ? '☀️' : '🌙';
+		btn.title = light ? 'Dunkelmodus' : 'Hellmodus';
+	}
+	localStorage.setItem('BZZZ_THEME', light ? 'light' : 'dark');
+	// Mobile browser top bar color hint
+	let meta = document.querySelector('meta[name="theme-color"]');
+	if(!meta){
+		meta = document.createElement('meta');
+		meta.setAttribute('name','theme-color');
+		document.head.appendChild(meta);
+	}
+	meta.setAttribute('content', light ? '#f6f7fb' : '#0b0b0c');
+}
+
+// ===== Local admin (no backend) =====
+const ADMIN = {
+	pin: '1234',
+	key: 'BZZZ_ADMIN_UNLOCKED'
+};
+function isAdminUnlocked(){
+	return localStorage.getItem(ADMIN.key) === '1';
+}
+function lockAdmin(){
+	localStorage.removeItem(ADMIN.key);
+}
+function unlockAdmin(pin){
+	if(String(pin||'').trim() === ADMIN.pin){
+		localStorage.setItem(ADMIN.key, '1');
+		return true;
+	}
+	return false;
+}
+const PROMO = {
+	key: 'BZZZ_PROMO_STATE',
+	defaults: {
+		enabled: false,
+		text: 'Heute Special: 10% auf Waldhonig 🍯',
+		voucher: 'BEE10',
+		discountPercent: 10,
+		items: { 'Waldhonig': true },
+		freeGiftWrap: false,
+	}
+};
+function loadPromo(){
+	try{
+		const raw = JSON.parse(localStorage.getItem(PROMO.key) || '{}');
+		return { ...PROMO.defaults, ...raw, items: { ...PROMO.defaults.items, ...(raw.items||{}) } };
+	}catch(e){
+		return { ...PROMO.defaults, items:{...PROMO.defaults.items} };
+	}
+}
+function savePromo(state){
+	localStorage.setItem(PROMO.key, JSON.stringify(state));
+}
+function activePromo(){
+	const p = loadPromo();
+	return p.enabled ? p : null;
+}
+function effectivePrice(item){
+	const p = activePromo();
+	if(!p) return item.price;
+	if(p.items && p.items[item.name]){
+		const pct = Number(p.discountPercent||0);
+		if(pct>0) return Math.max(0, Math.round((item.price*(100-pct))/100));
+	}
+	return item.price;
+}
+function promoBannerHTML(){
+	const p = activePromo();
+	if(!p) return '';
+	const v = (p.voucher && String(p.voucher).trim()) ? ` • Code: ${String(p.voucher).trim()}` : '';
+	return `<div class="card" style="display:block;border-color:rgba(37,211,102,.35);background:rgba(37,211,102,.10)">
+		<div style="font-weight:950">✨ Special</div>
+		<div class="muted" style="margin-top:6px">${sanitizeLine(p.text||'')}${v}</div>
+	</div>`;
+}
+
+function getLocalJSON(){
+	return {
+		theme: localStorage.getItem('BZZZ_THEME'),
+		gift: JSON.parse(localStorage.getItem(GIFT.storageKey) || '{}'),
+		discover: JSON.parse(localStorage.getItem(DISCOVER.storageKey) || '{}'),
+		promo: JSON.parse(localStorage.getItem(PROMO.key) || '{}'),
+	};
+}
+function renderAdmin(){
+	const gate = document.getElementById('adminGate');
+	const panel = document.getElementById('adminPanel');
+	if(!gate || !panel) return;
+	const unlocked = isAdminUnlocked();
+	gate.style.display = unlocked ? 'none' : 'block';
+	panel.style.display = unlocked ? 'block' : 'none';
+	if(!unlocked) return;
+
+	try{
+		const d = JSON.parse(localStorage.getItem(DISCOVER.storageKey) || '{}');
+		const g = JSON.parse(localStorage.getItem(GIFT.storageKey) || '{}');
+		const favCount = (d.favIds||[]).length;
+		const seenCount = (d.swipe?.seen||[]).length;
+		const knew = (d.swipe?.knew||0);
+		const mind = (d.swipe?.mindblown||0);
+		document.getElementById('adminDiscoverStats').textContent = `Favs: ${favCount}/${DISCOVER.favLimit} • Seen: ${seenCount}/${QUEEN_FACTS.length} • Knew: ${knew} • Mindblown: ${mind}`;
+		document.getElementById('adminGiftStats').textContent = `wrap: ${!!g.wrap} • shipToOther: ${!!g.shipToOther} • occasion: ${g.occasion||'none'} • partnerAdds: ${(g.partnerAdds||[]).length}`;
+	}catch(e){
+		document.getElementById('adminDiscoverStats').textContent = 'No data';
+		document.getElementById('adminGiftStats').textContent = 'No data';
+	}
+
+	// Promo panel defaults
+	try{
+		const p = loadPromo();
+		const set = (id, val)=>{ const el=document.getElementById(id); if(el) el.value = val; };
+		const setC = (id, val)=>{ const el=document.getElementById(id); if(el) el.checked = !!val; };
+		setC('promoEnabled', p.enabled);
+		set('promoText', p.text||'');
+		set('promoVoucher', p.voucher||'');
+		set('promoPct', String(p.discountPercent ?? ''));
+		setC('promoFreeWrap', p.freeGiftWrap);
+	}catch(e){}
+}
+
+function bindAdmin(){
+	document.getElementById('adminUnlock')?.addEventListener('click', ()=>{
+		const pin = document.getElementById('adminPin')?.value;
+		if(unlockAdmin(pin)){
+			toast('Admin unlocked');
+			renderAdmin();
+		}else{
+			toast('Wrong PIN');
+		}
+	});
+	document.getElementById('adminPin')?.addEventListener('keydown', (e)=>{
+		if(e.key==='Enter') document.getElementById('adminUnlock')?.click();
+	});
+	document.getElementById('adminLock')?.addEventListener('click', ()=>{
+		lockAdmin();
+		toast('Locked');
+		renderAdmin();
+	});
+	document.getElementById('adminResetDiscover')?.addEventListener('click', ()=>{
+		localStorage.removeItem(DISCOVER.storageKey);
+		loadDiscoverState();
+		renderFavs();
+		renderFacts();
+		renderSwipeDeck();
+		renderAdmin();
+		toast('Discover reset');
+	});
+	document.getElementById('adminResetGift')?.addEventListener('click', ()=>{
+		localStorage.removeItem(GIFT.storageKey);
+		loadGiftState();
+		renderSheet();
+		renderAdmin();
+		toast('Gift reset');
+	});
+	document.getElementById('adminDump')?.addEventListener('click', async ()=>{
+		try{
+			const json = JSON.stringify(getLocalJSON(), null, 2);
+			await navigator.clipboard.writeText(json);
+			toast('Copied JSON');
+		}catch(e){
+			toast('Copy not available');
+		}
+	});
+
+	// ===== Promo controls (local only) =====
+	const readPromoFromUI = ()=>{
+		const p = loadPromo();
+		const enabled = !!document.getElementById('promoEnabled')?.checked;
+		const freeWrap = !!document.getElementById('promoFreeWrap')?.checked;
+		const text = document.getElementById('promoText')?.value ?? p.text;
+		const voucher = document.getElementById('promoVoucher')?.value ?? p.voucher;
+		const pctRaw = document.getElementById('promoPct')?.value;
+		const pct = Math.max(0, Math.min(90, Number(pctRaw||0)));
+		return {
+			...p,
+			enabled,
+			freeGiftWrap: freeWrap,
+			text: String(text||''),
+			voucher: String(voucher||''),
+			discountPercent: isFinite(pct) ? pct : 0,
+		};
+	};
+	const applyPromoNow = ()=>{
+		renderItems();
+		updateBar();
+		if(document.getElementById('sheet')?.classList.contains('open')) renderSheet();
+	};
+
+	// live apply on toggle and typing
+	document.getElementById('promoEnabled')?.addEventListener('change', ()=>{ savePromo(readPromoFromUI()); applyPromoNow(); toast('Promo updated'); });
+	document.getElementById('promoFreeWrap')?.addEventListener('change', ()=>{ savePromo(readPromoFromUI()); applyPromoNow(); toast('Promo updated'); });
+	document.getElementById('promoText')?.addEventListener('input', ()=>{ savePromo(readPromoFromUI()); applyPromoNow(); });
+	document.getElementById('promoVoucher')?.addEventListener('input', ()=>{ savePromo(readPromoFromUI()); applyPromoNow(); });
+	document.getElementById('promoPct')?.addEventListener('input', ()=>{ savePromo(readPromoFromUI()); applyPromoNow(); });
+
+	document.getElementById('promoToggleWald')?.addEventListener('click', ()=>{
+		const p = loadPromo();
+		p.items = p.items || {};
+		p.items['Waldhonig'] = !p.items['Waldhonig'];
+		savePromo(p);
+		renderAdmin();
+		applyPromoNow();
+		toast('Toggled Waldhonig');
+	});
+	document.getElementById('promoToggleBluete')?.addEventListener('click', ()=>{
+		const p = loadPromo();
+		p.items = p.items || {};
+		p.items['Blütenhonig'] = !p.items['Blütenhonig'];
+		savePromo(p);
+		renderAdmin();
+		applyPromoNow();
+		toast('Toggled Blütenhonig');
+	});
+	document.getElementById('promoToggleDuo')?.addEventListener('click', ()=>{
+		const p = loadPromo();
+		p.items = p.items || {};
+		p.items['Honig-Duo Set'] = !p.items['Honig-Duo Set'];
+		savePromo(p);
+		renderAdmin();
+		applyPromoNow();
+		toast('Toggled Duo Set');
+	});
+
+	document.getElementById('promoSave')?.addEventListener('click', ()=>{
+		savePromo(readPromoFromUI());
+		applyPromoNow();
+		toast('Promo saved');
+	});
+	document.getElementById('promoClear')?.addEventListener('click', ()=>{
+		localStorage.removeItem(PROMO.key);
+		renderAdmin();
+		applyPromoNow();
+		toast('Promo cleared');
+	});
+}
+
+function initTheme(){
+	const saved = localStorage.getItem('BZZZ_THEME') || 'dark';
+	applyTheme(saved);
+	document.getElementById('themeToggle')?.addEventListener('click', ()=>{
+		const isLight = document.body.classList.contains('light');
+		applyTheme(isLight ? 'dark' : 'light');
+	});
+	// Brand click: always return to main order screen
+	document.getElementById('brandBtn')?.addEventListener('click', ()=>setMode('order'));
+}
+
+loadGiftState();
+renderAll();
+renderPerks();
+bind();
+initTheme();
+initLang();
+bindDiscover();
+bindAdmin();
+
+// Progressive hero fade in light mode (wait 5s, then fade to 75% over 3s)
+setTimeout(()=>{
+	if(document.body.classList.contains('light')){
+		document.body.classList.add('heroLoaded');
+	}
+}, 5000);
+
+</script>
+
+</body>
+</html>

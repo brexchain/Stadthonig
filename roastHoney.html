@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Stadthonig | The Brutal Rebuild</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=Space+Grotesk:wght@700&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #facc15; --dark: #080809; --light: #f5f5f7; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: white; overflow-x: hidden; }
+
+        /* The "Roast" Overlay - Fixed while scrolling */
+        .roast-bar {
+            position: fixed; top: 20px; right: 20px; width: 250px; 
+            background: rgba(255, 50, 50, 0.9); padding: 15px; border-radius: 12px;
+            font-size: 0.8rem; font-weight: 800; z-index: 10000; color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid white;
+        }
+
+        /* Section Controller */
+        section {
+            min-height: 100vh; width: 100vw; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; padding: 40px 20px;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Variation 1: The "Minimalist German" (Efficiency) */
+        #v1 { background: #fff; color: #000; }
+        #v1 h1 { font-weight: 900; letter-spacing: -2px; font-size: 3rem; text-transform: uppercase; }
+
+        /* Variation 2: The "Luxury French" (Emotion) */
+        #v2 { background: #1a1a1a; color: var(--accent); font-family: 'Playfair Display', serif; }
+        #v2 h1 { font-size: 3.5rem; font-style: italic; }
+
+        /* Variation 3: The "Cyber Tech" (VRC Future) */
+        #v3 { background: #000; color: #00ff41; font-family: 'Space Grotesk', sans-serif; }
+        #v3 .hex-grid { border: 1px solid #00ff41; padding: 20px; border-radius: 0; }
+
+        /* Shared Components */
+        .mock-phone {
+            width: 320px; height: 600px; border: 8px solid #333; border-radius: 40px;
+            background: var(--dark); overflow: hidden; position: relative;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+        }
+        .content-wrap { text-align: center; max-width: 600px; margin-bottom: 50px; }
+        .buy-btn {
+            margin-top: 20px; padding: 15px 40px; border-radius: 99px;
+            border: none; font-weight: 900; cursor: pointer; background: var(--accent);
+        }
+
+        /* Language Sync Indicator */
+        .lang-indicator { font-size: 5rem; opacity: 0.1; position: absolute; top: 10%; font-weight: 900; }
+    </style>
+</head>
+<body>
+
+    <div class="roast-bar" id="roastText">
+        "Your old site looks like a 2012 WordPress template had a mid-life crisis. Let's fix that."
+    </div>
+
+    <section id="v1">
+        <div class="lang-indicator">DE/AT</div>
+        <div class="content-wrap">
+            <h1>STADTHONIG</h1>
+            <p>Direct. Functional. No Fluff. <br>The old design wasted 40% of the screen on 'atmosphere'. We replaced it with <b>Buy Buttons</b>.</p>
+            <button class="buy-btn">JETZT KAUFEN</button>
+        </div>
+        <div class="mock-phone">
+            <div style="padding: 20px; background: #eee; height: 100%;">
+                <div style="background:#fff; height:200px; margin-bottom:10px;"></div>
+                <div style="background:#fff; height:40px; width:60%; margin-bottom:10px;"></div>
+                <div style="background:#000; height:50px; border-radius:5px;"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="v2">
+        <div class="lang-indicator">FR/ES</div>
+        <div class="content-wrap">
+            <h1>L'Or Liquide</h1>
+            <p>The old site was too 'mechanical'. For the Mediterranean market, we sell the <b>dream</b>, not the bee. Soft shadows, serif fonts, pure ego.</p>
+            <button class="buy-btn" style="background:#fff; color:#000;">DÉCOUVRIR</button>
+        </div>
+        <div class="mock-phone" style="border-color: #facc15;">
+            <div style="padding: 20px; background: #111; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                <h2 style="font-family:'Playfair Display';">Miel Pur</h2>
+                <hr style="border:0; border-top:1px solid #facc15; margin: 20px 0;">
+                <p>Une expérience sensorielle.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="v3">
+        <div class="lang-indicator">EN/TECH</div>
+        <div class="content-wrap">
+            <h1>SYSTEM: HONEY</h1>
+            <p>Old design = Analog. New design = Data. Optimized for the VRC Starter Kit users. 80% space saving, 100% cyberpunk efficiency.</p>
+            <button class="buy-btn" style="background:#00ff41; color:#000;">EXECUTE ORDER</button>
+        </div>
+        <div class="mock-phone" style="border-color: #00ff41;">
+            <div style="padding: 20px; font-family: monospace;">
+                [SCANNING BIOMETRICS...]<br>
+                > STATUS: PURE_HONEY<br>
+                > VRC_COMPATIBLE: YES<br>
+                <div style="border: 1px solid #00ff41; height: 100px; margin-top: 50px;"></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const roasts = [
+            "ROAST: Your old header takes up 300px of nothing. In Variant 1, we value the user's time.",
+            "ROAST: Colors in your old site are 'muddy'. Variant 2 uses high-contrast luxury to hide the lack of features.",
+            "ROAST: Your old site isn't VRC ready. Variant 3 treats honey like a software upgrade.",
+            "ROAST: Stop using 12px font for mobile users. We aren't using microscopes."
+        ];
+
+        window.addEventListener('scroll', () => {
+            const scrollPercent = window.scrollY / (document.body.offsetHeight - window.innerHeight);
+            const roastIdx = Math.floor(scrollPercent * roasts.length);
+            
+            // Dynamic Roast Update
+            if(roasts[roastIdx]) {
+                document.getElementById('roastText').innerText = roasts[roastIdx];
+            }
+
+            // Body Background Logic
+            if (scrollPercent < 0.33) {
+                document.body.style.background = "#fff";
+            } else if (scrollPercent < 0.66) {
+                document.body.style.background = "#1a1a1a";
+            } else {
+                document.body.style.background = "#000";
+            }
+        });
+    </script>
+</body>
+</html>
